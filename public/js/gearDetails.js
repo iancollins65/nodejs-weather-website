@@ -1,6 +1,8 @@
 const gearDetailsForm = document.querySelector('form')
 const chainRingFld = document.querySelector('#chainRing')
 const cogFld = document.querySelector('#cog')
+const tyreWidthFld = document.querySelector('#tyreWidth')
+const rimTypeFld = document.querySelector('#rimType')
 const messageOne = document.querySelector('#message-1')
 const gearDataTable = document.querySelector('#gearData')
 const gearRatioCell = document.querySelector('#gearRatio')
@@ -18,7 +20,12 @@ gearDetailsForm.addEventListener('submit', (e) => {
     
     const chainRing = chainRingFld.value
     const cog = cogFld.value
-    const url = '/gearInfo?chainRing=' + chainRing + '&cog=' + cog
+    const tyreWidth = tyreWidthFld.value
+    const rimType = rimTypeFld.value
+    var url = '/gearInfo?chainRing=' + chainRing + '&cog=' + cog + '&rimType=' + rimType
+    if (tyreWidth !== '') {
+        url = url + '&tyreWidth=' + tyreWidth
+    }
 
     fetch(url).then((response) => {
         response.json().then(({ error, gearRatio, gearInches, rollOut }) => {
@@ -26,6 +33,8 @@ gearDetailsForm.addEventListener('submit', (e) => {
                 var errorStr = error + '.'
                 errorStr = errorStr.replace('chainRing', 'Chain Ring')
                 errorStr = errorStr.replace('cog', 'Cog')
+                errorStr = errorStr.replace('tyreWidth', 'Tyre Width')
+                errorStr = errorStr.replace('rimType', 'Rim Type')
                 messageOne.style.color = 'red'
                 messageOne.textContent = errorStr
             } else {

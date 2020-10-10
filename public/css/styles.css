@@ -43,13 +43,18 @@ header a {
 
 input {
     border: 1px solid #cccccc;
-    padding: 8px;
+    padding: 4px 8px;
     margin: 4px;
 }
 
 label {
     width: 100px;
     display: inline-block;
+}
+
+select {
+    padding: 2px 8px;
+    margin: 4px;
 }
 
 button {
