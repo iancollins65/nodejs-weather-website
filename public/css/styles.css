@@ -69,3 +69,13 @@ button {
 td {
     padding: 6px;
 }
+
+/*
+@media only screen and (max-width: 650px) {
+    body {
+        width: 100%;
+        margin: 0;
+        padding: 5px;
+    }
+}
+*/
