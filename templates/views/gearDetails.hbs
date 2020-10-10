@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+
+<html>
+
+<head>
+    <title>Gear Details</title>
+    <link rel="icon" href="/img/weather.png">
+    <link rel="stylesheet" href="/css/styles.css">
+</head>
+
+<body>
+    <div class="main-content">
+        {{>header}}
+
+        <p>Enter information about your gear to get the details.</p>
+
+        <form>
+            <label for="chainRing">Chain Ring:</label>
+            <input type="text" id="chainRing" name="chainRing"><br>
+            <label for="cog">Cog:</label>
+            <input type="text" id="cog" name="cog"><br>
+            <button>Calc</button>
+        </form>
+
+        <p id="message-1">Your gear details...</p>
+
+        <div id="gearData">
+            <table>
+                <tr>
+                    <td>Gear Ratio:</td>
+                    <td id="gearRatio"></td>
+                </tr>
+                <tr>
+                    <td>Gear Inches:</td>
+                    <td id="gearInches"></td>
+                </tr>
+                <tr>
+                    <td>Rollout (Approx.):</td>
+                    <td id="rollOut"></td>
+                </tr>
+            </table>
+        </div>
+    </div>
+
+    {{>footer}}
+
+    <script src="/js/gearDetails.js"></script>
+</body>
+
+</html>

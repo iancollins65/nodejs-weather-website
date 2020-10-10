@@ -36,6 +36,20 @@ app.get('/about', (req, res) => {
     })
 })
 
+app.get('/gears', (req, res) => {
+    res.render('gears', {
+        title: 'Gears',
+        name: 'Ian Collins'
+    })
+})
+
+app.get('/gearDetails', (req, res) => {
+    res.render('gearDetails', {
+        title: 'Gear Details',
+        name: 'Ian Collins'
+    })
+})
+
 app.get('/help', (req, res) => {
     res.render('help', {
         title: 'Help',

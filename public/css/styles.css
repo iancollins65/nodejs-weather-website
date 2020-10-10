@@ -23,11 +23,11 @@ footer {
 
 header {
     margin-top: 16px;
-    margin-bottom: 48px;
+    margin-bottom: 24px;
 }
 
 h1 {
-    font-size: 64px;
+    font-size: 32px;
     margin-bottom: 16px;
 }
 
@@ -44,6 +44,12 @@ header a {
 input {
     border: 1px solid #cccccc;
     padding: 8px;
+    margin: 4px;
+}
+
+label {
+    width: 100px;
+    display: inline-block;
 }
 
 button {
@@ -51,5 +57,10 @@ button {
     border: 1px solid #888888;
     background: #888888;
     color: white;
-    padding: 8px;
+    padding: 8px 16px;
+    margin-top: 8px;
+}
+
+td {
+    padding: 6px;
 }
