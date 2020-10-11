@@ -26,6 +26,24 @@
                 <option value='700c'>700c</option>
                 <option value='650c'>650c</option>
             </select><br>
+            <label for="extras">Extras:</label>
+            <select id="extras" name="extras">
+                <option value="none">None</option>
+                <option value="cadence">Cadence for given Speed</option>
+                <option value="speed">Speed for given Cadence</option>
+            </select><br>
+            <div id="speedSection">
+                <label for="speed">Speed:</label>
+                <input type="text" id="speed" name="speed" placeholder="(km/h)"><br>
+            </div>
+            <div id="cadenceSection">
+                <label for="cadence">Cadence:</label>
+                <input type="text" id="cadence" name="cadence" placeholder="(rpm)"><br>
+            </div>
+            <div id="lapLengthSection">
+                <label for="lapLength">Lap Length:</label>
+                <input type="text" id="lapLength" name="lapLength" placeholder="(metres)"><br>
+            </div>
             <button>Calc</button>
         </form>
 
@@ -47,6 +65,32 @@
                 </tr>
             </table>
         </div>
+
+        <div id="extrasData">
+            <p>Your extras...</p>
+
+            <table>
+                <tr>
+                    <td>Speed:</td>
+                    <td id="speedCell"></td>
+                </tr>
+                <tr>
+                    <td>Cadence:</td>
+                    <td id="cadenceCell"></td>
+                </tr>
+                <div id="lapSection">
+                    <tr>
+                        <td>Lap Time:</td>
+                        <td id="lapTime"></td>
+                    </tr>
+                    <tr>
+                        <td>Lap Pedal Count:</td>
+                        <td id="lapPedalCount"></td>
+                    </tr>
+                </div>
+            </table>
+        </div>
+
     </div>
 
     {{>footer}}

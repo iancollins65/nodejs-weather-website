@@ -135,8 +135,41 @@ app.get('/gearInfo', (req, res) => {
         }
     }
 
+    let speed = undefined
+    if (req.query.speed) {
+        speed = Number(req.query.speed)
+        if (isNaN(speed)) {
+            return res.send({ error: 'speed is not numeric' })
+        }
+        if (!(speed > 0)) {
+            return res.send({ error: 'speed is not a positive number' })
+        }
+    }
+
+    let cadence = undefined
+    if (req.query.cadence) {
+        cadence = Number(req.query.cadence)
+        if (isNaN(cadence)) {
+            return res.send({ error: 'cadence is not numeric' })
+        }
+        if (!(cadence > 0)) {
+            return res.send({ error: 'cadence is not a positive number' })
+        }
+    }
+
+    let lapLength = undefined
+    if (req.query.lapLength) {
+        lapLength = Number(req.query.lapLength)
+        if (isNaN(lapLength)) {
+            return res.send({ error: 'lapLength is not numeric' })
+        }
+        if (!(lapLength > 0)) {
+            return res.send({ error: 'lapLength is not a positive number' })
+        }
+    }
+
     // Get the gear info
-    const gearInfo = gears.getGearInfo(chainRing, cog, tyreWidth, rimType)
+    const gearInfo = gears.getGearInfo(chainRing, cog, tyreWidth, rimType, speed, cadence, lapLength)
 
     res.send(gearInfo)
 })
