@@ -73,7 +73,7 @@ button {
 td {
     padding: 6px;
 }
-
+/*
 @media only screen and (min-width: 760px) {
     body {
         max-width: 650px;
@@ -87,3 +87,4 @@ td {
         flex-grow: 1;
     }
 }
+*/
