@@ -17,11 +17,11 @@
 
         <form>
             <label for="chainRing">Chain Ring:</label>
-            <input type="text" id="chainRing" name="chainRing"><br>
+            <input type="number" id="chainRing" name="chainRing"><br>
             <label for="cog">Cog:</label>
-            <input type="text" id="cog" name="cog"><br>
+            <input type="number" id="cog" name="cog"><br>
             <label for="tyreWidth">Tyre Width:</label>
-            <input type="text" id="tyreWidth" name="tyreWidth" placeholder="23"><br>
+            <input type="number" id="tyreWidth" name="tyreWidth" placeholder="23"><br>
             <label for="rimType">Rim Type:</label>
             <select id="rimType" name="rimType">
                 <option value='700c'>700c</option>
@@ -36,19 +36,19 @@
             </select><br>
             <div id="speedSection">
                 <label for="speed">Speed:</label>
-                <input type="text" id="speed" name="speed" placeholder="(km/h)"><br>
+                <input type="number" id="speed" name="speed" placeholder="(km/h)"><br>
             </div>
             <div id="cadenceSection">
                 <label for="cadence">Cadence:</label>
-                <input type="text" id="cadence" name="cadence" placeholder="(rpm)"><br>
+                <input type="number" id="cadence" name="cadence" placeholder="(rpm)"><br>
             </div>
             <div id="lapTimeSection">
                 <label for="lapTime">Lap Time:</label>
-                <input type="text" id="lapTime" name="lapTime" placeholder="(seconds)"><br>
+                <input type="number" id="lapTime" name="lapTime" placeholder="(seconds)"><br>
             </div>
             <div id="lapLengthSection">
                 <label for="lapLength">Lap Length:</label>
-                <input type="text" id="lapLength" name="lapLength" placeholder="(optional, metres)"><br>
+                <input type="number" id="lapLength" name="lapLength" placeholder="(optional, metres)"><br>
             </div>
             <button class="fields-button">Calculate</button>
         </form>
