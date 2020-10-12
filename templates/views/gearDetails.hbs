@@ -31,6 +31,7 @@
                 <option value="none">None</option>
                 <option value="cadence">Cadence for given Speed</option>
                 <option value="speed">Speed for given Cadence</option>
+                <option value="cadenceLapTime">Cadence for given Lap Time</option>
             </select><br>
             <div id="speedSection">
                 <label for="speed">Speed:</label>
@@ -40,9 +41,13 @@
                 <label for="cadence">Cadence:</label>
                 <input type="text" id="cadence" name="cadence" placeholder="(rpm)"><br>
             </div>
+            <div id="lapTimeSection">
+                <label for="lapTime">Lap Time:</label>
+                <input type="text" id="lapTime" name="lapTime" placeholder="(seconds)"><br>
+            </div>
             <div id="lapLengthSection">
                 <label for="lapLength">Lap Length:</label>
-                <input type="text" id="lapLength" name="lapLength" placeholder="(metres)"><br>
+                <input type="text" id="lapLength" name="lapLength" placeholder="(optional, metres)"><br>
             </div>
             <button>Calc</button>
         </form>
@@ -81,11 +86,11 @@
                 <div id="lapSection">
                     <tr>
                         <td>Lap Time:</td>
-                        <td id="lapTime"></td>
+                        <td id="lapTimeCell"></td>
                     </tr>
                     <tr>
                         <td>Lap Pedal Count:</td>
-                        <td id="lapPedalCount"></td>
+                        <td id="lapPedalCountCell"></td>
                     </tr>
                 </div>
             </table>

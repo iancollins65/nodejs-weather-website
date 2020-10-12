@@ -168,8 +168,19 @@ app.get('/gearInfo', (req, res) => {
         }
     }
 
+    let lapTime = undefined
+    if (req.query.lapTime) {
+        lapTime = Number(req.query.lapTime)
+        if (isNaN(lapTime)) {
+            return res.send({ error: 'lapTime is not numeric' })
+        }
+        if (!(lapTime > 0)) {
+            return res.send({ error: 'lapTime is not a positive number' })
+        }
+    }
+
     // Get the gear info
-    const gearInfo = gears.getGearInfo(chainRing, cog, tyreWidth, rimType, speed, cadence, lapLength)
+    const gearInfo = gears.getGearInfo(chainRing, cog, tyreWidth, rimType, speed, cadence, lapLength, lapTime)
 
     res.send(gearInfo)
 })

@@ -11,19 +11,22 @@ const rollOutCell = document.querySelector('#rollOut')
 const extrasSelect = document.querySelector('#extras')
 const speedSection = document.querySelector('#speedSection')
 const cadenceSection = document.querySelector('#cadenceSection')
+const lapTimeSection = document.querySelector('#lapTimeSection')
 const lapLengthSection = document.querySelector('#lapLengthSection')
 const speedFld = document.querySelector('#speed')
 const cadenceFld = document.querySelector('#cadence')
+const lapTimeFld = document.querySelector('#lapTime')
 const lapLengthFld = document.querySelector('#lapLength')
 const extrasData = document.querySelector('#extrasData')
 const speedCell = document.querySelector('#speedCell')
 const cadenceCell = document.querySelector('#cadenceCell')
 const lapSection = document.querySelector('#lapSection')
-const lapTimeCell = document.querySelector('#lapTime')
-const lapPedalCountCell = document.querySelector('#lapPedalCount')
+const lapTimeCell = document.querySelector('#lapTimeCell')
+const lapPedalCountCell = document.querySelector('#lapPedalCountCell')
 
 speedSection.style.display = 'none'
 cadenceSection.style.display = 'none'
+lapTimeSection.style.display = 'none'
 lapLengthSection.style.display = 'none'
 extrasData.style.display = 'none'
 
@@ -46,6 +49,7 @@ gearDetailsForm.addEventListener('submit', (e) => {
     const rimType = rimTypeFld.value
     const speed = speedFld.value
     const cadence = cadenceFld.value
+    const lapTime = lapTimeFld.value
     const lapLength = lapLengthFld.value
     var url = '/gearInfo?chainRing=' + chainRing + '&cog=' + cog + '&rimType=' + rimType
     if (tyreWidth !== '') {
@@ -56,6 +60,9 @@ gearDetailsForm.addEventListener('submit', (e) => {
     }
     if (cadence !== '') {
         url = url + '&cadence=' + cadence
+    }
+    if (lapTime !== '') {
+        url = url + '&lapTime=' + lapTime
     }
     if (lapLength !== '') {
         url = url + '&lapLength=' + lapLength
@@ -71,6 +78,7 @@ gearDetailsForm.addEventListener('submit', (e) => {
                 errorStr = errorStr.replace('rimType', 'Rim Type')
                 errorStr = errorStr.replace('speed', 'Speed')
                 errorStr = errorStr.replace('cadence', 'Cadence')
+                errorStr = errorStr.replace('lapTime', 'Lap Time')
                 errorStr = errorStr.replace('lapLength', 'Lap Length')
                 messageOne.style.color = 'red'
                 messageOne.textContent = errorStr
@@ -106,19 +114,35 @@ extrasSelect.addEventListener('change', (e) => {
     if (extrasSelect.value === 'none') {
         speedFld.value = ''
         cadenceFld.value = ''
+        lapTimeFld.value = ''
         lapLengthFld.value = ''
         speedSection.style.display = 'none'
         cadenceSection.style.display = 'none'
+        lapTimeSection.style.display = 'none'
         lapLengthSection.style.display = 'none'
     } else if (extrasSelect.value === 'speed') {
         speedFld.value = ''
+        lapTimeFld.value = ''
+        lapLengthFld.placeholder = '(optional, metres)'
         speedSection.style.display = 'none'
         cadenceSection.style.display = 'block'
+        lapTimeSection.style.display = 'none'
         lapLengthSection.style.display = 'block'
     } else if (extrasSelect.value === 'cadence') {
         cadenceFld.value = ''
+        lapTimeFld.value = ''
+        lapLengthFld.placeholder = '(optional, metres)'
         speedSection.style.display = 'block'
         cadenceSection.style.display = 'none'
+        lapTimeSection.style.display = 'none'
         lapLengthSection.style.display = 'block'
-     }
+    } else if (extrasSelect.value === 'cadenceLapTime') {
+        speedFld.value = ''
+        cadenceFld.value = ''
+        lapLengthFld.placeholder = '(metres)'
+        speedSection.style.display = 'none'
+        cadenceSection.style.display = 'none'
+        lapTimeSection.style.display = 'block'
+        lapLengthSection.style.display = 'block'
+    }
 })

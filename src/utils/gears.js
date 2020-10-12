@@ -52,7 +52,11 @@ const getLapPedalCount = (lapLength, rollOut) => {
     return lapLength / (rollOut / 1000)
 }
 
-const getGearInfo = (chainRing, cog, tyreWidth = 23, rimType = '700c', speed, cadence, lapLength) => {
+const getSpeedFromLapTimeAndLength = (lapTime, lapLength) => {
+    return (lapLength * 60 * 60) / (lapTime * 1000)
+}
+
+const getGearInfo = (chainRing, cog, tyreWidth = 23, rimType = '700c', speed, cadence, lapLength, lapTime) => {
     const gearRatio = getGearRatio(chainRing, cog)
     const gearInches = getGearInches(gearRatio)
     const rimDiameter = getRimSizeByType(rimType)
@@ -60,15 +64,17 @@ const getGearInfo = (chainRing, cog, tyreWidth = 23, rimType = '700c', speed, ca
     const rollOut = getRollOut(gearRatio, wheelCircumfrance)
     var returnSpeed = speed
     var returnCadence = cadence
-    var returnLapTime = undefined
+    var returnLapTime = lapTime
     var returnLapPedalCount = undefined
 
     if (speed) {
         returnCadence = getCadenceAtKmhSpeed(rollOut, speed)
-    }
-
-    if (cadence && !speed) {
+    } else if (cadence) {
         returnSpeed = getKmhSpeedAtCadence(rollOut, cadence)
+    } else if (lapTime && lapLength) {
+        returnSpeed = getSpeedFromLapTimeAndLength(lapTime, lapLength)
+        returnCadence = getCadenceAtKmhSpeed(rollOut, returnSpeed)
+        returnLapPedalCount = getLapPedalCount(lapLength, rollOut)
     }
 
     if (lapLength && (speed || cadence)) {
