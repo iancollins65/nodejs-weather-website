@@ -66,6 +66,10 @@ button {
     margin-top: 8px;
 }
 
+.fields-button {
+    margin-left: 108px
+}
+
 td {
     padding: 6px;
 }
