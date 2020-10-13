@@ -29,10 +29,14 @@ cadenceSection.style.display = 'none'
 lapTimeSection.style.display = 'none'
 lapLengthSection.style.display = 'none'
 extrasData.style.display = 'none'
+messageOne.style.display = 'none'
+gearDataTable.style.display = 'none'
+extrasData.style.display = 'none'
 
 gearDetailsForm.addEventListener('submit', (e) => {
     e.preventDefault()
 
+    messageOne.style.display = 'block'
     messageOne.style.color = '#333456'   
     messageOne.textContent = 'Loading...'
     gearRatioCell.textContent = ''
@@ -42,7 +46,7 @@ gearDetailsForm.addEventListener('submit', (e) => {
     cadenceCell.textContent = ''
     lapTimeCell.textContent = ''
     lapPedalCountCell.textContent = ''
-    
+
     const chainRing = chainRingFld.value
     const cog = cogFld.value
     const tyreWidth = tyreWidthFld.value
@@ -82,8 +86,11 @@ gearDetailsForm.addEventListener('submit', (e) => {
                 errorStr = errorStr.replace('lapLength', 'Lap Length')
                 messageOne.style.color = 'red'
                 messageOne.textContent = errorStr
+                gearDataTable.style.display = 'none'
+                extrasData.style.display = 'none'
             } else {
                 messageOne.textContent = 'Your gear details...'
+                gearDataTable.style.display = 'block'
                 gearRatioCell.textContent = Math.round(gearRatio * 1000) / 1000
                 gearInchesCell.textContent = Math.round(gearInches * 1000) / 1000
                 rollOutCell.textContent = Math.round(rollOut) / 1000 + ' m'
@@ -108,6 +115,12 @@ gearDetailsForm.addEventListener('submit', (e) => {
             }
         })
     })
+})
+
+gearDetailsForm.addEventListener('input', (e) => {
+    messageOne.style.display = 'none'
+    gearDataTable.style.display = 'none'
+    extrasData.style.display = 'none'
 })
 
 extrasSelect.addEventListener('change', (e) => {

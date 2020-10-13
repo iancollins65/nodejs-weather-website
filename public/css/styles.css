@@ -15,6 +15,10 @@ body {
     flex-grow: 1;
 }
 
+.output-stem {
+    line-height: 20px;
+}
+
 footer {
     color: #888888;
     border-top: 1px solid #eeeeee;
