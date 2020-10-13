@@ -100,11 +100,54 @@ const getGearInfo = (chainRing, cog, tyreWidth = 23, rimType = '700c', speed, ca
     }
 }
 
+const getCogGivenChainRingAndGearInches = (chainRing, gearInches, fraction = 0.4) => {
+    const digitalCog = (27 * chainRing) / gearInches
+    const floorCog = Math.floor(digitalCog)
+    const ceilingCog = Math.ceil(digitalCog)
+    const floorFraction = digitalCog - floorCog
+    if (floorFraction < fraction) {
+        return [floorCog]
+    } else if (floorFraction > (1 - fraction)) {
+        return [ceilingCog]
+    } else {
+        return [floorCog, ceilingCog]
+    }
+}
+
+const getChainRingAndCogOptionsForGearInches = (gearInches, plusOrMinus = 1, sortByDiff = true, minChainRing = 34, maxChainRing = 60, minCog = 10, maxCog = 36, minTeeth = 44, maxTeeth = 96) => {
+    let options = []
+    var chainRing = minChainRing
+    for (; chainRing <= maxChainRing; chainRing++) {
+        const cogCandidates = getCogGivenChainRingAndGearInches(chainRing, gearInches)
+        for (cog of cogCandidates) {
+            const teeth = chainRing + cog
+            if ((cog >= minCog) && (cog <= maxCog) && (teeth >= minTeeth) && (teeth <= maxTeeth)) {
+                const candidateGearInches = getGearInches(getGearRatio(chainRing,cog))
+                const diffGearInches = Math.abs(candidateGearInches - gearInches)
+                if (diffGearInches <= plusOrMinus) {
+                    options.push({
+                        chainRing,
+                        cog,
+                        gearInches: candidateGearInches,
+                        diff: diffGearInches
+                    })
+                }
+            }
+        }
+    }
+    if (sortByDiff === true) {
+        options.sort((a, b) => (a.diff >= b.diff) ? 1 : -1)
+    }
+    return options
+}
+
 module.exports = {
     getGearRatio: getGearRatio,
     getWheelCircumfrance: getWheelCircumfrance,
     getGearInches: getGearInches,
     getRollOut: getRollOut,
     getRimSizeByType: getRimSizeByType,
-    getGearInfo: getGearInfo
+    getGearInfo: getGearInfo,
+    getCogGivenChainRingAndGearInches: getCogGivenChainRingAndGearInches,
+    getChainRingAndCogOptionsForGearInches: getChainRingAndCogOptionsForGearInches
 }
