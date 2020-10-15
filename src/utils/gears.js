@@ -141,6 +141,38 @@ const getChainRingAndCogOptionsForGearInches = (gearInches, plusOrMinus = 1, sor
     return options
 }
 
+const getCogGivenChainRingAndWheelForRollOut = (chainRing, wheelCircumfrance, rollOut) => {
+    const digitalCog = (chainRing * wheelCircumfrance) / rollOut
+    const ceilingCog = Math.ceil(digitalCog)
+    return ceilingCog
+}
+
+const getChainRingAndCogOptionsForRollOut = (rollOut, maxDiff = 1000, sortDesc = true, tyreWidth = 23, rimType = '700c', minChainRing = 34, maxChainRing = 60, minCog = 10, maxCog = 36, minTeeth = 44, maxTeeth = 96) => {
+    const rimDiameter = getRimSizeByType(rimType)
+    const wheelCircumfrance = getWheelCircumfrance(rimDiameter, tyreWidth)
+    let options = []
+    var chainRing = minChainRing
+    for (; chainRing <= maxChainRing; chainRing++) {
+        const cog = getCogGivenChainRingAndWheelForRollOut(chainRing, wheelCircumfrance, rollOut)
+        const teeth = chainRing + cog
+        if ((cog >= minCog) && (cog <= maxCog) && (teeth >= minTeeth) && (teeth <= maxTeeth)) {
+            const candidateRollOut = getRollOut(getGearRatio(chainRing, cog), wheelCircumfrance)
+            const diffRollOut = Math.abs(rollOut - candidateRollOut)
+            if (diffRollOut <= maxDiff) {
+                options.push({
+                    chainRing,
+                    cog,
+                    rollOut: candidateRollOut
+                })
+            }
+        }
+    }
+    if (sortDesc === true) {
+        options.sort((a, b) => (a.rollOut <= b.rollOut) ? 1 : -1)
+    }
+    return options
+}
+
 module.exports = {
     getGearRatio: getGearRatio,
     getWheelCircumfrance: getWheelCircumfrance,
@@ -149,5 +181,7 @@ module.exports = {
     getRimSizeByType: getRimSizeByType,
     getGearInfo: getGearInfo,
     getCogGivenChainRingAndGearInches: getCogGivenChainRingAndGearInches,
-    getChainRingAndCogOptionsForGearInches: getChainRingAndCogOptionsForGearInches
+    getChainRingAndCogOptionsForGearInches: getChainRingAndCogOptionsForGearInches,
+    getCogGivenChainRingAndWheelForRollOut: getCogGivenChainRingAndWheelForRollOut,
+    getChainRingAndCogOptionsForRollOut: getChainRingAndCogOptionsForRollOut
 }
