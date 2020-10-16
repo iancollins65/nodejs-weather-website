@@ -39,14 +39,14 @@ app.get('/about', (req, res) => {
 app.get('/gears', (req, res) => {
     res.render('gears', {
         title: 'Gears',
-        name: 'Ian Collins'
+        name: 'Hot Pursuit Cycling'
     })
 })
 
 app.get('/gearDetails', (req, res) => {
     res.render('gearDetails', {
         title: 'Gear Details',
-        name: 'Ian Collins'
+        name: 'Hot Pursuit Cycling'
     })
 })
 
@@ -183,6 +183,237 @@ app.get('/gearInfo', (req, res) => {
     const gearInfo = gears.getGearInfo(chainRing, cog, tyreWidth, rimType, speed, cadence, lapLength, lapTime)
 
     res.send(gearInfo)
+})
+
+app.get('/gearInchesOptions', (req, res) => {
+    // Check for query string errors
+    if (!req.query.gearInches) {
+        return res.send({ error: 'gearInches is not provided' })
+    }
+
+    const gearInches = Number(req.query.gearInches)
+    if (isNaN(gearInches)) {
+        return res.send({ error: 'gearInches is not numeric' })
+    }
+    if (!(gearInches > 0)) {
+        return res.send({ error: 'gearInches is not a positive number' })
+    }
+
+    let plusOrMinus = 1
+    if (req.query.plusOrMinus) {
+        plusOrMinus = Number(req.query.plusOrMinus)
+        if (isNaN(plusOrMinus)) {
+            return res.send({ error: 'plusOrMinus is not numeric' })
+        }
+        if (!(plusOrMinus > 0)) {
+            return res.send({ error: 'plusOrMinus is not a positive number' })
+        }
+    }
+
+    var sortByDiff = true
+    if (req.query.sortByDiff) {
+        if (req.query.sortByDiff === 'false') {
+            sortByDiff = false
+        } else if (req.query.sortByDiff !== 'true') {
+            return res.send({ error: 'sortByDiff is not true or false' })
+        }
+    }
+
+    let minChainRing = undefined
+    if (req.query.minChainRing) {
+        minChainRing = Number(req.query.minChainRing)
+        if (isNaN(minChainRing)) {
+            return res.send({ error: 'minChainRing is not numeric' })
+        }
+        if (!Number.isInteger(minChainRing) || !(minChainRing > 0)) {
+            return res.send({ error: 'minChainRing is not a positive integer' })
+        }
+    }
+
+    let maxChainRing = undefined
+    if (req.query.maxChainRing) {
+        maxChainRing = Number(req.query.maxChainRing)
+        if (isNaN(maxChainRing)) {
+            return res.send({ error: 'maxChainRing is not numeric' })
+        }
+        if (!Number.isInteger(maxChainRing) || !(maxChainRing > 0)) {
+            return res.send({ error: 'maxChainRing is not a positive integer' })
+        }
+    }
+
+    let minCog = undefined
+    if (req.query.minCog) {
+        minCog = Number(req.query.minCog)
+        if (isNaN(minCog)) {
+            return res.send({ error: 'minCog is not numeric' })
+        }
+        if (!Number.isInteger(minCog) || !(minCog > 0)) {
+            return res.send({ error: 'minCog is not a positive integer' })
+        }
+    }
+
+    let maxCog = undefined
+    if (req.query.maxCog) {
+        maxCog = Number(req.query.maxCog)
+        if (isNaN(maxCog)) {
+            return res.send({ error: 'maxCog is not numeric' })
+        }
+        if (!Number.isInteger(maxCog) || !(maxCog > 0)) {
+            return res.send({ error: 'maxCog is not a positive integer' })
+        }
+    }
+
+    let minTeeth = undefined
+    if (req.query.minTeeth) {
+        minTeeth = Number(req.query.minTeeth)
+        if (isNaN(minTeeth)) {
+            return res.send({ error: 'minTeeth is not numeric' })
+        }
+        if (!Number.isInteger(minTeeth) || !(minTeeth > 0)) {
+            return res.send({ error: 'minTeeth is not a positive integer' })
+        }
+    }
+
+    let maxTeeth = undefined
+    if (req.query.maxTeeth) {
+        maxTeeth = Number(req.query.maxTeeth)
+        if (isNaN(maxTeeth)) {
+            return res.send({ error: 'maxTeeth is not numeric' })
+        }
+        if (!Number.isInteger(maxTeeth) || !(maxTeeth > 0)) {
+            return res.send({ error: 'maxTeeth is not a positive integer' })
+        }
+    }
+
+    // Get the gear inches options
+    const gearInchesOptions = gears.getChainRingAndCogOptionsForGearInches(gearInches, plusOrMinus, sortByDiff, minChainRing, maxChainRing, minCog, maxCog, minTeeth, maxTeeth)
+
+    res.send(gearInchesOptions)
+})
+
+app.get('/rollOutOptions', (req, res) => {
+    // Check for query string errors
+    if (!req.query.rollOut) {
+        return res.send({ error: 'rollOut is not provided' })
+    }
+
+    const rollOut = Number(req.query.rollOut)
+    if (isNaN(rollOut)) {
+        return res.send({ error: 'rollOut is not numeric' })
+    }
+    if (!(rollOut > 0)) {
+        return res.send({ error: 'rollOut is not a positive number' })
+    }
+
+    let maxDiff = 1000
+    if (req.query.maxDiff) {
+        maxDiff = Number(req.query.maxDiff)
+        if (isNaN(maxDiff)) {
+            return res.send({ error: 'maxDiff is not numeric' })
+        }
+        if (!(maxDiff > 0)) {
+            return res.send({ error: 'maxDiff is not a positive number' })
+        }
+    }
+
+    var sortDesc = true
+    if (req.query.sortDesc) {
+        if (req.query.sortDesc === 'false') {
+            sortDesc = false
+        } else if (req.query.sortDesc !== 'true') {
+            return res.send({ error: 'sortDesc is not true or false' })
+        }
+    }
+
+    let tyreWidth = 23
+    if (req.query.tyreWidth) {
+        tyreWidth = Number(req.query.tyreWidth)
+        if (isNaN(tyreWidth)) {
+            return res.send({ error: 'tyreWidth is not numeric' })
+        }
+        if (!Number.isInteger(tyreWidth) || !(tyreWidth > 0)) {
+            return res.send({ error: 'tyreWidth is not a positive integer' })
+        }
+    }
+
+    let rimType = '700c'
+    if (req.query.rimType) {
+        rimType = req.query.rimType
+        if (!(rimType === '700c') && !(rimType === '650c')) {
+            return res.send({ error: 'rimType must be 700c or 650c' })
+        }
+    }
+
+    let minChainRing = undefined
+    if (req.query.minChainRing) {
+        minChainRing = Number(req.query.minChainRing)
+        if (isNaN(minChainRing)) {
+            return res.send({ error: 'minChainRing is not numeric' })
+        }
+        if (!Number.isInteger(minChainRing) || !(minChainRing > 0)) {
+            return res.send({ error: 'minChainRing is not a positive integer' })
+        }
+    }
+
+    let maxChainRing = undefined
+    if (req.query.maxChainRing) {
+        maxChainRing = Number(req.query.maxChainRing)
+        if (isNaN(maxChainRing)) {
+            return res.send({ error: 'maxChainRing is not numeric' })
+        }
+        if (!Number.isInteger(maxChainRing) || !(maxChainRing > 0)) {
+            return res.send({ error: 'maxChainRing is not a positive integer' })
+        }
+    }
+
+    let minCog = undefined
+    if (req.query.minCog) {
+        minCog = Number(req.query.minCog)
+        if (isNaN(minCog)) {
+            return res.send({ error: 'minCog is not numeric' })
+        }
+        if (!Number.isInteger(minCog) || !(minCog > 0)) {
+            return res.send({ error: 'minCog is not a positive integer' })
+        }
+    }
+
+    let maxCog = undefined
+    if (req.query.maxCog) {
+        maxCog = Number(req.query.maxCog)
+        if (isNaN(maxCog)) {
+            return res.send({ error: 'maxCog is not numeric' })
+        }
+        if (!Number.isInteger(maxCog) || !(maxCog > 0)) {
+            return res.send({ error: 'maxCog is not a positive integer' })
+        }
+    }
+
+    let minTeeth = undefined
+    if (req.query.minTeeth) {
+        minTeeth = Number(req.query.minTeeth)
+        if (isNaN(minTeeth)) {
+            return res.send({ error: 'minTeeth is not numeric' })
+        }
+        if (!Number.isInteger(minTeeth) || !(minTeeth > 0)) {
+            return res.send({ error: 'minTeeth is not a positive integer' })
+        }
+    }
+
+    let maxTeeth = undefined
+    if (req.query.maxTeeth) {
+        maxTeeth = Number(req.query.maxTeeth)
+        if (isNaN(maxTeeth)) {
+            return res.send({ error: 'maxTeeth is not numeric' })
+        }
+        if (!Number.isInteger(maxTeeth) || !(maxTeeth > 0)) {
+            return res.send({ error: 'maxTeeth is not a positive integer' })
+        }
+    }
+
+    // Get the gear inches options
+    const rollOutOptions = gears.getChainRingAndCogOptionsForRollOut(rollOut, maxDiff, sortDesc, tyreWidth, rimType, minChainRing, maxChainRing, minCog, maxCog, minTeeth, maxTeeth)
+
+    res.send(rollOutOptions)
 })
 
 app.get('/help/*', (req, res) => {
