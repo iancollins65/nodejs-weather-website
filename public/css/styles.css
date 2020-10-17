@@ -43,14 +43,24 @@ header a {
 }
 
 input {
+    width: 120px;
     border: 1px solid #cccccc;
     padding: 4px 8px;
     margin: 4px;
 }
 
+.sub-input {
+    width: 50px;
+}
+
 label {
     width: 100px;
     display: inline-block;
+}
+
+.sub-label {
+    width: 40px;
+    text-align: right;
 }
 
 select {

@@ -4,6 +4,7 @@ const findGearForm = document.querySelector('form')
 const findForSelect = document.querySelector('#findFor')
 const gearInchesSection = document.querySelector('#gearInchesSection')
 const gearInchesFld = document.querySelector('#gearInches')
+const plusOrMinusFld = document.querySelector('#plusOrMinus')
 const rollOutSection = document.querySelector('#rollOutSection')
 const rollOutFld = document.querySelector('#rollOut')
 const tyreWidthSection = document.querySelector('#tyreWidthSection')
@@ -33,12 +34,17 @@ findGearForm.addEventListener('submit', (e) => {
     const findFor = findForSelect.value
     if (findFor === 'gearInches') {
         const gearInches = gearInchesFld.value
+        const plusOrMinus = plusOrMinusFld.value
         var url = '/gearInchesOptions?gearInches=' + gearInches
+        if (plusOrMinus !== '') {
+            url = url + "&plusOrMinus=" + plusOrMinus
+        }
         fetch(url).then((response) => {
             response.json().then((gearOptions) => {
                 if (gearOptions.error) {
                     var errorStr = gearOptions.error + '.'
                     errorStr = errorStr.replace('gearInches', 'Gear Inches')
+                    errorStr = errorStr.replace('plusOrMinus', '+/-')
                     messageOne.style.color = 'red'
                     messageOne.textContent = errorStr
                 } else if (gearOptions.length === 0) {
