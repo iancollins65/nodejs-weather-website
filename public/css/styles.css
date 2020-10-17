@@ -71,9 +71,27 @@ button {
     margin-left: 108px
 }
 
-td {
+td, th {
     padding: 6px;
+    text-align: left;
 }
+
+table {
+    border-collapse: collapse;
+}
+
+table, th, td {
+    border: 1px solid black;
+}
+
+tr:nth-child(even) {
+    background-color: #eeeeee; 
+}
+
+th {
+    background-color: #cccccc;
+}
+
 /*
 @media only screen and (min-width: 760px) {
     body {

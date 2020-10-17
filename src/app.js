@@ -50,6 +50,13 @@ app.get('/gearDetails', (req, res) => {
     })
 })
 
+app.get('/findGear', (req, res) => {
+    res.render('findGear', {
+        title: 'Find Gear',
+        name: 'Hot Pursuit Cycling'
+    })
+})
+
 app.get('/help', (req, res) => {
     res.render('help', {
         title: 'Help',

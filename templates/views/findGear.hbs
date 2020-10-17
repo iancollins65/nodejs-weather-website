@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+
+<html>
+
+<head>
+    <title>Find Gear</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1.0">
+    <link rel="icon" href="/img/weather.png">
+    <link rel="stylesheet" href="/css/styles.css">
+</head>
+
+<body>
+    <div class="main-content">
+        {{>header}}
+
+        <p>Enter information about the gear you're looking for.</p>
+
+        <form>
+            <label for="findFor">Find For:</label>
+            <select id="findFor" name="findFor">
+                <option value="gearInches">Gear Inches</option>
+                <option value="rollOut">Roll Out</option>
+            </select><br>
+            <div id="gearInchesSection">
+                <label for="gearInches">Gear Inches:</label>
+                <input type="number" id="gearInches" name="gearInches" step="0.001"><br>
+            </div>
+            <div id="rollOutSection">
+                <label for="rollOut">Roll Out:</label>
+                <input type="number" id="rollOut" name="rollOut" step="0.001" placeholder="(metres)"><br>
+            </div>
+            <div id="tyreWidthSection">
+                <label for="tyreWidth">Tyre Width:</label>
+                <input type="number" id="tyreWidth" name="tyreWidth" placeholder="23"><br>
+            </div>
+            <div id="rimTypeSection">
+                <label for="rimType">Rim Type:</label>
+                <select id="rimType" name="rimType">
+                    <option value='700c'>700c</option>
+                    <option value='650c'>650c</option>
+                </select><br>
+            </div>
+            <button class="fields-button">Find</button>
+        </form>
+
+        <p id="message-1">Your gear options...</p>
+
+        <div id="outputTable">
+            <p>Placeholder</p>
+        </div>
+
+        <p id="outputText">Output</p>
+
+    </div>
+
+    {{>footer}}
+
+    <script src="/js/findGear.js"></script>
+</body>
+
+</html>

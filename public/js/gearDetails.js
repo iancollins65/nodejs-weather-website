@@ -91,20 +91,20 @@ gearDetailsForm.addEventListener('submit', (e) => {
             } else {
                 messageOne.textContent = 'Your gear details...'
                 gearDataTable.style.display = 'block'
-                gearRatioCell.textContent = Math.round(gearRatio * 1000) / 1000
-                gearInchesCell.textContent = Math.round(gearInches * 1000) / 1000
-                rollOutCell.textContent = Math.round(rollOut) / 1000 + ' m'
+                gearRatioCell.textContent = round(gearRatio, 3)
+                gearInchesCell.textContent = round(gearInches, 3)
+                rollOutCell.textContent = round(rollOut, 3) + ' m'
                 if (speed) {
                     extrasData.style.display = 'block'
-                    speedCell.textContent = Math.round(speed * 1000) / 1000 + ' km/h'
+                    speedCell.textContent = round(speed, 3) + ' km/h'
                     if (cadence) {
-                        cadenceCell.textContent = Math.round(cadence * 1000) / 1000 + ' rpm'
+                        cadenceCell.textContent = round(cadence, 3) + ' rpm'
                     }
                     if (lapTime) {
                         lapSection.style.display = 'block'
-                        lapTimeCell.textContent = Math.round(lapTime * 1000) / 1000 + ' seconds'
+                        lapTimeCell.textContent = round(lapTime, 3) + ' seconds'
                         if (lapPedalCount) {
-                            lapPedalCountCell.textContent = Math.round(lapPedalCount * 1000) / 1000
+                            lapPedalCountCell.textContent = round(lapPedalCount, 3)
                         }
                     } else {
                         lapSection.style.display = 'none'
@@ -159,3 +159,10 @@ extrasSelect.addEventListener('change', (e) => {
         lapLengthSection.style.display = 'block'
     }
 })
+
+// Utilities
+
+const round = (value, places) => {
+    const rounder = Math.pow(10, places)
+    return Math.round(value * rounder) / rounder
+}
