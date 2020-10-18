@@ -147,7 +147,7 @@ const getCogGivenChainRingAndWheelForRollOut = (chainRing, wheelCircumfrance, ro
     return ceilingCog
 }
 
-const getChainRingAndCogOptionsForRollOut = (rollOut, maxDiff = 1000, sortDesc = true, tyreWidth = 23, rimType = '700c', minChainRing = 34, maxChainRing = 60, minCog = 10, maxCog = 36, minTeeth = 44, maxTeeth = 96) => {
+const getChainRingAndCogOptionsForRollOut = (rollOut, maxDiff = 500, sortDesc = true, calcInches = true, tyreWidth = 23, rimType = '700c', minChainRing = 34, maxChainRing = 60, minCog = 10, maxCog = 36, minTeeth = 44, maxTeeth = 96) => {
     const rimDiameter = getRimSizeByType(rimType)
     const wheelCircumfrance = getWheelCircumfrance(rimDiameter, tyreWidth)
     let options = []
@@ -156,13 +156,19 @@ const getChainRingAndCogOptionsForRollOut = (rollOut, maxDiff = 1000, sortDesc =
         const cog = getCogGivenChainRingAndWheelForRollOut(chainRing, wheelCircumfrance, rollOut)
         const teeth = chainRing + cog
         if ((cog >= minCog) && (cog <= maxCog) && (teeth >= minTeeth) && (teeth <= maxTeeth)) {
-            const candidateRollOut = getRollOut(getGearRatio(chainRing, cog), wheelCircumfrance)
+            const gearRatio = getGearRatio(chainRing, cog)
+            const candidateRollOut = getRollOut(gearRatio, wheelCircumfrance)
             const diffRollOut = Math.abs(rollOut - candidateRollOut)
             if (diffRollOut <= maxDiff) {
+                var gearInches = undefined
+                if (calcInches === true) {
+                    gearInches = getGearInches(gearRatio)
+                }
                 options.push({
                     chainRing,
                     cog,
-                    rollOut: candidateRollOut
+                    rollOut: candidateRollOut,
+                    gearInches
                 })
             }
         }
