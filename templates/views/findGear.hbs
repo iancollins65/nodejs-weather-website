@@ -44,6 +44,20 @@
                     <option value='650c'>650c</option>
                 </select><br>
             </div>
+            <input class="checkbox-input" type="checkbox" id="minMaxCheckBox" name="minMaxCheckBox" value="setMinMax">
+            <label class="checkbox-label" for="minMaxCheckBox">Show min and max options</label><br>
+            <div id="minMaxSection">
+                <label class="min-max-main-label">Chain Ring:</label>
+                <label class="sub-label" for="minChainRing">Min:</label>
+                <input class="sub-input" type="number" id="minChainRing" name="minChainRing" placeholder="34">
+                <label class="sub-label" for="maxChainRing">Max:</label>
+                <input class="sub-input" type="number" id="maxChainRing" name="maxChainRing" placeholder="60"><br>
+                <label class="min-max-main-label">Cog:</label>
+                <label class="sub-label" for="minCog">Min:</label>
+                <input class="sub-input" type="number" id="minCog" name="minCog" placeholder="10">
+                <label class="sub-label" for="maxCog">Max:</label>
+                <input class="sub-input" type="number" id="maxCog" name="maxCog" placeholder="36"><br>
+            </div>
             <button class="fields-button">Find</button>
         </form>
 

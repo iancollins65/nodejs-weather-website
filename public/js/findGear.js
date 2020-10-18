@@ -1,6 +1,4 @@
 const findGearForm = document.querySelector('form')
-// const chainRingFld = document.querySelector('#chainRing')
-// const cogFld = document.querySelector('#cog')
 const findForSelect = document.querySelector('#findFor')
 const gearInchesSection = document.querySelector('#gearInchesSection')
 const gearInchesFld = document.querySelector('#gearInches')
@@ -12,6 +10,12 @@ const tyreWidthSection = document.querySelector('#tyreWidthSection')
 const tyreWidthFld = document.querySelector('#tyreWidth')
 const rimTypeSection = document.querySelector('#rimTypeSection')
 const rimTypeFld = document.querySelector('#rimType')
+const minMaxCheckBox = document.querySelector('#minMaxCheckBox')
+const minMaxSection = document.querySelector('#minMaxSection')
+const minChainRingFld = document.querySelector('#minChainRing')
+const maxChainRingFld = document.querySelector('#maxChainRing')
+const minCogFld = document.querySelector('#minCog')
+const maxCogFld = document.querySelector('#maxCog')
 const messageOne = document.querySelector('#message-1')
 const outputText = document.querySelector('#outputText')
 const outputTable = document.querySelector('#outputTable')
@@ -19,6 +23,7 @@ const outputTable = document.querySelector('#outputTable')
 rollOutSection.style.display = 'none'
 tyreWidthSection.style.display = 'none'
 rimTypeSection.style.display = 'none'
+minMaxSection.style.display = 'none'
 messageOne.style.display = 'none'
 outputText.style.display = 'none'
 outputTable.style.display = 'none'
@@ -36,16 +41,27 @@ findGearForm.addEventListener('submit', (e) => {
     if (findFor === 'gearInches') {
         const gearInches = gearInchesFld.value
         const plusOrMinus = plusOrMinusFld.value
+        const minChainRing = minChainRingFld.value
+        const maxChainRing = maxChainRingFld.value
+        const minCog = minCogFld.value
+        const maxCog = maxCogFld.value
+
         var url = '/gearInchesOptions?gearInches=' + gearInches
-        if (plusOrMinus !== '') {
-            url = url + "&plusOrMinus=" + plusOrMinus
-        }
+        if (plusOrMinus !== '') { url = url + "&plusOrMinus=" + plusOrMinus }
+        if (minChainRing !== '') { url = url + "&minChainRing=" + minChainRing }
+        if (maxChainRing !== '') { url = url + "&maxChainRing=" + maxChainRing }
+        if (minCog !== '') { url = url + "&minCog=" + minCog }
+        if (maxCog !== '') { url = url + "&maxCog=" + maxCog }
+
         fetch(url).then((response) => {
             response.json().then((gearOptions) => {
                 if (gearOptions.error) {
                     var errorStr = gearOptions.error + '.'
                     errorStr = errorStr.replace('gearInches', 'Gear Inches')
                     errorStr = errorStr.replace('plusOrMinus', '+/-')
+                    errorStr = errorStr.replace('min', 'Min ')
+                    errorStr = errorStr.replace('max', 'Max ')
+                    errorStr = errorStr.replace('ChainRing', 'Chain Ring')
                     messageOne.style.color = 'red'
                     messageOne.textContent = errorStr
                 } else if (gearOptions.length === 0) {
@@ -86,10 +102,18 @@ findGearForm.addEventListener('submit', (e) => {
         }
         const tyreWidth = tyreWidthFld.value
         const rimType = rimTypeFld.value
+        const minChainRing = minChainRingFld.value
+        const maxChainRing = maxChainRingFld.value
+        const minCog = minCogFld.value
+        const maxCog = maxCogFld.value
+
         var url = '/rollOutOptions?rollOut=' + rollOut + '&maxDiff=' + maxDiff + '&rimType=' + rimType
-        if (tyreWidth !== '') {
-            url = url + '&tyreWidth=' + tyreWidth
-        }
+        if (tyreWidth !== '') { url = url + '&tyreWidth=' + tyreWidth }
+        if (minChainRing !== '') { url = url + "&minChainRing=" + minChainRing }
+        if (maxChainRing !== '') { url = url + "&maxChainRing=" + maxChainRing }
+        if (minCog !== '') { url = url + "&minCog=" + minCog }
+        if (maxCog !== '') { url = url + "&maxCog=" + maxCog }
+
         fetch(url).then((response) => {
             response.json().then((gearOptions) => {
                 if (gearOptions.error) {
@@ -98,6 +122,9 @@ findGearForm.addEventListener('submit', (e) => {
                     errorStr = errorStr.replace('maxDiff', 'Within')
                     errorStr = errorStr.replace('tyreWidth', 'Tyre Width')
                     errorStr = errorStr.replace('rimType', 'Rim Type')
+                    errorStr = errorStr.replace('min', 'Min ')
+                    errorStr = errorStr.replace('max', 'Max ')
+                    errorStr = errorStr.replace('ChainRing', 'Chain Ring')
                     messageOne.style.color = 'red'
                     messageOne.textContent = errorStr
                 } else if (gearOptions.length === 0) {
@@ -119,6 +146,14 @@ findGearForm.addEventListener('input', (e) => {
     messageOne.style.display = 'none'
     outputText.style.display = 'none'
     outputTable.style.display = 'none'    
+})
+
+minMaxCheckBox.addEventListener('input', (e) => {
+    if (minMaxCheckBox.checked === true) {
+        minMaxSection.style.display = 'block'
+    } else {
+        minMaxSection.style.display = 'none'
+    }
 })
 
 findForSelect.addEventListener('change', (e) => {

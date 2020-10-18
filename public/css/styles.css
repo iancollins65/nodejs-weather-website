@@ -58,9 +58,23 @@ label {
     display: inline-block;
 }
 
+.checkbox-input {
+    width: 20px;
+    padding: 8px 2px;
+    margin: 12px 2px;
+}
+
+.checkbox-label {
+    width: 200px;
+}
+
 .sub-label {
     width: 50px;
     text-align: right;
+}
+
+.min-max-main-label {
+    width: 116px;
 }
 
 select {
