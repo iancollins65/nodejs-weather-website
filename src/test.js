@@ -1,4 +1,4 @@
-const hpUtils = require('./utils/hpc-utils')
+const hpcUtils = require('./utils/hpc-utils')
 
 const gears = require('./utils/gears.js')
 
@@ -16,7 +16,21 @@ const gears = require('./utils/gears.js')
 
 // const test = gears.getGearInfo(50, 15)
 
-const test = hpUtils.round(1.23456789,4)
+// const test = hpcUtils.round(1.23456789,4)
 
-console.log(test)
+// console.log(test)
+
+const fields = [
+    { name: 'chainRing', mandatory: true, },
+    { name: 'cog', mandatory: true, },
+    { name: 'rimType', default: '700c' }
+]
+
+const query = {
+    chainRing: '49',
+    cog: '15',
+    rimType: '700c'
+}
+
+console.log(hpcUtils.validateQueryString(query , fields))
 
