@@ -12,6 +12,82 @@ const validateQueryString = (query, fields) => {
     let chainRing = undefined
     let cog = undefined
     let rimType = undefined
+    let sortByDiff = undefined
+
+    for (field of fields) {
+        let fieldValue = field.default
+
+        if (field.mandatory === true) {
+            if (!query[field.name]) {
+                return { error: field.name + ' is not provided' }
+            }
+        }
+
+        if (query[field.name]) {
+            if (field.type === 'integer' || field.type === 'decimal') {
+                fieldValue = Number(query[field.name])
+                if (isNaN(fieldValue)) {
+                    return { error: field.name + ' is not numeric' }
+                }
+                if (field.type === 'integer') {
+                    if (!Number.isInteger(fieldValue)) {
+                        return { error: field.name + ' is not an integer' }
+                    }
+                }
+                if (field.sign === 'positive') {
+                    if (!(fieldValue > 0)) {
+                        return { error: field.name + ' is not a positive number' }
+                    }
+                }
+            
+            } else if (field.type === 'boolean') {
+                fieldValue = query[field.name]
+                if (fieldValue !== 'true' && fieldValue !== 'false') {
+                    return { error: field.name + ' is not true or false' }
+                }
+                fieldValue = (fieldValue === 'true')
+            
+            } else if (field.type === 'string') {
+                fieldValue = query[field.name]
+                if (field.options) {
+                    const fieldOption = field.options.find((option) => option === fieldValue)
+                    if (!fieldOption) {
+                        let optionsStr = field.options[0]
+                        for (let i = 1; i < field.options.length; i++) {
+                            optionsStr = optionsStr + ' or ' + field.options[i]
+                        }
+                        return { error: field.name + ' is not ' +  optionsStr }
+                    }
+                }
+            }
+        }
+
+        switch (field.name) {
+            case 'chainRing': chainRing = fieldValue; break;
+            case 'cog': cog = fieldValue; break;
+            case 'rimType': rimType = fieldValue; break; 
+            case 'sortByDiff': sortByDiff = fieldValue; break;
+        }
+    }
+
+    return {
+        error,
+        chainRing,
+        cog,
+        rimType,
+        sortByDiff
+    }
+}
+
+const validateQueryString1 = (query, fields) => {
+    if (!query) { 
+        return { error: 'No query string found' }
+    }
+
+    let error = undefined
+    let chainRing = undefined
+    let cog = undefined
+    let rimType = undefined
 
     for (field of fields) {
         switch (field.name) {
@@ -79,5 +155,6 @@ const validateQueryString = (query, fields) => {
 
 module.exports = {
     round: round,
+    validateQueryString1: validateQueryString1,
     validateQueryString: validateQueryString
 }

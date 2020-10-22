@@ -21,16 +21,22 @@ const gears = require('./utils/gears.js')
 // console.log(test)
 
 const fields = [
-    { name: 'chainRing', mandatory: true, },
-    { name: 'cog', mandatory: true, },
-    { name: 'rimType', default: '700c' }
+    { name: 'chainRing', mandatory: true, type: 'integer', sign: 'positive' },
+    { name: 'cog', mandatory: true, type: 'integer', sign: 'positive' },
+    { name: 'rimType', default: '700c', type: 'string', options: ['700c', '650c'] },
+    { name: 'sortByDiff', default: 'true', type: 'boolean'}
 ]
 
 const query = {
     chainRing: '49',
     cog: '15',
-    rimType: '700c'
+    rimType: '700c',
+    sortByDiff: 'true'
 }
+
+let name = fields[0].name
+
+console.log(query[name])
 
 console.log(hpcUtils.validateQueryString(query , fields))
 
