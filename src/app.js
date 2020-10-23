@@ -19,6 +19,10 @@ const partialsPath = path.join(__dirname,'../templates/partials')
 app.set('view engine', 'hbs')
 app.set('views', viewsPath)
 hbs.registerPartials(partialsPath)
+// Experimenting with accessing hbs variables in js...
+// hbs.registerHelper('json', (context) => {
+//     return JSON.stringify(context);
+// })
 
 // Setup static directory to serve
 app.use(express.static(publicDirectoryPath))
@@ -45,10 +49,34 @@ app.get('/gears', (req, res) => {
 })
 
 app.get('/gearDetails', (req, res) => {
-    res.render('gearDetails', {
-        title: 'Gear Details',
-        name: 'Hot Pursuit Cycling'
-    })
+
+    const {error, chainRing, cog, tyreWidth, rimType, speed, cadence, lapLength, lapTime} = 
+        hpcUtils.validateQueryString(req.query, [
+            { name: 'chainRing', type: 'integer', sign: 'positive', returnEmpty: true },
+            { name: 'cog', type: 'integer', sign: 'positive', returnEmpty: true },
+            { name: 'tyreWidth', type: 'integer', sign: 'positive', returnEmpty: true },
+            { name: 'rimType', type: 'string', options: ['700c', '650c'], returnEmpty: true }
+    ])
+
+    if (error) {
+        res.render('gearDetails', {
+            title: 'Gear Details',
+            name: 'Hot Pursuit Cycling',
+            chainRing: '',
+            cog: '',
+            tyreWidth: '',
+            rimType: ''
+        })
+    } else {
+        res.render('gearDetails', {
+            title: 'Gear Details',
+            name: 'Hot Pursuit Cycling',
+            chainRing,
+            cog,
+            tyreWidth,
+            rimType
+        })
+    }
 })
 
 app.get('/findGear', (req, res) => {

@@ -17,16 +17,17 @@
 
         <form>
             <label for="chainRing">Chain Ring:</label>
-            <input type="number" id="chainRing" name="chainRing"><br>
+            <input type="number" id="chainRing" name="chainRing" value={{chainRing}}><br>
             <label for="cog">Cog:</label>
-            <input type="number" id="cog" name="cog"><br>
+            <input type="number" id="cog" name="cog" value={{cog}}><br>
             <label for="tyreWidth">Tyre Width:</label>
-            <input type="number" id="tyreWidth" name="tyreWidth" placeholder="23"><br>
+            <input type="number" id="tyreWidth" name="tyreWidth" placeholder="23" value={{tyreWidth}}><br>
             <label for="rimType">Rim Type:</label>
             <select id="rimType" name="rimType">
-                <option value='700c'>700c</option>
-                <option value='650c'>650c</option>
+                <option value="700c">700c</option>
+                <option value="650c">650c</option>
             </select><br>
+            <input type="hidden" id="rimTypeHidden" name="rimTypeHidden" value={{rimType}}>
             <label for="extras">Extras:</label>
             <select id="extras" name="extras">
                 <option value="none">None</option>

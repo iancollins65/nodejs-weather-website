@@ -3,6 +3,7 @@ const chainRingFld = document.querySelector('#chainRing')
 const cogFld = document.querySelector('#cog')
 const tyreWidthFld = document.querySelector('#tyreWidth')
 const rimTypeFld = document.querySelector('#rimType')
+const rimTypeHiddenFld = document.querySelector('#rimTypeHidden')
 const messageOne = document.querySelector('#message-1')
 const gearDataTable = document.querySelector('#gearData')
 const gearRatioCell = document.querySelector('#gearRatio')
@@ -35,7 +36,10 @@ extrasData.style.display = 'none'
 
 gearDetailsForm.addEventListener('submit', (e) => {
     e.preventDefault()
+    handleSubmit()
+})
 
+const handleSubmit = () => {
     messageOne.style.display = 'block'
     messageOne.style.color = '#333456'   
     messageOne.textContent = 'Loading...'
@@ -115,7 +119,7 @@ gearDetailsForm.addEventListener('submit', (e) => {
             }
         })
     })
-})
+}
 
 gearDetailsForm.addEventListener('input', (e) => {
     messageOne.style.display = 'none'
@@ -165,4 +169,21 @@ extrasSelect.addEventListener('change', (e) => {
 const round = (value, places) => {
     const rounder = Math.pow(10, places)
     return Math.round(value * rounder) / rounder
+}
+
+// On load
+
+// Experimenting with accessing hbs variables in js...
+// let initRimType = JSON.parse('{{rimType}}')
+// console.log(initRimType)
+// if (initRimType !== '') {
+//     rimTypeFld.value = initRimType
+// }
+
+if (rimTypeHiddenFld.value !== '') {
+    rimTypeFld.value = rimTypeHiddenFld.value
+}
+
+if (chainRingFld.value !== '' && cogFld.value !== '') {
+    handleSubmit()
 }

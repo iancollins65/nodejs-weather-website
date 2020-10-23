@@ -77,6 +77,8 @@ const validateQueryString = (query, fields) => {
                     }
                 }
             }
+        } else if (fieldValue === undefined && field.returnEmpty === true) {
+            fieldValue = ''
         }
 
         switch (field.name) {
