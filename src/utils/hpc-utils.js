@@ -11,8 +11,25 @@ const validateQueryString = (query, fields) => {
     let error = undefined
     let chainRing = undefined
     let cog = undefined
+    let tyreWidth = undefined
     let rimType = undefined
+    let speed = undefined
+    let cadence = undefined
+    let lapLength = undefined
+    let lapTime = undefined
+    let gearInches = undefined
+    let plusOrMinus = undefined
     let sortByDiff = undefined
+    let rollOut = undefined
+    let maxDiff = undefined
+    let sortDesc = undefined
+    let calcInches = undefined
+    let minChainRing = undefined
+    let maxChainRing = undefined
+    let minCog = undefined
+    let maxCog = undefined
+    let minTeeth = undefined
+    let maxTeeth = undefined
 
     for (field of fields) {
         let fieldValue = field.default
@@ -41,11 +58,11 @@ const validateQueryString = (query, fields) => {
                 }
             
             } else if (field.type === 'boolean') {
-                fieldValue = query[field.name]
-                if (fieldValue !== 'true' && fieldValue !== 'false') {
+                let fieldValueStr = query[field.name]
+                if (fieldValueStr !== 'true' && fieldValueStr !== 'false') {
                     return { error: field.name + ' is not true or false' }
                 }
-                fieldValue = (fieldValue === 'true')
+                fieldValue = Boolean(fieldValueStr === 'true')
             
             } else if (field.type === 'string') {
                 fieldValue = query[field.name]
@@ -65,8 +82,25 @@ const validateQueryString = (query, fields) => {
         switch (field.name) {
             case 'chainRing': chainRing = fieldValue; break;
             case 'cog': cog = fieldValue; break;
+            case 'tyreWidth': tyreWidth = fieldValue; break;
             case 'rimType': rimType = fieldValue; break; 
+            case 'speed': speed = fieldValue; break; 
+            case 'cadence': cadence = fieldValue; break; 
+            case 'lapLength': lapLength = fieldValue; break; 
+            case 'lapTime': lapTime = fieldValue; break; 
+            case 'gearInches': gearInches = fieldValue; break; 
+            case 'plusOrMinus': plusOrMinus = fieldValue; break; 
             case 'sortByDiff': sortByDiff = fieldValue; break;
+            case 'rollOut': rollOut = fieldValue; break;
+            case 'maxDiff': maxDiff = fieldValue; break;
+            case 'sortDesc': sortDesc = fieldValue; break;
+            case 'calcInches': calcInches = fieldValue; break;
+            case 'minChainRing': minChainRing = fieldValue; break; 
+            case 'maxChainRing': maxChainRing = fieldValue; break; 
+            case 'minCog': minCog = fieldValue; break; 
+            case 'maxCog': maxCog = fieldValue; break; 
+            case 'minTeeth': minTeeth = fieldValue; break; 
+            case 'maxTeeth': maxTeeth = fieldValue; break; 
         }
     }
 
@@ -74,87 +108,29 @@ const validateQueryString = (query, fields) => {
         error,
         chainRing,
         cog,
+        tyreWidth,
         rimType,
-        sortByDiff
-    }
-}
-
-const validateQueryString1 = (query, fields) => {
-    if (!query) { 
-        return { error: 'No query string found' }
-    }
-
-    let error = undefined
-    let chainRing = undefined
-    let cog = undefined
-    let rimType = undefined
-
-    for (field of fields) {
-        switch (field.name) {
-
-            case 'chainRing':
-                chainRing = field.default
-                if (field.mandatory === true) {
-                    if (!query.chainRing) {
-                        return { error: 'chainRing is not provided' }
-                    }
-                }
-                if (query.chainRing) {
-                    chainRing = Number(query.chainRing)
-                    if (isNaN(chainRing)) {
-                        return { error: 'chainRing is not numeric' }
-                    }
-                    if (!Number.isInteger(chainRing) || !(chainRing > 0)) {
-                        return { error: 'chainRing is not a positive integer' }
-                    }
-                }           
-                break;
-
-            case 'cog':
-                cog = field.default
-                if (field.mandatory === true) {
-                    if (!query.cog) {
-                        return { error: 'cog is not provided' }
-                    }
-                }
-                if (query.cog) {
-                    cog = Number(query.cog)
-                    if (isNaN(cog)) {
-                        return { error: 'cog is not numeric' }
-                    }
-                    if (!Number.isInteger(cog) || !(cog > 0)) {
-                        return { error: 'cog is not a positive integer' }
-                    }
-                }           
-                break;
-    
-            case 'rimType':
-                rimType = field.default
-                if (field.mandatory === true) {
-                    if (!query.rimType) {
-                        return { error: 'rimType is not provided' }
-                    }
-                }
-                if (query.rimType) {
-                    rimType = query.rimType
-                    if (!(rimType === '700c') && !(rimType === '650c')) {
-                        return { error: 'rimType must be 700c or 650c' }
-                    }
-                }           
-                break;
-        }
-    }
-
-    return {
-        error,
-        chainRing,
-        cog,
-        rimType
+        speed,
+        cadence,
+        lapLength,
+        lapTime,
+        gearInches, 
+        plusOrMinus, 
+        sortByDiff,
+        rollOut, 
+        maxDiff, 
+        sortDesc, 
+        calcInches,
+        minChainRing, 
+        maxChainRing, 
+        minCog, 
+        maxCog, 
+        minTeeth, 
+        maxTeeth
     }
 }
 
 module.exports = {
     round: round,
-    validateQueryString1: validateQueryString1,
     validateQueryString: validateQueryString
 }

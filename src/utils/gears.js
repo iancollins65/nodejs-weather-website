@@ -56,7 +56,8 @@ const getSpeedFromLapTimeAndLength = (lapTime, lapLength) => {
     return (lapLength * 60 * 60) / (lapTime * 1000)
 }
 
-const getGearInfo = (chainRing, cog, tyreWidth = 23, rimType = '700c', speed, cadence, lapLength, lapTime) => {
+const getGearInfo = (chainRing, cog, tyreWidth = 23, rimType = '700c', speed, cadence, 
+    lapLength, lapTime) => {
     const gearRatio = getGearRatio(chainRing, cog)
     const gearInches = getGearInches(gearRatio)
     const rimDiameter = getRimSizeByType(rimType)
@@ -114,7 +115,8 @@ const getCogGivenChainRingAndGearInches = (chainRing, gearInches, fraction = 0.4
     }
 }
 
-const getChainRingAndCogOptionsForGearInches = (gearInches, plusOrMinus = 1, sortByDiff = true, minChainRing = 34, maxChainRing = 60, minCog = 10, maxCog = 36, minTeeth = 44, maxTeeth = 96) => {
+const getChainRingAndCogOptionsForGearInches = (gearInches, plusOrMinus = 1, sortByDiff = true, 
+    minChainRing = 34, maxChainRing = 60, minCog = 10, maxCog = 36, minTeeth = 44, maxTeeth = 96) => {
     let options = []
     var chainRing = minChainRing
     for (; chainRing <= maxChainRing; chainRing++) {
@@ -147,7 +149,9 @@ const getCogGivenChainRingAndWheelForRollOut = (chainRing, wheelCircumfrance, ro
     return ceilingCog
 }
 
-const getChainRingAndCogOptionsForRollOut = (rollOut, maxDiff = 500, sortDesc = true, calcInches = true, tyreWidth = 23, rimType = '700c', minChainRing = 34, maxChainRing = 60, minCog = 10, maxCog = 36, minTeeth = 44, maxTeeth = 96) => {
+const getChainRingAndCogOptionsForRollOut = (rollOut, maxDiff = 500, sortDesc = true, calcInches = true, 
+    tyreWidth = 23, rimType = '700c', minChainRing = 34, maxChainRing = 60, minCog = 10, maxCog = 36, 
+    minTeeth = 44, maxTeeth = 96) => {
     const rimDiameter = getRimSizeByType(rimType)
     const wheelCircumfrance = getWheelCircumfrance(rimDiameter, tyreWidth)
     let options = []

@@ -24,6 +24,7 @@ const fields = [
     { name: 'chainRing', mandatory: true, type: 'integer', sign: 'positive' },
     { name: 'cog', mandatory: true, type: 'integer', sign: 'positive' },
     { name: 'rimType', default: '700c', type: 'string', options: ['700c', '650c'] },
+    { name: 'speed', type: 'decimal', sign: 'positive' },
     { name: 'sortByDiff', default: 'true', type: 'boolean'}
 ]
 
@@ -31,12 +32,9 @@ const query = {
     chainRing: '49',
     cog: '15',
     rimType: '700c',
+    speed: '50',
     sortByDiff: 'true'
 }
-
-let name = fields[0].name
-
-console.log(query[name])
 
 console.log(hpcUtils.validateQueryString(query , fields))
 
