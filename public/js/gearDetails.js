@@ -97,7 +97,7 @@ const handleSubmit = () => {
                 gearDataTable.style.display = 'block'
                 gearRatioCell.textContent = round(gearRatio, 3)
                 gearInchesCell.textContent = round(gearInches, 3)
-                rollOutCell.textContent = round(rollOut, 3) + ' m'
+                rollOutCell.textContent = round(rollOut / 1000, 3) + ' m'
                 if (speed) {
                     extrasData.style.display = 'block'
                     speedCell.textContent = round(speed, 3) + ' km/h'

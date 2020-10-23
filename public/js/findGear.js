@@ -30,7 +30,10 @@ outputTable.style.display = 'none'
 
 findGearForm.addEventListener('submit', (e) => {
     e.preventDefault()
+    handleSubmit()
+})
 
+const handleSubmit = () => {
     messageOne.style.display = 'block'
     messageOne.style.color = '#333456'   
     messageOne.textContent = 'Loading...'
@@ -140,7 +143,7 @@ findGearForm.addEventListener('submit', (e) => {
             })
         })            
     }
-})
+}
 
 findGearForm.addEventListener('input', (e) => {
     messageOne.style.display = 'none'
@@ -190,8 +193,15 @@ const buildOutputTable = (findFor, gearOptions) => {
         // Create data rows
         for (gearOption of gearOptions) {
             let tr = table.insertRow(-1)
+            // Gear cell as a link
             let gearCell = tr.insertCell(-1)
-            gearCell.innerHTML = gearOption.chainRing + ' x ' + gearOption.cog
+            let a = document.createElement('A')
+            let linkText = gearOption.chainRing + ' x ' + gearOption.cog
+            a.text = linkText
+            a.title = linkText
+            a.href = linkToGearDetails(findFor, gearOption.chainRing, gearOption.cog)
+            gearCell.appendChild(a)
+            // Gear Inches cell
             let gearInchesCell = tr.insertCell(-1)
             let rawValue = gearOption.gearInches
             gearInchesCell.innerHTML = round(rawValue, 3)
@@ -212,11 +222,19 @@ const buildOutputTable = (findFor, gearOptions) => {
         // Create data rows
         for (gearOption of gearOptions) {
             let tr = table.insertRow(-1)
+            // Gear cell as a link
             let gearCell = tr.insertCell(-1)
-            gearCell.innerHTML = gearOption.chainRing + ' x ' + gearOption.cog
+            let a = document.createElement('A')
+            let linkText = gearOption.chainRing + ' x ' + gearOption.cog
+            a.text = linkText
+            a.title = linkText
+            a.href = linkToGearDetails(findFor, gearOption.chainRing, gearOption.cog)
+            gearCell.appendChild(a)
+            // Roll Out cell
             let rollOutCell = tr.insertCell(-1)
             let rawValue = (gearOption.rollOut / 1000)
             rollOutCell.innerHTML = round(rawValue, 3) + ' m'
+            // Gear Inches cell
             let gearInchesCell = tr.insertCell(-1)
             rawValue = gearOption.gearInches
             gearInchesCell.innerHTML = round(rawValue, 3)
@@ -226,9 +244,32 @@ const buildOutputTable = (findFor, gearOptions) => {
     return table
 }
 
+const linkToGearDetails = (findFor, chainRing, cog) => {
+    let url = '/gearDetails?chainRing=' + chainRing + '&cog=' + cog
+    if (findFor === 'rollOut') {
+        if (tyreWidthFld.value !== '') {
+            url = url + '&tyreWidth=' + tyreWidthFld.value
+        }
+        url = url + '&rimType=' + rimTypeFld.value
+    }
+    return url
+}
+
 // Utilities
 
 const round = (value, places) => {
     const rounder = Math.pow(10, places)
     return Math.round(value * rounder) / rounder
 }
+
+// On load
+
+// if (findForSelect.value === 'gearInches') {
+//     console.log('hello')
+//     if (gearInchesFld.value !== '') {
+//         console.log('there')
+//         handleSubmit()
+//     }
+// } else if (findForSelect.value === 'rollOut') {
+//     console.log('WIP')
+// }
