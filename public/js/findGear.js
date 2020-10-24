@@ -44,6 +44,9 @@ const handleSubmit = () => {
     outputTable.style.display = 'none'    
 
     const findFor = findForSelect.value
+    setCookie('findFor', findFor, 1)
+    // findForHiddenFld.value = findFor
+
     if (findFor === 'gearInches') {
         const gearInches = gearInchesFld.value
         const plusOrMinus = plusOrMinusFld.value
@@ -58,6 +61,13 @@ const handleSubmit = () => {
         if (maxChainRing !== '') { url = url + "&maxChainRing=" + maxChainRing }
         if (minCog !== '') { url = url + "&minCog=" + minCog }
         if (maxCog !== '') { url = url + "&maxCog=" + maxCog }
+
+        setCookie('gearInches', gearInches, 1)
+        setCookie('plusOrMinus', plusOrMinus, 1)
+        setCookie('minChainRing', minChainRing, 1)
+        setCookie('maxChainRing', maxChainRing, 1)
+        setCookie('minCog', minCog, 1)
+        setCookie('maxCog', maxCog, 1)
 
         fetch(url).then((response) => {
             response.json().then((gearOptions) => {
@@ -120,6 +130,16 @@ const handleSubmit = () => {
         if (minCog !== '') { url = url + "&minCog=" + minCog }
         if (maxCog !== '') { url = url + "&maxCog=" + maxCog }
 
+        setCookie('rollOut', rollOut / 1000, 1)
+        setCookie('maxDiff', maxDiff / 1000, 1)
+        setCookie('tyreWidth', tyreWidth, 1)
+        setCookie('rimType', rimType, 1)
+        setCookie('minChainRing', minChainRing, 1)
+        setCookie('maxChainRing', maxChainRing, 1)
+        setCookie('minCog', minCog, 1)
+        setCookie('maxCog', maxCog, 1)
+        rimTypeHiddenFld.value = rimType
+
         fetch(url).then((response) => {
             response.json().then((gearOptions) => {
                 if (gearOptions.error) {
@@ -163,9 +183,14 @@ minMaxCheckBox.addEventListener('input', (e) => {
 const actOnShowMinMaxSet = () => {
     if (minMaxCheckBox.checked === true) {
         minMaxSection.style.display = 'block'
+        // showMinMaxHiddenFld.value = 'yes'
+        setCookie('showMinMax', 'yes', 1)
     } else {
         minMaxSection.style.display = 'none'
+        // showMinMaxHiddenFld.value = 'no'
+        setCookie('showMinMax', 'no', 1)
     }
+    // setCookie('showMinMax', showMinMaxHiddenFld.value, 1)
 }
 
 findForSelect.addEventListener('change', (e) => {
@@ -266,6 +291,25 @@ const linkToGearDetails = (findFor, chainRing, cog) => {
     return url
 }
 
+const applyMinMaxCookies = () => {
+    const minChainRing = getCookie('minChainRing')
+    if (minChainRing !== '') {
+        minChainRingFld.value = minChainRing
+    }
+    const maxChainRing = getCookie('maxChainRing')
+    if (maxChainRing !== '') {
+        maxChainRingFld.value = maxChainRing
+    }
+    const minCog = getCookie('minCog')
+    if (minCog !== '') {
+        minCogFld.value = minCog
+    }
+    const maxCog = getCookie('maxCog')
+    if (maxCog !== '') {
+        maxCogFld.value = maxCog
+    }
+}
+
 // Utilities
 
 const round = (value, places) => {
@@ -273,28 +317,160 @@ const round = (value, places) => {
     return Math.round(value * rounder) / rounder
 }
 
+// Cookie functions copied from https://www.w3schools.com/js/js_cookies.asp
+const setCookie = (cname, cvalue, exdays) => {
+    var d = new Date();
+    d.setTime(d.getTime() + (exdays * 24 * 60 * 60 * 1000));
+    var expires = "expires="+d.toUTCString();
+    document.cookie = cname + "=" + cvalue + ";" + expires // + ";path=/";
+}
+  
+const getCookie = (cname) => {
+    var name = cname + "=";
+    var ca = document.cookie.split(';');
+    for(var i = 0; i < ca.length; i++) {
+      var c = ca[i];
+      while (c.charAt(0) == ' ') {
+        c = c.substring(1);
+      }
+      if (c.indexOf(name) == 0) {
+        return c.substring(name.length, c.length);
+      }
+    }
+    return "";
+}
+
 // On load
 
-if (rimTypeHiddenFld.value !== '') {
-    rimTypeFld.value = rimTypeHiddenFld.value
-}
+const handleOnLoad = () => {
+    console.log(document.cookie)
 
-if (showMinMaxHiddenFld.value !== '') {
-    minMaxCheckBox.checked = Boolean(showMinMaxHiddenFld.value === 'yes')
-    actOnShowMinMaxSet()
-}
-
-if (findForHiddenFld.value !== '') {
-    findForSelect.value = findForHiddenFld.value
-    actOnFindForSelection()
-    if (findForSelect.value === 'gearInches' && gearInchesFld.value !== '') {
-        handleSubmit()
-    } else if (findForSelect.value === 'rollOut' && rollOutFld.value !== '') {
-        handleSubmit()
+    if (rimTypeHiddenFld.value !== '') {
+        rimTypeFld.value = rimTypeHiddenFld.value
     }
-} else if (gearInchesFld.value !== '') {
-    handleSubmit()
+    
+    if (showMinMaxHiddenFld.value !== '') {
+        minMaxCheckBox.checked = Boolean(showMinMaxHiddenFld.value === 'yes')
+        actOnShowMinMaxSet()
+    } else {
+        const showMinMax = getCookie('showMinMax')
+        if (showMinMax !== '') {
+            minMaxCheckBox.checked = Boolean(showMinMax === 'yes')
+            actOnShowMinMaxSet()
+        }
+    }
+    
+    if (findForHiddenFld.value !== '') {
+        findForSelect.value = findForHiddenFld.value
+        actOnFindForSelection()
+        if (findForSelect.value === 'gearInches' && gearInchesFld.value !== '') {
+            handleSubmit()
+        } else if (findForSelect.value === 'rollOut' && rollOutFld.value !== '') {
+            handleSubmit()
+        }
+    // } else if (gearInchesFld.value !== '') {
+    //     handleSubmit()
+    } else {
+        // Use cookies if they have been set
+        const findFor = getCookie('findFor')
+        if (findFor === 'gearInches') {
+            const gearInches = getCookie('gearInches')
+            if (gearInches !== '') {
+                gearInchesFld.value = gearInches
+                const plusOrMinus = getCookie('plusOrMinus')
+                if (plusOrMinus !== '') {
+                    plusOrMinusFld.value = plusOrMinus
+                }
+                applyMinMaxCookies()
+                handleSubmit()
+            }
+        } else if (findFor === 'rollOut') {
+            const rollOut = getCookie('rollOut')
+            if (rollOut !== '') {
+                rollOutFld.value = rollOut
+                const maxDiff = getCookie('maxDiff')
+                if (maxDiff !== '') {
+                    maxDiffFld.value = maxDiff
+                }
+                const tyreWidth = getCookie('tyreWidth')
+                if (tyreWidth !== '') {
+                    tyreWidthFld.value = tyreWidth
+                }
+                const rimType = getCookie('rimType')
+                if (rimType !== '') {
+                    rimTypeFld.value = rimType
+                }
+                applyMinMaxCookies()
+                handleSubmit()
+            }
+        }
+    }    
 }
+
+// console.log('findFor: ' + getCookie('findFor'))
+// console.log('gearInches: ' + getCookie('gearInches'))
+// console.log('rollOut: ' + getCookie('rollOut'))
+// console.log(document.cookie)
+
+// if (rimTypeHiddenFld.value !== '') {
+//     rimTypeFld.value = rimTypeHiddenFld.value
+// }
+
+// if (showMinMaxHiddenFld.value !== '') {
+//     minMaxCheckBox.checked = Boolean(showMinMaxHiddenFld.value === 'yes')
+//     actOnShowMinMaxSet()
+// } else {
+//     const showMinMax = getCookie('showMinMax')
+//     if (showMinMax !== '') {
+//         minMaxCheckBox.checked = Boolean(showMinMax === 'yes')
+//     }
+// }
+
+// if (findForHiddenFld.value !== '') {
+//     findForSelect.value = findForHiddenFld.value
+//     actOnFindForSelection()
+//     if (findForSelect.value === 'gearInches' && gearInchesFld.value !== '') {
+//         handleSubmit()
+//     } else if (findForSelect.value === 'rollOut' && rollOutFld.value !== '') {
+//         handleSubmit()
+//     }
+// } else if (gearInchesFld.value !== '') {
+//     handleSubmit()
+// } else {
+//     // Use cookies if they have been set
+//     const findFor = getCookie('findFor')
+//     if (findFor === 'gearInches') {
+//         const gearInches = getCookie('gearInches')
+//         if (gearInches !== '') {
+//             gearInchesFld.value = gearInches
+//             const plusOrMinus = getCookie('plusOrMinus')
+//             if (plusOrMinus !== '') {
+//                 plusOrMinusFld.value = plusOrMinus
+//             }
+//             applyMinMaxCookies()
+//             handleSubmit()
+//         }
+//     } else if (findFor === 'rollOut') {
+//         const rollOut = getCookie('rollOut')
+//         if (rollOut !== '') {
+//             rollOutFld.value = rollOut
+//             const maxDiff = getCookie('maxDiff')
+//             if (maxDiff !== '') {
+//                 maxDiffFld.value = maxDiff
+//             }
+//             const tyreWidth = getCookie('tyreWidth')
+//             if (tyreWidth !== '') {
+//                 tyreWidthFld.value = tyreWidth
+//             }
+//             const rimType = getCookie('rimType')
+//             if (rimType !== '') {
+//                 rimTypeFld.value = rimType
+//             }
+//             applyMinMaxCookies()
+//             handleSubmit()
+//         }
+//     }
+// }
 
 // Experimenting with browser back handling...
 // if (findForSelect.value === 'gearInches') {
