@@ -1,5 +1,6 @@
 const findGearForm = document.querySelector('form')
 const findForSelect = document.querySelector('#findFor')
+const findForHiddenFld = document.querySelector('#findForHidden')
 const gearInchesSection = document.querySelector('#gearInchesSection')
 const gearInchesFld = document.querySelector('#gearInches')
 const plusOrMinusFld = document.querySelector('#plusOrMinus')
@@ -10,7 +11,9 @@ const tyreWidthSection = document.querySelector('#tyreWidthSection')
 const tyreWidthFld = document.querySelector('#tyreWidth')
 const rimTypeSection = document.querySelector('#rimTypeSection')
 const rimTypeFld = document.querySelector('#rimType')
+const rimTypeHiddenFld = document.querySelector('#rimTypeHidden')
 const minMaxCheckBox = document.querySelector('#minMaxCheckBox')
+const showMinMaxHiddenFld = document.querySelector('#showMinMaxHidden')
 const minMaxSection = document.querySelector('#minMaxSection')
 const minChainRingFld = document.querySelector('#minChainRing')
 const maxChainRingFld = document.querySelector('#maxChainRing')
@@ -146,35 +149,45 @@ const handleSubmit = () => {
 }
 
 findGearForm.addEventListener('input', (e) => {
-    messageOne.style.display = 'none'
-    outputText.style.display = 'none'
-    outputTable.style.display = 'none'    
+    if (e.target !== minMaxCheckBox) {
+        messageOne.style.display = 'none'
+        outputText.style.display = 'none'
+        outputTable.style.display = 'none'
+    }
 })
 
 minMaxCheckBox.addEventListener('input', (e) => {
+    actOnShowMinMaxSet()
+})
+
+const actOnShowMinMaxSet = () => {
     if (minMaxCheckBox.checked === true) {
         minMaxSection.style.display = 'block'
     } else {
         minMaxSection.style.display = 'none'
     }
-})
+}
 
 findForSelect.addEventListener('change', (e) => {
+    actOnFindForSelection()
+})
+
+const actOnFindForSelection = () => {
     if (findForSelect.value === 'gearInches') {
-        rollOut.value = ''
-        tyreWidth.value = ''
+        // rollOut.value = ''
+        // tyreWidth.value = ''
         gearInchesSection.style.display = 'block'
         rollOutSection.style.display = 'none'
         tyreWidthSection.style.display = 'none'
         rimTypeSection.style.display = 'none'
     } else if (findForSelect.value === 'rollOut') {
-        gearInches.value = ''
+        // gearInches.value = ''
         gearInchesSection.style.display = 'none'
         rollOutSection.style.display = 'block'
         tyreWidthSection.style.display = 'block'
         rimTypeSection.style.display = 'block'
     }
-})
+}
 
 const buildOutputTable = (findFor, gearOptions) => {
     var table = document.createElement('table')
@@ -196,9 +209,8 @@ const buildOutputTable = (findFor, gearOptions) => {
             // Gear cell as a link
             let gearCell = tr.insertCell(-1)
             let a = document.createElement('A')
-            let linkText = gearOption.chainRing + ' x ' + gearOption.cog
-            a.text = linkText
-            a.title = linkText
+            a.text = gearOption.chainRing + ' x ' + gearOption.cog
+            a.title = 'Chain Ring ' + gearOption.chainRing + ' Cog ' + gearOption.cog
             a.href = linkToGearDetails(findFor, gearOption.chainRing, gearOption.cog)
             gearCell.appendChild(a)
             // Gear Inches cell
@@ -225,9 +237,8 @@ const buildOutputTable = (findFor, gearOptions) => {
             // Gear cell as a link
             let gearCell = tr.insertCell(-1)
             let a = document.createElement('A')
-            let linkText = gearOption.chainRing + ' x ' + gearOption.cog
-            a.text = linkText
-            a.title = linkText
+            a.text = gearOption.chainRing + ' x ' + gearOption.cog
+            a.title = 'Chain Ring ' + gearOption.chainRing + ' Cog ' + gearOption.cog
             a.href = linkToGearDetails(findFor, gearOption.chainRing, gearOption.cog)
             gearCell.appendChild(a)
             // Roll Out cell
@@ -264,6 +275,28 @@ const round = (value, places) => {
 
 // On load
 
+if (rimTypeHiddenFld.value !== '') {
+    rimTypeFld.value = rimTypeHiddenFld.value
+}
+
+if (showMinMaxHiddenFld.value !== '') {
+    minMaxCheckBox.checked = Boolean(showMinMaxHiddenFld.value === 'yes')
+    actOnShowMinMaxSet()
+}
+
+if (findForHiddenFld.value !== '') {
+    findForSelect.value = findForHiddenFld.value
+    actOnFindForSelection()
+    if (findForSelect.value === 'gearInches' && gearInchesFld.value !== '') {
+        handleSubmit()
+    } else if (findForSelect.value === 'rollOut' && rollOutFld.value !== '') {
+        handleSubmit()
+    }
+} else if (gearInchesFld.value !== '') {
+    handleSubmit()
+}
+
+// Experimenting with browser back handling...
 // if (findForSelect.value === 'gearInches') {
 //     console.log('hello')
 //     if (gearInchesFld.value !== '') {

@@ -30,6 +30,8 @@ const validateQueryString = (query, fields) => {
     let maxCog = undefined
     let minTeeth = undefined
     let maxTeeth = undefined
+    let findFor = undefined
+    let showMinMax = undefined
 
     for (field of fields) {
         let fieldValue = field.default
@@ -103,6 +105,8 @@ const validateQueryString = (query, fields) => {
             case 'maxCog': maxCog = fieldValue; break; 
             case 'minTeeth': minTeeth = fieldValue; break; 
             case 'maxTeeth': maxTeeth = fieldValue; break; 
+            case 'findFor': findFor = fieldValue; break; 
+            case 'showMinMax': showMinMax = fieldValue; break; 
         }
     }
 
@@ -128,7 +132,9 @@ const validateQueryString = (query, fields) => {
         minCog, 
         maxCog, 
         minTeeth, 
-        maxTeeth
+        maxTeeth,
+        findFor,
+        showMinMax
     }
 }
 

@@ -80,10 +80,65 @@ app.get('/gearDetails', (req, res) => {
 })
 
 app.get('/findGear', (req, res) => {
-    res.render('findGear', {
-        title: 'Find Gear',
-        name: 'Hot Pursuit Cycling'
-    })
+
+    const {error, findFor, gearInches, plusOrMinus, rollOut, maxDiff, tyreWidth, rimType, 
+        showMinMax, minChainRing, maxChainRing, minCog, maxCog, minTeeth, maxTeeth} = 
+        hpcUtils.validateQueryString(req.query, [
+            { name: 'findFor', type: 'string', options: ['gearInches', 'rollOut'], returnEmpty: true },
+            { name: 'gearInches', type: 'decimal', sign: 'positive', returnEmpty: true },
+            { name: 'plusOrMinus', type: 'decimal', sign: 'positive', returnEmpty: true },
+            { name: 'rollOut', type: 'decimal', sign: 'positive', returnEmpty: true },
+            { name: 'maxDiff', type: 'decimal', sign: 'positive', returnEmpty: true },
+            { name: 'tyreWidth', type: 'integer', sign: 'positive', returnEmpty: true },
+            { name: 'rimType', type: 'string', options: ['700c', '650c'], returnEmpty: true },
+            { name: 'showMinMax', type: 'string', options: ['yes', 'no'], returnEmpty: true },
+            { name: 'minChainRing', type: 'integer', sign: 'positive', returnEmpty: true },
+            { name: 'maxChainRing', type: 'integer', sign: 'positive', returnEmpty: true },
+            { name: 'minCog', type: 'integer', sign: 'positive', returnEmpty: true },
+            { name: 'maxCog', type: 'integer', sign: 'positive', returnEmpty: true },
+            { name: 'minTeeth', type: 'integer', sign: 'positive', returnEmpty: true },
+            { name: 'maxTeeth', type: 'integer', sign: 'positive', returnEmpty: true }
+    ])
+
+    if (error) {
+        res.render('findGear', {
+            title: 'Find Gear',
+            name: 'Hot Pursuit Cycling', 
+            findFor: '',
+            gearInches: '', 
+            plusOrMinus: '', 
+            rollOut: '', 
+            maxDiff: '', 
+            tyreWidth: '', 
+            rimType: '', 
+            showMinMax: '',
+            minChainRing: '', 
+            maxChainRing: '', 
+            minCog: '', 
+            maxCog: '', 
+            minTeeth: '', 
+            maxTeeth: ''
+        })
+    } else {
+        res.render('findGear', {
+            title: 'Find Gear',
+            name: 'Hot Pursuit Cycling', 
+            findFor,
+            gearInches, 
+            plusOrMinus, 
+            rollOut, 
+            maxDiff, 
+            tyreWidth, 
+            rimType, 
+            showMinMax,
+            minChainRing, 
+            maxChainRing, 
+            minCog, 
+            maxCog, 
+            minTeeth, 
+            maxTeeth
+        })    
+    }
 })
 
 app.get('/help', (req, res) => {
