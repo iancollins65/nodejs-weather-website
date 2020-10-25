@@ -43,14 +43,14 @@ header a {
 }
 
 input {
-    width: 120px;
+    width: 70px;
     border: 1px solid #cccccc;
     padding: 4px 8px;
-    margin: 4px;
+    margin: 4px 0px;
 }
 
 .sub-input {
-    width: 50px;
+    width: 40px;
 }
 
 label {
@@ -69,17 +69,17 @@ label {
 }
 
 .sub-label {
-    width: 50px;
+    width: 40px;
     text-align: right;
 }
 
 .min-max-main-label {
-    width: 116px;
+    width: 86px;
 }
 
 select {
     padding: 2px 8px;
-    margin: 4px;
+    margin: 4px 0px;
 }
 
 button {
@@ -92,7 +92,7 @@ button {
 }
 
 .fields-button {
-    margin-left: 108px
+    margin-left: 100px
 }
 
 td, th {
