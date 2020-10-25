@@ -230,19 +230,9 @@ const actOnFindForSelection = () => {
 }
 
 sortByFld.addEventListener('change', (e) => {
-    let gearOptions = gearOptionsGlobal
     const findFor = findForSelect.value
-    if (sortByFld.value === 'gearInches') {
-        gearOptions.sort((a, b) => (a.gearInches >= b.gearInches) ? 1 : -1)
-    } else if (sortByFld.value === 'chainRing') {
-        gearOptions.sort((a, b) => (a.chainRing >= b.chainRing) ? 1 : -1)
-    } else if (sortByFld.value === 'closestGearInches') {
-        gearOptions.sort((a, b) => (a.diff >= b.diff) ? 1 : -1)
-    } else if (sortByFld.value === 'closestRollOut') {
-        gearOptions.sort((a, b) => (a.rollOut <= b.rollOut) ? 1 : -1)
-    }
     outputTable.innerHTML = ""
-    outputTable.appendChild(buildOutputTable(findFor, gearOptions))
+    outputTable.appendChild(buildOutputTable(findFor, gearOptionsGlobal))
 })
 
 const buildSortSelect = (findFor) => {
@@ -272,11 +262,51 @@ const buildSortSelect = (findFor) => {
     optionx.appendChild(textx)
     optionx.setAttribute('value', 'chainRing')
     sortByFld.appendChild(optionx)
+
+    // Set value based on cookie, if it is available
+    const sortBy = getCookie('sortBy')
+    if (sortBy !== '') {
+        if (sortBy === 'chainRing') {
+            sortByFld.value = 'chainRing'
+        } else if (sortBy === 'gearInches' && findFor === 'gearInches') {
+            sortByFld.value = 'gearInches'
+        } else if (sortBy === 'closestGearInches' && findFor === 'gearInches') {
+            sortByFld.value = 'closestGearInches'
+        } else if (sortBy === 'closestRollOut' && findFor === 'rollOut') {
+            sortByFld.value = 'closestRollOut'
+        } else if (findFor === 'gearInches') {
+            sortByFld.value = 'closestGearInches'
+        } else if (findFor === 'rollOut') {
+            sortByFld.value = 'closestRollOut'
+        }
+    } else if (findFor === 'gearInches') {
+        sortByFld.value = 'closestGearInches'
+    } else if (findFor === 'rollOut') {
+        sortByFld.value = 'closestRollOut'
+    }
 }
 
 const buildOutputTable = (findFor, gearOptions) => {
+    // Sort gearOptions
+    if (sortByFld.value === 'gearInches' && findFor === 'gearInches') {
+        gearOptions.sort((a, b) => (a.gearInches >= b.gearInches) ? 1 : -1)
+    } else if (sortByFld.value === 'chainRing') {
+        gearOptions.sort((a, b) => (a.chainRing >= b.chainRing) ? 1 : -1)
+    } else if (sortByFld.value === 'closestGearInches' && findFor === 'gearInches') {
+        gearOptions.sort((a, b) => (a.diff >= b.diff) ? 1 : -1)
+    } else if (sortByFld.value === 'closestRollOut' && findFor === 'rollOut') {
+        gearOptions.sort((a, b) => (a.rollOut <= b.rollOut) ? 1 : -1)
+    } else if (findFor === 'gearInches') {
+        gearOptions.sort((a, b) => (a.diff >= b.diff) ? 1 : -1)
+        sortByFld.value = 'closestGearInches'
+    } else if (findFor === 'rollOut') {
+        gearOptions.sort((a, b) => (a.rollOut <= b.rollOut) ? 1 : -1)
+        sortByFld.value = 'closestRollOut'
+    }
+    setCookie('sortBy', sortByFld.value, 1)
+
+    // Build the table
     var table = document.createElement('table')
-    // table.className = "output-table"
 
     if (findFor === 'gearInches') {
         // Create header row
@@ -425,7 +455,7 @@ const getCookie = (cname) => {
 // On load
 
 const handleOnLoad = () => {
-    console.log(document.cookie)
+    // console.log(document.cookie)
 
     if (rimTypeHiddenFld.value !== '') {
         rimTypeFld.value = rimTypeHiddenFld.value
@@ -458,6 +488,7 @@ const handleOnLoad = () => {
         if (findFor === 'gearInches') {
             const gearInches = getCookie('gearInches')
             if (gearInches !== '') {
+                findForSelect.value = 'gearInches'
                 actOnFindForSelection()
                 gearInchesFld.value = gearInches
                 const plusOrMinus = getCookie('plusOrMinus')
@@ -470,6 +501,7 @@ const handleOnLoad = () => {
         } else if (findFor === 'rollOut') {
             const rollOut = getCookie('rollOut')
             if (rollOut !== '') {
+                findForSelect.value = 'rollOut'
                 actOnFindForSelection()
                 rollOutFld.value = rollOut
                 const maxDiff = getCookie('maxDiff')
