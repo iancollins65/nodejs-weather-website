@@ -22,12 +22,16 @@ const maxCogFld = document.querySelector('#maxCog')
 const messageOne = document.querySelector('#message-1')
 const outputText = document.querySelector('#outputText')
 const outputTable = document.querySelector('#outputTable')
+const sortSelectSection = document.querySelector('#sortSelect')
+const sortByFld = document.querySelector('#sortBy')
+var gearOptionsGlobal = []
 
 rollOutSection.style.display = 'none'
 tyreWidthSection.style.display = 'none'
 rimTypeSection.style.display = 'none'
 minMaxSection.style.display = 'none'
 messageOne.style.display = 'none'
+sortSelectSection.style.display = 'none'
 outputText.style.display = 'none'
 outputTable.style.display = 'none'
 
@@ -40,6 +44,7 @@ const handleSubmit = () => {
     messageOne.style.display = 'block'
     messageOne.style.color = '#333456'   
     messageOne.textContent = 'Loading...'
+    sortSelectSection.style.display = 'none'
     outputText.style.display = 'none'    
     outputTable.style.display = 'none'    
 
@@ -84,7 +89,10 @@ const handleSubmit = () => {
                 } else if (gearOptions.length === 0) {
                     messageOne.textContent = 'No gear options found. Please adjust your selections.'
                 } else {
+                    gearOptionsGlobal = gearOptions
                     messageOne.textContent = 'Your gear options...'
+                    buildSortSelect(findFor)
+                    sortSelectSection.style.display = 'block'
                     outputTable.style.display = 'block'
                     outputTable.innerHTML = ""
                     outputTable.appendChild(buildOutputTable(findFor, gearOptions))
@@ -158,7 +166,10 @@ const handleSubmit = () => {
                 } else if (gearOptions.length === 0) {
                     messageOne.textContent = 'No gear options found. Please adjust your selections.'
                 } else {
+                    gearOptionsGlobal = gearOptions
                     messageOne.textContent = 'Your gear options...'
+                    buildSortSelect(findFor)
+                    sortSelectSection.style.display = 'block'
                     outputTable.style.display = 'block'
                     outputTable.innerHTML = ""
                     outputTable.appendChild(buildOutputTable(findFor, gearOptions))
@@ -173,6 +184,7 @@ const handleSubmit = () => {
 findGearForm.addEventListener('input', (e) => {
     if (e.target !== minMaxCheckBox) {
         messageOne.style.display = 'none'
+        sortSelectSection.style.display = 'none'
         outputText.style.display = 'none'
         outputTable.style.display = 'none'
     }
@@ -215,6 +227,51 @@ const actOnFindForSelection = () => {
         tyreWidthSection.style.display = 'block'
         rimTypeSection.style.display = 'block'
     }
+}
+
+sortByFld.addEventListener('change', (e) => {
+    let gearOptions = gearOptionsGlobal
+    const findFor = findForSelect.value
+    if (sortByFld.value === 'gearInches') {
+        gearOptions.sort((a, b) => (a.gearInches >= b.gearInches) ? 1 : -1)
+    } else if (sortByFld.value === 'chainRing') {
+        gearOptions.sort((a, b) => (a.chainRing >= b.chainRing) ? 1 : -1)
+    } else if (sortByFld.value === 'closestGearInches') {
+        gearOptions.sort((a, b) => (a.diff >= b.diff) ? 1 : -1)
+    } else if (sortByFld.value === 'closestRollOut') {
+        gearOptions.sort((a, b) => (a.rollOut <= b.rollOut) ? 1 : -1)
+    }
+    outputTable.innerHTML = ""
+    outputTable.appendChild(buildOutputTable(findFor, gearOptions))
+})
+
+const buildSortSelect = (findFor) => {
+    while (sortByFld.options.length > 0) {
+        sortByFld.remove(0);
+    }
+    if (findFor === 'gearInches') {
+        const option1 = document.createElement('option')
+        const text1 = document.createTextNode('Closest to ' + gearInchesFld.value)
+        option1.appendChild(text1)
+        option1.setAttribute('value', 'closestGearInches')
+        sortByFld.appendChild(option1)
+        const option2 = document.createElement('option')
+        const text2 = document.createTextNode('Gear Inches (asc)')
+        option2.appendChild(text2)
+        option2.setAttribute('value', 'gearInches')
+        sortByFld.appendChild(option2)
+    } else if (findFor === 'rollOut') {
+        const option1 = document.createElement('option')
+        const text1 = document.createTextNode('Closest to ' + rollOutFld.value)
+        option1.appendChild(text1)
+        option1.setAttribute('value', 'closestRollOut')
+        sortByFld.appendChild(option1)
+    }
+    const optionx = document.createElement('option')
+    const textx = document.createTextNode('Chain Ring (asc)')
+    optionx.appendChild(textx)
+    optionx.setAttribute('value', 'chainRing')
+    sortByFld.appendChild(optionx)
 }
 
 const buildOutputTable = (findFor, gearOptions) => {

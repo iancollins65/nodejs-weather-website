@@ -64,9 +64,18 @@
             <button class="fields-button">Find</button>
         </form>
 
-        <p id="message-1">Your gear options...</p>
+        <p class="bold-text" id="message-1">Your gear options...</p>
 
-        <div id="outputTable">
+        <div id="sortSelect">
+            <form>
+                <label for="sortBy">Sort by:</label>
+                <select id="sortBy" name="sortBy">
+                    <option value="none">None</option>
+                </select>
+            </form>
+        </div>
+
+        <div class="output-table" id="outputTable">
             <p>Placeholder</p>
         </div>
 
