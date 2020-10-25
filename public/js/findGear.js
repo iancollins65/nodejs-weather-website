@@ -68,6 +68,7 @@ const handleSubmit = () => {
         setCookie('maxChainRing', maxChainRing, 1)
         setCookie('minCog', minCog, 1)
         setCookie('maxCog', maxCog, 1)
+        setCookie('rollOut', '', 1)
 
         fetch(url).then((response) => {
             response.json().then((gearOptions) => {
@@ -138,7 +139,8 @@ const handleSubmit = () => {
         setCookie('maxChainRing', maxChainRing, 1)
         setCookie('minCog', minCog, 1)
         setCookie('maxCog', maxCog, 1)
-        rimTypeHiddenFld.value = rimType
+        setCookie('gearInches', '', 1)
+        // rimTypeHiddenFld.value = rimType
 
         fetch(url).then((response) => {
             response.json().then((gearOptions) => {
@@ -195,6 +197,7 @@ const actOnShowMinMaxSet = () => {
 
 findForSelect.addEventListener('change', (e) => {
     actOnFindForSelection()
+    findForHiddenFld.value = ''
 })
 
 const actOnFindForSelection = () => {
@@ -237,6 +240,7 @@ const buildOutputTable = (findFor, gearOptions) => {
             a.text = gearOption.chainRing + ' x ' + gearOption.cog
             a.title = 'Chain Ring ' + gearOption.chainRing + ' Cog ' + gearOption.cog
             a.href = linkToGearDetails(findFor, gearOption.chainRing, gearOption.cog)
+            // a.onclick = 'gearLink()' Doesn't seem to work
             gearCell.appendChild(a)
             // Gear Inches cell
             let gearInchesCell = tr.insertCell(-1)
@@ -265,6 +269,7 @@ const buildOutputTable = (findFor, gearOptions) => {
             a.text = gearOption.chainRing + ' x ' + gearOption.cog
             a.title = 'Chain Ring ' + gearOption.chainRing + ' Cog ' + gearOption.cog
             a.href = linkToGearDetails(findFor, gearOption.chainRing, gearOption.cog)
+            // a.onclick = 'gearLink()' Doesn't seem to work
             gearCell.appendChild(a)
             // Roll Out cell
             let rollOutCell = tr.insertCell(-1)
@@ -291,6 +296,10 @@ const linkToGearDetails = (findFor, chainRing, cog) => {
     return url
 }
 
+// const gearLink = () => {
+//     setCookie('lastAction', 'gearLink', 1)
+// }
+
 const applyMinMaxCookies = () => {
     const minChainRing = getCookie('minChainRing')
     if (minChainRing !== '') {
@@ -308,6 +317,22 @@ const applyMinMaxCookies = () => {
     if (maxCog !== '') {
         maxCogFld.value = maxCog
     }
+}
+
+const clearCookies = () => {
+    setCookie('findFor', '', 1)
+    setCookie('gearInches', '', 1)
+    setCookie('plusOrMinus', '', 1)
+    setCookie('rollOut', '', 1)
+    setCookie('maxDiff', '', 1)
+    setCookie('tyreWidth', '', 1)
+    setCookie('rimType', '', 1)
+    setCookie('minChainRing', '', 1)
+    setCookie('maxChainRing', '', 1)
+    setCookie('minCog', '', 1)
+    setCookie('maxCog', '', 1)
+    setCookie('showMinMax', '', 1)
+    return 'done'
 }
 
 // Utilities
@@ -376,6 +401,7 @@ const handleOnLoad = () => {
         if (findFor === 'gearInches') {
             const gearInches = getCookie('gearInches')
             if (gearInches !== '') {
+                actOnFindForSelection()
                 gearInchesFld.value = gearInches
                 const plusOrMinus = getCookie('plusOrMinus')
                 if (plusOrMinus !== '') {
@@ -387,6 +413,7 @@ const handleOnLoad = () => {
         } else if (findFor === 'rollOut') {
             const rollOut = getCookie('rollOut')
             if (rollOut !== '') {
+                actOnFindForSelection()
                 rollOutFld.value = rollOut
                 const maxDiff = getCookie('maxDiff')
                 if (maxDiff !== '') {
@@ -404,7 +431,9 @@ const handleOnLoad = () => {
                 handleSubmit()
             }
         }
-    }    
+    }
+    // setCookie('lastAction', 'loadedPage', 1)
+    // console.log(document.cookie)
 }
 
 // console.log('findFor: ' + getCookie('findFor'))
