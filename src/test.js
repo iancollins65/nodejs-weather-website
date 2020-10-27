@@ -18,23 +18,29 @@ const gears = require('./utils/gears.js')
 
 // const test = hpcUtils.round(1.23456789,4)
 
-// console.log(test)
+// const test = gears.getCogGivenChainRingAndWheelForSpeedAndCadence(50, 2099, 40, 90)
 
-const fields = [
-    { name: 'chainRing', mandatory: true, type: 'integer', sign: 'positive' },
-    { name: 'cog', mandatory: true, type: 'integer', sign: 'positive' },
-    { name: 'rimType', default: '700c', type: 'string', options: ['700c', '650c'] },
-    { name: 'speed', type: 'decimal', sign: 'positive' },
-    { name: 'sortByDiff', default: 'true', type: 'boolean'}
-]
+// const test = gears.getChainRingAndCogOptionsForSpeedAndCadence(40, 90, 'cadence')
 
-const query = {
-    chainRing: '49',
-    cog: '15',
-    rimType: '700c',
-    speed: '50',
-    sortByDiff: 'true'
-}
+const test = gears.getChainRingAndCogOptionsForLapTimeAndCadence(22, 250, 90)
 
-console.log(hpcUtils.validateQueryString(query , fields))
+console.log(test)
+
+// const fields = [
+//     { name: 'chainRing', mandatory: true, type: 'integer', sign: 'positive' },
+//     { name: 'cog', mandatory: true, type: 'integer', sign: 'positive' },
+//     { name: 'rimType', default: '700c', type: 'string', options: ['700c', '650c'] },
+//     { name: 'speed', type: 'decimal', sign: 'positive' },
+//     { name: 'sortByDiff', default: 'true', type: 'boolean'}
+// ]
+
+// const query = {
+//     chainRing: '49',
+//     cog: '15',
+//     rimType: '700c',
+//     speed: '50',
+//     sortByDiff: 'true'
+// }
+
+// console.log(hpcUtils.validateQueryString(query , fields))
 

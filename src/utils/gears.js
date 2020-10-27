@@ -102,10 +102,10 @@ const getGearInfo = (chainRing, cog, tyreWidth = 23, rimType = '700c', speed, ca
 }
 
 const getCogGivenChainRingAndGearInches = (chainRing, gearInches, fraction = 0.4) => {
-    const digitalCog = (27 * chainRing) / gearInches
-    const floorCog = Math.floor(digitalCog)
-    const ceilingCog = Math.ceil(digitalCog)
-    const floorFraction = digitalCog - floorCog
+    const decimalCog = (27 * chainRing) / gearInches
+    const floorCog = Math.floor(decimalCog)
+    const ceilingCog = Math.ceil(decimalCog)
+    const floorFraction = decimalCog - floorCog
     if (floorFraction < fraction) {
         return [floorCog]
     } else if (floorFraction > (1 - fraction)) {
@@ -144,8 +144,8 @@ const getChainRingAndCogOptionsForGearInches = (gearInches, plusOrMinus = 1, sor
 }
 
 const getCogGivenChainRingAndWheelForRollOut = (chainRing, wheelCircumfrance, rollOut) => {
-    const digitalCog = (chainRing * wheelCircumfrance) / rollOut
-    const ceilingCog = Math.ceil(digitalCog)
+    const decimalCog = (chainRing * wheelCircumfrance) / rollOut
+    const ceilingCog = Math.ceil(decimalCog)
     return ceilingCog
 }
 
@@ -183,6 +183,62 @@ const getChainRingAndCogOptionsForRollOut = (rollOut, maxDiff = 500, sortDesc = 
     return options
 }
 
+const getCogGivenChainRingAndWheelForSpeedAndCadence = (chainRing, wheelCircumfrance, speed, cadence) => {
+    const decimalCog = (chainRing * wheelCircumfrance * cadence * 60) / (speed * 1000000)
+    return Math.round(decimalCog)
+}
+
+const getChainRingAndCogOptionsForSpeedAndCadence = (speed, cadence, fixed = 'cadence', plusOrMinus = 2,  
+    tyreWidth = 23, rimType = '700c', minChainRing = 34, maxChainRing = 60, minCog = 10, maxCog = 36, 
+    minTeeth = 44, maxTeeth = 96) => {
+    const rimDiameter = getRimSizeByType(rimType)
+    const wheelCircumfrance = getWheelCircumfrance(rimDiameter, tyreWidth)
+    let options = []
+    var chainRing = minChainRing
+    for (; chainRing <= maxChainRing; chainRing++) {
+        const cog = getCogGivenChainRingAndWheelForSpeedAndCadence(chainRing, wheelCircumfrance, speed, cadence)
+        const teeth = chainRing + cog
+        if ((cog >= minCog) && (cog <= maxCog) && (teeth >= minTeeth) && (teeth <= maxTeeth)) {
+            const gearRatio = getGearRatio(chainRing, cog)
+            const rollOut = getRollOut(gearRatio, wheelCircumfrance)
+            var candidateSpeed = speed
+            var candidateCadence = cadence
+            var includeOption = false
+            if (fixed === 'speed') {
+                candidateCadence = getCadenceAtKmhSpeed(rollOut, speed)
+                includeOption = Boolean(Math.abs(candidateCadence - cadence) < plusOrMinus)
+            } else { // 'cadence'
+                candidateSpeed = getKmhSpeedAtCadence(rollOut, cadence)
+                includeOption = Boolean(Math.abs(candidateSpeed - speed) < plusOrMinus)
+            }
+            if (includeOption === true) {
+                const gearInches = getGearInches(gearRatio)
+                options.push({
+                    chainRing,
+                    cog,
+                    speed: candidateSpeed,
+                    cadence: candidateCadence,
+                    rollOut,
+                    gearInches
+                })
+            }
+        }
+    }
+    return options
+}
+
+const getChainRingAndCogOptionsForLapTimeAndCadence = (lapTime, lapLength, cadence, 
+    tyreWidth = 23, rimType = '700c', minChainRing = 34, maxChainRing = 60, minCog = 10, maxCog = 36, 
+    minTeeth = 44, maxTeeth = 96) => {
+    const speed = getSpeedFromLapTimeAndLength(lapTime, lapLength)
+    var options = getChainRingAndCogOptionsForSpeedAndCadence(speed, cadence, 'speed', 4, tyreWidth, rimType, 
+        minChainRing, maxChainRing, minCog, maxCog, minTeeth, maxTeeth)
+    for (option of options) {
+        option.lapTime = lapTime
+    }
+    return options
+}
+
 module.exports = {
     getGearRatio: getGearRatio,
     getWheelCircumfrance: getWheelCircumfrance,
@@ -193,5 +249,8 @@ module.exports = {
     getCogGivenChainRingAndGearInches: getCogGivenChainRingAndGearInches,
     getChainRingAndCogOptionsForGearInches: getChainRingAndCogOptionsForGearInches,
     getCogGivenChainRingAndWheelForRollOut: getCogGivenChainRingAndWheelForRollOut,
-    getChainRingAndCogOptionsForRollOut: getChainRingAndCogOptionsForRollOut
+    getChainRingAndCogOptionsForRollOut: getChainRingAndCogOptionsForRollOut,
+    getCogGivenChainRingAndWheelForSpeedAndCadence: getCogGivenChainRingAndWheelForSpeedAndCadence,
+    getChainRingAndCogOptionsForSpeedAndCadence: getChainRingAndCogOptionsForSpeedAndCadence,
+    getChainRingAndCogOptionsForLapTimeAndCadence: getChainRingAndCogOptionsForLapTimeAndCadence
 }
