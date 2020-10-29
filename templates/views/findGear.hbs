@@ -20,6 +20,8 @@
             <select id="findFor" name="findFor">
                 <option value="gearInches">Gear Inches</option>
                 <option value="rollOut">Roll Out</option>
+                <option value="speedCadence">Speed and Cadence</option>
+                <option value="lapTimeCadence">Lap Time and Cadence</option>
             </select><br>
             <input type="hidden" id="findForHidden" name="findForHidden" value={{findFor}}>
             <div id="gearInchesSection">
@@ -33,6 +35,27 @@
                 <input type="number" id="rollOut" name="rollOut" step="0.001" placeholder="(metres)" value={{rollOut}}>
                 <label class="sub-label" for="maxDiff">to -</label>
                 <input class="sub-input" type="number" id="maxDiff" name="maxDiff" step="0.001" placeholder="0.5" value={{maxDiff}}><br>
+            </div>
+            <div id="speedSection">
+                <label for="speed">Speed:</label>
+                <input type="number" id="speed" name="speed" step="0.001" placeholder="(km/h)" value={{speed}}><br>
+            </div>
+            <div id="lapSection">
+                <label for="lapTime">Lap Time:</label>
+                <input type="number" id="lapTime" name="lapTime" step="0.001" placeholder="(sec)" value={{lapTime}}><br>
+                <label for="lapLength">Lap Length:</label>
+                <input type="number" id="lapLength" name="lapLength" step="0.001" placeholder="(m)" value={{lapLength}}><br>
+            </div>
+            <div id="cadenceSection">
+                <label for="cadence">Cadence:</label>
+                <input type="number" id="cadence" name="cadence" step="0.001" placeholder="(rpm)" value={{cadence}}><br>
+            </div>
+            <div id="fixedSection">
+                <label for="fixed">Fixed:</label>
+                <select id="fixed" name="fixed">
+                    <option value='cadence'>Cadence</option>
+                    <option value='speed'>Speed</option>
+                </select><br>
             </div>
             <div id="tyreWidthSection">
                 <label for="tyreWidth">Tyre Width:</label>

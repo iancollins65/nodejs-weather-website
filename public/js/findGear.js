@@ -7,6 +7,15 @@ const plusOrMinusFld = document.querySelector('#plusOrMinus')
 const rollOutSection = document.querySelector('#rollOutSection')
 const rollOutFld = document.querySelector('#rollOut')
 const maxDiffFld = document.querySelector('#maxDiff')
+const speedSection = document.querySelector('#speedSection')
+const speedFld = document.querySelector('#speed')
+const lapSection = document.querySelector('#lapSection')
+const lapTimeFld = document.querySelector('#lapTime')
+const lapLengthFld = document.querySelector('#lapLength')
+const cadenceSection = document.querySelector('#cadenceSection')
+const cadenceFld = document.querySelector('#cadence')
+const fixedSection = document.querySelector('#fixedSection')
+const fixedFld = document.querySelector('#fixed')
 const tyreWidthSection = document.querySelector('#tyreWidthSection')
 const tyreWidthFld = document.querySelector('#tyreWidth')
 const rimTypeSection = document.querySelector('#rimTypeSection')
@@ -27,6 +36,10 @@ const sortByFld = document.querySelector('#sortBy')
 var gearOptionsGlobal = []
 
 rollOutSection.style.display = 'none'
+speedSection.style.display = 'none'
+lapSection.style.display = 'none'
+cadenceSection.style.display = 'none'
+fixedSection.style.display = 'none'
 tyreWidthSection.style.display = 'none'
 rimTypeSection.style.display = 'none'
 minMaxSection.style.display = 'none'
@@ -155,7 +168,7 @@ const handleSubmit = () => {
                 if (gearOptions.error) {
                     var errorStr = gearOptions.error + '.'
                     errorStr = errorStr.replace('rollOut', 'Roll Out')
-                    errorStr = errorStr.replace('maxDiff', 'Within')
+                    errorStr = errorStr.replace('maxDiff', 'to -')
                     errorStr = errorStr.replace('tyreWidth', 'Tyre Width')
                     errorStr = errorStr.replace('rimType', 'Rim Type')
                     errorStr = errorStr.replace('min', 'Min ')
@@ -178,6 +191,128 @@ const handleSubmit = () => {
                 }
             })
         })            
+    } else if (findFor === 'speedCadence') {
+        const speed = speedFld.value
+        const cadence = cadenceFld.value
+        const fixed = fixedFld.value
+        const tyreWidth = tyreWidthFld.value
+        const rimType = rimTypeFld.value
+        const minChainRing = minChainRingFld.value
+        const maxChainRing = maxChainRingFld.value
+        const minCog = minCogFld.value
+        const maxCog = maxCogFld.value
+
+        var url = '/speedCadenceOptions?speed=' + speed + '&cadence=' + cadence + '&fixed=' + fixed + 
+            '&rimType=' + rimType
+        if (tyreWidth !== '') { url = url + '&tyreWidth=' + tyreWidth }
+        if (minChainRing !== '') { url = url + "&minChainRing=" + minChainRing }
+        if (maxChainRing !== '') { url = url + "&maxChainRing=" + maxChainRing }
+        if (minCog !== '') { url = url + "&minCog=" + minCog }
+        if (maxCog !== '') { url = url + "&maxCog=" + maxCog }
+
+        setCookie('speed', speed, 1)
+        setCookie('cadence', cadence, 1)
+        setCookie('fixed', fixed, 1)
+        setCookie('tyreWidth', tyreWidth, 1)
+        setCookie('rimType', rimType, 1)
+        setCookie('minChainRing', minChainRing, 1)
+        setCookie('maxChainRing', maxChainRing, 1)
+        setCookie('minCog', minCog, 1)
+        setCookie('maxCog', maxCog, 1)
+        setCookie('gearInches', '', 1) // ??? needed
+        setCookie('rollOut', '', 1) // ??? needed
+        // rimTypeHiddenFld.value = rimType
+
+        fetch(url).then((response) => {
+            response.json().then((gearOptions) => {
+                if (gearOptions.error) {
+                    var errorStr = gearOptions.error + '.'
+                    errorStr = errorStr.replace('speed', 'Speed')
+                    errorStr = errorStr.replace('cadence', 'Cadence')
+                    errorStr = errorStr.replace('fixed', 'Fixed')
+                    errorStr = errorStr.replace('tyreWidth', 'Tyre Width')
+                    errorStr = errorStr.replace('rimType', 'Rim Type')
+                    errorStr = errorStr.replace('min', 'Min ')
+                    errorStr = errorStr.replace('max', 'Max ')
+                    errorStr = errorStr.replace('ChainRing', 'Chain Ring')
+                    messageOne.style.color = 'red'
+                    messageOne.textContent = errorStr
+                } else if (gearOptions.length === 0) {
+                    messageOne.textContent = 'No gear options found. Please adjust your selections.'
+                } else {
+                    gearOptionsGlobal = gearOptions
+                    messageOne.textContent = 'Your gear options...'
+                    // buildSortSelect(findFor)
+                    // sortSelectSection.style.display = 'block'
+                    outputTable.style.display = 'block'
+                    outputTable.innerHTML = ""
+                    outputTable.appendChild(buildOutputTable(findFor, gearOptions))
+                    // outputText.style.display = 'block'
+                    // outputText.textContent = JSON.stringify(gearOptions)
+                }
+            })
+        }) 
+    } else if (findFor === 'lapTimeCadence') {
+        const lapTime = lapTimeFld.value
+        const lapLength = lapLengthFld.value
+        const cadence = cadenceFld.value
+        const tyreWidth = tyreWidthFld.value
+        const rimType = rimTypeFld.value
+        const minChainRing = minChainRingFld.value
+        const maxChainRing = maxChainRingFld.value
+        const minCog = minCogFld.value
+        const maxCog = maxCogFld.value
+
+        var url = '/lapTimeCadenceOptions?lapTime=' + lapTime + '&lapLength=' + lapLength + 
+            '&cadence=' + cadence + '&rimType=' + rimType
+        if (tyreWidth !== '') { url = url + '&tyreWidth=' + tyreWidth }
+        if (minChainRing !== '') { url = url + "&minChainRing=" + minChainRing }
+        if (maxChainRing !== '') { url = url + "&maxChainRing=" + maxChainRing }
+        if (minCog !== '') { url = url + "&minCog=" + minCog }
+        if (maxCog !== '') { url = url + "&maxCog=" + maxCog }
+
+        setCookie('lapTime', lapTime, 1)
+        setCookie('lapLength', lapLength, 1)
+        setCookie('cadence', cadence, 1)
+        setCookie('tyreWidth', tyreWidth, 1)
+        setCookie('rimType', rimType, 1)
+        setCookie('minChainRing', minChainRing, 1)
+        setCookie('maxChainRing', maxChainRing, 1)
+        setCookie('minCog', minCog, 1)
+        setCookie('maxCog', maxCog, 1)
+        setCookie('gearInches', '', 1) // ??? needed
+        setCookie('rollOut', '', 1) // ??? needed
+        // rimTypeHiddenFld.value = rimType
+
+        fetch(url).then((response) => {
+            response.json().then((gearOptions) => {
+                if (gearOptions.error) {
+                    var errorStr = gearOptions.error + '.'
+                    errorStr = errorStr.replace('lapTime', 'Lap Time')
+                    errorStr = errorStr.replace('lapLength', 'Lap Length')
+                    errorStr = errorStr.replace('cadence', 'Cadence')
+                    errorStr = errorStr.replace('tyreWidth', 'Tyre Width')
+                    errorStr = errorStr.replace('rimType', 'Rim Type')
+                    errorStr = errorStr.replace('min', 'Min ')
+                    errorStr = errorStr.replace('max', 'Max ')
+                    errorStr = errorStr.replace('ChainRing', 'Chain Ring')
+                    messageOne.style.color = 'red'
+                    messageOne.textContent = errorStr
+                } else if (gearOptions.length === 0) {
+                    messageOne.textContent = 'No gear options found. Please adjust your selections.'
+                } else {
+                    gearOptionsGlobal = gearOptions
+                    messageOne.textContent = 'Your gear options...'
+                    // buildSortSelect(findFor)
+                    // sortSelectSection.style.display = 'block'
+                    outputTable.style.display = 'block'
+                    outputTable.innerHTML = ""
+                    outputTable.appendChild(buildOutputTable(findFor, gearOptions))
+                    // outputText.style.display = 'block'
+                    // outputText.textContent = JSON.stringify(gearOptions)
+                }
+            })
+        }) 
     }
 }
 
@@ -218,12 +353,38 @@ const actOnFindForSelection = () => {
         // tyreWidth.value = ''
         gearInchesSection.style.display = 'block'
         rollOutSection.style.display = 'none'
+        speedSection.style.display = 'none'
+        lapSection.style.display = 'none'
+        cadenceSection.style.display = 'none'
+        fixedSection.style.display = 'none'
         tyreWidthSection.style.display = 'none'
         rimTypeSection.style.display = 'none'
     } else if (findForSelect.value === 'rollOut') {
         // gearInches.value = ''
         gearInchesSection.style.display = 'none'
         rollOutSection.style.display = 'block'
+        speedSection.style.display = 'none'
+        lapSection.style.display = 'none'
+        cadenceSection.style.display = 'none'
+        fixedSection.style.display = 'none'
+        tyreWidthSection.style.display = 'block'
+        rimTypeSection.style.display = 'block'
+    } else if (findForSelect.value === 'speedCadence') {
+        gearInchesSection.style.display = 'none'
+        rollOutSection.style.display = 'none'
+        speedSection.style.display = 'block'
+        lapSection.style.display = 'none'
+        cadenceSection.style.display = 'block'
+        fixedSection.style.display = 'block'
+        tyreWidthSection.style.display = 'block'
+        rimTypeSection.style.display = 'block'
+    } else if (findForSelect.value === 'lapTimeCadence') {
+        gearInchesSection.style.display = 'none'
+        rollOutSection.style.display = 'none'
+        speedSection.style.display = 'none'
+        lapSection.style.display = 'block'
+        cadenceSection.style.display = 'block'
+        fixedSection.style.display = 'none'
         tyreWidthSection.style.display = 'block'
         rimTypeSection.style.display = 'block'
     }
@@ -367,6 +528,39 @@ const buildOutputTable = (findFor, gearOptions) => {
             rawValue = gearOption.gearInches
             gearInchesCell.innerHTML = round(rawValue, 3)
         }
+    } else if ((findFor === 'speedCadence') || (findFor === 'lapTimeCadence')) {
+        // Create header row
+        let tr = table.insertRow(-1)
+        let th = document.createElement('th')
+        th.innerHTML = 'Gear'
+        tr.appendChild(th)
+        th = document.createElement('th')
+        th.innerHTML = 'Speed'
+        tr.appendChild(th)
+        th = document.createElement('th')
+        th.innerHTML = 'Cadence'
+        tr.appendChild(th)
+
+        // Create data rows
+        for (gearOption of gearOptions) {
+            let tr = table.insertRow(-1)
+            // Gear cell as a link
+            let gearCell = tr.insertCell(-1)
+            let a = document.createElement('A')
+            a.text = gearOption.chainRing + ' x ' + gearOption.cog
+            a.title = 'Chain Ring ' + gearOption.chainRing + ' Cog ' + gearOption.cog
+            a.href = linkToGearDetails(findFor, gearOption.chainRing, gearOption.cog)
+            // a.onclick = 'gearLink()' Doesn't seem to work
+            gearCell.appendChild(a)
+            // Speed cell
+            let speedCell = tr.insertCell(-1)
+            let rawValue = gearOption.speed
+            speedCell.innerHTML = round(rawValue, 3) + ' km/h'
+            // Cadence cell
+            let cadenceCell = tr.insertCell(-1)
+            rawValue = gearOption.cadence
+            cadenceCell.innerHTML = round(rawValue, 3) + ' rpm'
+        }
     }
 
     return table
@@ -374,7 +568,7 @@ const buildOutputTable = (findFor, gearOptions) => {
 
 const linkToGearDetails = (findFor, chainRing, cog) => {
     let url = '/gearDetails?chainRing=' + chainRing + '&cog=' + cog
-    if (findFor === 'rollOut') {
+    if ((findFor === 'rollOut') || (findFor === 'speedCadence') || (findFor === 'lapTimeCadence')) {
         if (tyreWidthFld.value !== '') {
             url = url + '&tyreWidth=' + tyreWidthFld.value
         }
@@ -412,6 +606,11 @@ const clearCookies = () => {
     setCookie('plusOrMinus', '', 1)
     setCookie('rollOut', '', 1)
     setCookie('maxDiff', '', 1)
+    setCookie('speed', '', 1)
+    setCookie('cadence', '', 1)
+    setCookie('fixed', '', 1)
+    setCookie('lapTime', '', 1)
+    setCookie('lapLength', '', 1)
     setCookie('tyreWidth', '', 1)
     setCookie('rimType', '', 1)
     setCookie('minChainRing', '', 1)

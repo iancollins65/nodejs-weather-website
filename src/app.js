@@ -85,7 +85,7 @@ app.get('/findGear', (req, res) => {
         fixed, tyreWidth, rimType, showMinMax, 
         minChainRing, maxChainRing, minCog, maxCog, minTeeth, maxTeeth} = 
         hpcUtils.validateQueryString(req.query, [
-            { name: 'findFor', type: 'string', options: ['gearInches', 'rollOut'], returnEmpty: true },
+            { name: 'findFor', type: 'string', options: ['gearInches', 'rollOut', 'speedCadence', 'lapTimeCadence'], returnEmpty: true },
             { name: 'gearInches', type: 'decimal', sign: 'positive', returnEmpty: true },
             { name: 'plusOrMinus', type: 'decimal', sign: 'positive', returnEmpty: true },
             { name: 'rollOut', type: 'decimal', sign: 'positive', returnEmpty: true },
