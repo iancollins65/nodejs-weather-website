@@ -81,14 +81,20 @@ app.get('/gearDetails', (req, res) => {
 
 app.get('/findGear', (req, res) => {
 
-    const {error, findFor, gearInches, plusOrMinus, rollOut, maxDiff, tyreWidth, rimType, 
-        showMinMax, minChainRing, maxChainRing, minCog, maxCog, minTeeth, maxTeeth} = 
+    const {error, findFor, gearInches, plusOrMinus, rollOut, maxDiff, speed, cadence, lapTime, lapLength, 
+        fixed, tyreWidth, rimType, showMinMax, 
+        minChainRing, maxChainRing, minCog, maxCog, minTeeth, maxTeeth} = 
         hpcUtils.validateQueryString(req.query, [
             { name: 'findFor', type: 'string', options: ['gearInches', 'rollOut'], returnEmpty: true },
             { name: 'gearInches', type: 'decimal', sign: 'positive', returnEmpty: true },
             { name: 'plusOrMinus', type: 'decimal', sign: 'positive', returnEmpty: true },
             { name: 'rollOut', type: 'decimal', sign: 'positive', returnEmpty: true },
             { name: 'maxDiff', type: 'decimal', sign: 'positive', returnEmpty: true },
+            { name: 'speed', type: 'decimal', sign: 'positive', returnEmpty: true },
+            { name: 'cadence', type: 'decimal', sign: 'positive', returnEmpty: true },
+            { name: 'fixed', type: 'string', options: ['cadence', 'speed'], returnEmpty: true },
+            { name: 'lapTime', type: 'decimal', sign: 'positive', returnEmpty: true },
+            { name: 'lapLength', type: 'decimal', sign: 'positive', returnEmpty: true },
             { name: 'tyreWidth', type: 'integer', sign: 'positive', returnEmpty: true },
             { name: 'rimType', type: 'string', options: ['700c', '650c'], returnEmpty: true },
             { name: 'showMinMax', type: 'string', options: ['yes', 'no'], returnEmpty: true },
@@ -109,6 +115,11 @@ app.get('/findGear', (req, res) => {
             plusOrMinus: '', 
             rollOut: '', 
             maxDiff: '', 
+            speed: '', 
+            cadence: '', 
+            fixed: '', 
+            lapTime: '', 
+            lapLength: '', 
             tyreWidth: '', 
             rimType: '', 
             showMinMax: '',
@@ -128,6 +139,11 @@ app.get('/findGear', (req, res) => {
             plusOrMinus, 
             rollOut, 
             maxDiff, 
+            speed, 
+            cadence, 
+            fixed, 
+            lapTime, 
+            lapLength, 
             tyreWidth, 
             rimType, 
             showMinMax,
