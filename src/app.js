@@ -259,6 +259,65 @@ app.get('/rollOutOptions', (req, res) => {
     res.send(rollOutOptions)
 })
 
+app.get('/speedCadenceOptions', (req, res) => {
+
+    const {error, speed, cadence, fixed, plusOrMinus, tyreWidth, rimType, minChainRing, maxChainRing, 
+        minCog, maxCog, minTeeth, maxTeeth} = 
+        hpcUtils.validateQueryString(req.query, [
+            { name: 'speed', mandatory: true, type: 'decimal', sign: 'positive' },
+            { name: 'cadence', mandatory: true, type: 'decimal', sign: 'positive' },
+            { name: 'fixed', default: 'cadence', type: 'string', options: ['cadence', 'speed'] },
+            { name: 'plusOrMinus', default: 4, type: 'decimal', sign: 'positive' },
+            { name: 'tyreWidth', default: 23, type: 'integer', sign: 'positive' },
+            { name: 'rimType', default: '700c', type: 'string', options: ['700c', '650c'] },
+            { name: 'minChainRing', type: 'integer', sign: 'positive' },
+            { name: 'maxChainRing', type: 'integer', sign: 'positive' },
+            { name: 'minCog', type: 'integer', sign: 'positive' },
+            { name: 'maxCog', type: 'integer', sign: 'positive' },
+            { name: 'minTeeth', type: 'integer', sign: 'positive' },
+            { name: 'maxTeeth', type: 'integer', sign: 'positive' }
+    ])
+
+    if (error) {
+        return res.send({ error })
+    }
+
+    // Get the gear inches options
+    const speedCadenceOptions = gears.getChainRingAndCogOptionsForSpeedAndCadence(speed, cadence, fixed, 
+        plusOrMinus, tyreWidth, rimType, minChainRing, maxChainRing, minCog, maxCog, minTeeth, maxTeeth)
+
+    res.send(speedCadenceOptions)
+})
+
+app.get('/lapTimeCadenceOptions', (req, res) => {
+
+    const {error, lapTime, lapLength, cadence, tyreWidth, rimType, minChainRing, maxChainRing, 
+        minCog, maxCog, minTeeth, maxTeeth} = 
+        hpcUtils.validateQueryString(req.query, [
+            { name: 'lapTime', mandatory: true, type: 'decimal', sign: 'positive' },
+            { name: 'lapLength', mandatory: true, type: 'decimal', sign: 'positive' },
+            { name: 'cadence', mandatory: true, type: 'decimal', sign: 'positive' },
+            { name: 'tyreWidth', default: 23, type: 'integer', sign: 'positive' },
+            { name: 'rimType', default: '700c', type: 'string', options: ['700c', '650c'] },
+            { name: 'minChainRing', type: 'integer', sign: 'positive' },
+            { name: 'maxChainRing', type: 'integer', sign: 'positive' },
+            { name: 'minCog', type: 'integer', sign: 'positive' },
+            { name: 'maxCog', type: 'integer', sign: 'positive' },
+            { name: 'minTeeth', type: 'integer', sign: 'positive' },
+            { name: 'maxTeeth', type: 'integer', sign: 'positive' }
+    ])
+
+    if (error) {
+        return res.send({ error })
+    }
+
+    // Get the gear inches options
+    const lapTimeCadenceOptions = gears.getChainRingAndCogOptionsForLapTimeAndCadence(lapTime, lapLength, 
+        cadence, tyreWidth, rimType, minChainRing, maxChainRing, minCog, maxCog, minTeeth, maxTeeth)
+
+    res.send(lapTimeCadenceOptions)
+})
+
 app.get('/help/*', (req, res) => {
     res.render('404_page', {
         title: '404 Error',

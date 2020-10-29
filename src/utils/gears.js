@@ -188,7 +188,7 @@ const getCogGivenChainRingAndWheelForSpeedAndCadence = (chainRing, wheelCircumfr
     return Math.round(decimalCog)
 }
 
-const getChainRingAndCogOptionsForSpeedAndCadence = (speed, cadence, fixed = 'cadence', plusOrMinus = 2,  
+const getChainRingAndCogOptionsForSpeedAndCadence = (speed, cadence, fixed = 'cadence', plusOrMinus = 4,  
     tyreWidth = 23, rimType = '700c', minChainRing = 34, maxChainRing = 60, minCog = 10, maxCog = 36, 
     minTeeth = 44, maxTeeth = 96) => {
     const rimDiameter = getRimSizeByType(rimType)
