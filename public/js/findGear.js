@@ -86,7 +86,7 @@ const handleSubmit = () => {
         setCookie('maxChainRing', maxChainRing, 1)
         setCookie('minCog', minCog, 1)
         setCookie('maxCog', maxCog, 1)
-        setCookie('rollOut', '', 1)
+        // setCookie('rollOut', '', 1)
 
         fetch(url).then((response) => {
             response.json().then((gearOptions) => {
@@ -160,7 +160,7 @@ const handleSubmit = () => {
         setCookie('maxChainRing', maxChainRing, 1)
         setCookie('minCog', minCog, 1)
         setCookie('maxCog', maxCog, 1)
-        setCookie('gearInches', '', 1)
+        // setCookie('gearInches', '', 1)
         // rimTypeHiddenFld.value = rimType
 
         fetch(url).then((response) => {
@@ -219,8 +219,8 @@ const handleSubmit = () => {
         setCookie('maxChainRing', maxChainRing, 1)
         setCookie('minCog', minCog, 1)
         setCookie('maxCog', maxCog, 1)
-        setCookie('gearInches', '', 1) // ??? needed
-        setCookie('rollOut', '', 1) // ??? needed
+        // setCookie('gearInches', '', 1) // ??? needed
+        // setCookie('rollOut', '', 1) // ??? needed
         // rimTypeHiddenFld.value = rimType
 
         fetch(url).then((response) => {
@@ -242,8 +242,8 @@ const handleSubmit = () => {
                 } else {
                     gearOptionsGlobal = gearOptions
                     messageOne.textContent = 'Your gear options...'
-                    // buildSortSelect(findFor)
-                    // sortSelectSection.style.display = 'block'
+                    buildSortSelect(findFor)
+                    sortSelectSection.style.display = 'block'
                     outputTable.style.display = 'block'
                     outputTable.innerHTML = ""
                     outputTable.appendChild(buildOutputTable(findFor, gearOptions))
@@ -280,8 +280,8 @@ const handleSubmit = () => {
         setCookie('maxChainRing', maxChainRing, 1)
         setCookie('minCog', minCog, 1)
         setCookie('maxCog', maxCog, 1)
-        setCookie('gearInches', '', 1) // ??? needed
-        setCookie('rollOut', '', 1) // ??? needed
+        // setCookie('gearInches', '', 1) // ??? needed
+        // setCookie('rollOut', '', 1) // ??? needed
         // rimTypeHiddenFld.value = rimType
 
         fetch(url).then((response) => {
@@ -303,8 +303,8 @@ const handleSubmit = () => {
                 } else {
                     gearOptionsGlobal = gearOptions
                     messageOne.textContent = 'Your gear options...'
-                    // buildSortSelect(findFor)
-                    // sortSelectSection.style.display = 'block'
+                    buildSortSelect(findFor)
+                    sortSelectSection.style.display = 'block'
                     outputTable.style.display = 'block'
                     outputTable.innerHTML = ""
                     outputTable.appendChild(buildOutputTable(findFor, gearOptions))
@@ -423,6 +423,27 @@ const buildSortSelect = (findFor) => {
     optionx.appendChild(textx)
     optionx.setAttribute('value', 'chainRing')
     sortByFld.appendChild(optionx)
+    if (findFor === 'speedCadence') {
+        if (fixedFld.value === 'cadence') {
+            const option1 = document.createElement('option')
+            const text1 = document.createTextNode('Speed (asc)')
+            option1.appendChild(text1)
+            option1.setAttribute('value', 'speed')
+            sortByFld.appendChild(option1)
+        } else if (fixedFld.value === 'speed') {
+            const option1 = document.createElement('option')
+            const text1 = document.createTextNode('Cadence (asc)')
+            option1.appendChild(text1)
+            option1.setAttribute('value', 'cadence')
+            sortByFld.appendChild(option1)
+        }
+    } else if (findFor === 'lapTimeCadence') {
+        const option1 = document.createElement('option')
+        const text1 = document.createTextNode('Cadence (asc)')
+        option1.appendChild(text1)
+        option1.setAttribute('value', 'cadence')
+        sortByFld.appendChild(option1)
+    }
 
     // Set value based on cookie, if it is available
     const sortBy = getCookie('sortBy')
@@ -439,11 +460,19 @@ const buildSortSelect = (findFor) => {
             sortByFld.value = 'closestGearInches'
         } else if (findFor === 'rollOut') {
             sortByFld.value = 'closestRollOut'
+        } else if ((sortBy === 'speed') && (findFor === 'speedCadence' || findFor === 'lapTimeCadence')) {
+            sortByFld.value = 'speed'
+        } else if ((sortBy === 'cadence') && (findFor === 'speedCadence')) {
+            sortByFld.value = 'cadence'
+        } else {
+            sortByFld.value = 'chainRing'
         }
     } else if (findFor === 'gearInches') {
         sortByFld.value = 'closestGearInches'
     } else if (findFor === 'rollOut') {
         sortByFld.value = 'closestRollOut'
+    } else {
+        sortByFld.value = 'chainRing'
     }
 }
 
@@ -463,6 +492,13 @@ const buildOutputTable = (findFor, gearOptions) => {
     } else if (findFor === 'rollOut') {
         gearOptions.sort((a, b) => (a.rollOut <= b.rollOut) ? 1 : -1)
         sortByFld.value = 'closestRollOut'
+    } else if ((sortByFld.value === 'speed') && (findFor === 'speedCadence')) {
+        gearOptions.sort((a, b) => (a.speed >= b.speed) ? 1 : -1)
+    } else if (sortByFld.value === 'cadence') {
+        gearOptions.sort((a, b) => (a.cadence >= b.cadence) ? 1 : -1)
+    } else {
+        gearOptions.sort((a, b) => (a.chainRing >= b.chainRing) ? 1 : -1)
+        sortByFld.value = 'chainRing'
     }
     setCookie('sortBy', sortByFld.value, 1)
 
@@ -576,10 +612,6 @@ const linkToGearDetails = (findFor, chainRing, cog) => {
     }
     return url
 }
-
-// const gearLink = () => {
-//     setCookie('lastAction', 'gearLink', 1)
-// }
 
 const applyMinMaxCookies = () => {
     const minChainRing = getCookie('minChainRing')
@@ -718,84 +750,52 @@ const handleOnLoad = () => {
                 applyMinMaxCookies()
                 handleSubmit()
             }
+        } else if (findFor === 'speedCadence') {
+            const speed = getCookie('speed')
+            const cadence = getCookie('cadence')
+            if (speed !== '' && cadence !== '') {
+                findForSelect.value = 'speedCadence'
+                actOnFindForSelection()
+                speedFld.value = speed
+                cadenceFld.value = cadence
+                const fixed = getCookie('fixed')
+                if (fixed !== '') {
+                    fixedFld.value = fixed
+                }
+                const tyreWidth = getCookie('tyreWidth')
+                if (tyreWidth !== '') {
+                    tyreWidthFld.value = tyreWidth
+                }
+                const rimType = getCookie('rimType')
+                if (rimType !== '') {
+                    rimTypeFld.value = rimType
+                }
+                applyMinMaxCookies()
+                handleSubmit()
+            }
+        } else if (findFor === 'lapTimeCadence') {
+            const lapTime = getCookie('lapTime')
+            const lapLength = getCookie('lapLength')
+            const cadence = getCookie('cadence')
+            if (lapTime !== '' && lapLength !== '' && cadence !== '') {
+                findForSelect.value = 'lapTimeCadence'
+                actOnFindForSelection()
+                lapTimeFld.value = lapTime
+                lapLengthFld.value = lapLength
+                cadenceFld.value = cadence
+                const tyreWidth = getCookie('tyreWidth')
+                if (tyreWidth !== '') {
+                    tyreWidthFld.value = tyreWidth
+                }
+                const rimType = getCookie('rimType')
+                if (rimType !== '') {
+                    rimTypeFld.value = rimType
+                }
+                applyMinMaxCookies()
+                handleSubmit()
+            }
         }
     }
     // setCookie('lastAction', 'loadedPage', 1)
     // console.log(document.cookie)
 }
-
-// console.log('findFor: ' + getCookie('findFor'))
-// console.log('gearInches: ' + getCookie('gearInches'))
-// console.log('rollOut: ' + getCookie('rollOut'))
-// console.log(document.cookie)
-
-// if (rimTypeHiddenFld.value !== '') {
-//     rimTypeFld.value = rimTypeHiddenFld.value
-// }
-
-// if (showMinMaxHiddenFld.value !== '') {
-//     minMaxCheckBox.checked = Boolean(showMinMaxHiddenFld.value === 'yes')
-//     actOnShowMinMaxSet()
-// } else {
-//     const showMinMax = getCookie('showMinMax')
-//     if (showMinMax !== '') {
-//         minMaxCheckBox.checked = Boolean(showMinMax === 'yes')
-//     }
-// }
-
-// if (findForHiddenFld.value !== '') {
-//     findForSelect.value = findForHiddenFld.value
-//     actOnFindForSelection()
-//     if (findForSelect.value === 'gearInches' && gearInchesFld.value !== '') {
-//         handleSubmit()
-//     } else if (findForSelect.value === 'rollOut' && rollOutFld.value !== '') {
-//         handleSubmit()
-//     }
-// } else if (gearInchesFld.value !== '') {
-//     handleSubmit()
-// } else {
-//     // Use cookies if they have been set
-//     const findFor = getCookie('findFor')
-//     if (findFor === 'gearInches') {
-//         const gearInches = getCookie('gearInches')
-//         if (gearInches !== '') {
-//             gearInchesFld.value = gearInches
-//             const plusOrMinus = getCookie('plusOrMinus')
-//             if (plusOrMinus !== '') {
-//                 plusOrMinusFld.value = plusOrMinus
-//             }
-//             applyMinMaxCookies()
-//             handleSubmit()
-//         }
-//     } else if (findFor === 'rollOut') {
-//         const rollOut = getCookie('rollOut')
-//         if (rollOut !== '') {
-//             rollOutFld.value = rollOut
-//             const maxDiff = getCookie('maxDiff')
-//             if (maxDiff !== '') {
-//                 maxDiffFld.value = maxDiff
-//             }
-//             const tyreWidth = getCookie('tyreWidth')
-//             if (tyreWidth !== '') {
-//                 tyreWidthFld.value = tyreWidth
-//             }
-//             const rimType = getCookie('rimType')
-//             if (rimType !== '') {
-//                 rimTypeFld.value = rimType
-//             }
-//             applyMinMaxCookies()
-//             handleSubmit()
-//         }
-//     }
-// }
-
-// Experimenting with browser back handling...
-// if (findForSelect.value === 'gearInches') {
-//     console.log('hello')
-//     if (gearInchesFld.value !== '') {
-//         console.log('there')
-//         handleSubmit()
-//     }
-// } else if (findForSelect.value === 'rollOut') {
-//     console.log('WIP')
-// }
