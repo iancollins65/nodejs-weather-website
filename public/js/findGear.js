@@ -16,6 +16,7 @@ const cadenceSection = document.querySelector('#cadenceSection')
 const cadenceFld = document.querySelector('#cadence')
 const fixedSection = document.querySelector('#fixedSection')
 const fixedFld = document.querySelector('#fixed')
+const fixedHiddenFld = document.querySelector('#fixedHidden')
 const tyreWidthSection = document.querySelector('#tyreWidthSection')
 const tyreWidthFld = document.querySelector('#tyreWidth')
 const rimTypeSection = document.querySelector('#rimTypeSection')
@@ -711,11 +712,23 @@ const handleOnLoad = () => {
     }
     
     if (findForHiddenFld.value !== '') {
+        // Use values provided in the query string / fields
         findForSelect.value = findForHiddenFld.value
         actOnFindForSelection()
         if (findForSelect.value === 'gearInches' && gearInchesFld.value !== '') {
             handleSubmit()
         } else if (findForSelect.value === 'rollOut' && rollOutFld.value !== '') {
+            handleSubmit()
+        } else if (findForSelect.value === 'speedCadence' && speedFld.value !== '' 
+                    && cadenceFld.value !== '') {
+            if (fixedHiddenFld.value !== '') {
+                if (fixedHiddenFld.value === 'cadence' || fixedHiddenFld.value === 'speed') {
+                    fixedFld.value = fixedHiddenFld.value
+                }
+            }
+            handleSubmit()
+        } else if (findForSelect.value === 'lapTimeCadence' && lapTimeFld.value !== '' 
+                    && lapLengthFld.value !== '' && cadenceFld.value !== '') {
             handleSubmit()
         }
     // } else if (gearInchesFld.value !== '') {
