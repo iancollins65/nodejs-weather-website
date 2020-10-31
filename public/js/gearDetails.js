@@ -10,6 +10,7 @@ const gearRatioCell = document.querySelector('#gearRatio')
 const gearInchesCell = document.querySelector('#gearInches')
 const rollOutCell = document.querySelector('#rollOut')
 const extrasSelect = document.querySelector('#extras')
+const extrasHiddenFld = document.querySelector('#extrasHidden')
 const speedSection = document.querySelector('#speedSection')
 const cadenceSection = document.querySelector('#cadenceSection')
 const lapTimeSection = document.querySelector('#lapTimeSection')
@@ -128,6 +129,10 @@ gearDetailsForm.addEventListener('input', (e) => {
 })
 
 extrasSelect.addEventListener('change', (e) => {
+    actOnExtrasSelect()
+})
+
+const actOnExtrasSelect = () => {
     if (extrasSelect.value === 'none') {
         speedFld.value = ''
         cadenceFld.value = ''
@@ -162,7 +167,7 @@ extrasSelect.addEventListener('change', (e) => {
         lapTimeSection.style.display = 'block'
         lapLengthSection.style.display = 'block'
     }
-})
+}
 
 // Utilities
 
@@ -180,10 +185,24 @@ const round = (value, places) => {
 //     rimTypeFld.value = initRimType
 // }
 
-if (rimTypeHiddenFld.value !== '') {
-    rimTypeFld.value = rimTypeHiddenFld.value
+const handleOnLoad = () => {
+    if (rimTypeHiddenFld.value !== '') {
+        rimTypeFld.value = rimTypeHiddenFld.value
+    }
+    
+    if (extrasHiddenFld.value === '' && extrasHiddenFld.value === 'none') {
+        extrasSelect.value = 'none'
+    } else if (extrasHiddenFld.value === 'cadenceAtSpeed') {
+        extrasSelect.value = 'cadence'
+    } else if (extrasHiddenFld.value === 'speedAtCadence') {
+        extrasSelect.value = 'speed'
+    } else if (extrasHiddenFld.value === 'cadenceAtLapTime') {
+        extrasSelect.value = 'cadenceLapTime'
+    }
+    actOnExtrasSelect()
+    
+    if (chainRingFld.value !== '' && cogFld.value !== '') {
+        handleSubmit()
+    }
 }
 
-if (chainRingFld.value !== '' && cogFld.value !== '') {
-    handleSubmit()
-}

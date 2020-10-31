@@ -610,6 +610,13 @@ const linkToGearDetails = (findFor, chainRing, cog) => {
         }
         url = url + '&rimType=' + rimTypeFld.value
     }
+    if (findFor === 'speedCadence' && fixedFld.value === 'cadence') {
+        url = url + '&extras=speedAtCadence&cadence=' + cadenceFld.value
+    } else if (findFor === 'speedCadence' && fixedFld.value === 'speed') {
+        url = url + '&extras=cadenceAtSpeed&speed=' + speedFld.value
+    } else if (findFor === 'lapTimeCadence') {
+        url = url + '&extras=cadenceAtLapTime&lapTime=' + lapTimeFld.value + '&lapLength=' + lapLengthFld.value
+    }
     return url
 }
 

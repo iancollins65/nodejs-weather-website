@@ -9,7 +9,7 @@
     <link rel="stylesheet" href="/css/styles.css">
 </head>
 
-<body>
+<body onpageshow="handleOnLoad()">
     <div class="main-content">
         {{>header}}
 
@@ -35,21 +35,22 @@
                 <option value="speed">Speed for given Cadence</option>
                 <option value="cadenceLapTime">Cadence for given Lap Time</option>
             </select><br>
+            <input type="hidden" id="extrasHidden" name="extrasHidden" value={{extras}}>
             <div id="speedSection">
                 <label for="speed">Speed:</label>
-                <input type="number" id="speed" name="speed" step="0.001" placeholder="(km/h)"><br>
+                <input type="number" id="speed" name="speed" step="0.001" placeholder="(km/h)" value={{speed}}><br>
             </div>
             <div id="cadenceSection">
                 <label for="cadence">Cadence:</label>
-                <input type="number" id="cadence" name="cadence" step="0.001" placeholder="(rpm)"><br>
+                <input type="number" id="cadence" name="cadence" step="0.001" placeholder="(rpm)" value={{cadence}}><br>
             </div>
             <div id="lapTimeSection">
                 <label for="lapTime">Lap Time:</label>
-                <input type="number" id="lapTime" name="lapTime" step="0.001" placeholder="(seconds)"><br>
+                <input type="number" id="lapTime" name="lapTime" step="0.001" placeholder="(seconds)" value={{lapTime}}><br>
             </div>
             <div id="lapLengthSection">
                 <label for="lapLength">Lap Length:</label>
-                <input type="number" id="lapLength" name="lapLength" step="0.001" placeholder="(optional, metres)"><br>
+                <input type="number" id="lapLength" name="lapLength" step="0.001" placeholder="(optional, metres)" value={{lapLength}}><br>
             </div>
             <button class="fields-button">Calculate</button>
         </form>
