@@ -34,6 +34,8 @@ const validateQueryString = (query, fields) => {
     let showMinMax = undefined
     let fixed = undefined
     let extras = undefined
+    let chainRings = undefined
+    let cogs = undefined
 
     for (field of fields) {
         let fieldValue = field.default
@@ -80,6 +82,32 @@ const validateQueryString = (query, fields) => {
                         return { error: field.name + ' is not ' +  optionsStr }
                     }
                 }
+
+            } else if (field.type === 'list') {
+                const listValue = query[field.name]
+                const arrayValue = convertListToArray(listValue)
+                fieldValue = []
+                for (item of arrayValue) {
+                    if (field.subType === 'integer' || field.subType === 'decimal') {
+                        itemValue = Number(item)
+                        if (isNaN(itemValue)) {
+                            return { error: field.name + ' list contains a non-numeric value' }
+                        }
+                        if (field.subType === 'integer') {
+                            if (!Number.isInteger(itemValue)) {
+                                return { error: field.name + ' list contains a non-integer' }
+                            }
+                        }
+                        if (field.sign === 'positive') {
+                            if (!(itemValue > 0)) {
+                                return { error: field.name + ' list contains a non-positive number' }
+                            }
+                        }
+                        fieldValue.push(itemValue)
+                    } else {
+                        fieldValue.push(item)
+                    }
+                }
             }
         } else if (fieldValue === undefined && field.returnEmpty === true) {
             fieldValue = ''
@@ -111,6 +139,8 @@ const validateQueryString = (query, fields) => {
             case 'showMinMax': showMinMax = fieldValue; break; 
             case 'fixed': fixed = fieldValue; break;
             case 'extras': extras = fieldValue; break;
+            case 'chainRings': chainRings = fieldValue; break;
+            case 'cogs': cogs = fieldValue; break;
         }
     }
 
@@ -140,11 +170,29 @@ const validateQueryString = (query, fields) => {
         findFor,
         showMinMax,
         fixed,
-        extras
+        extras,
+        chainRings,
+        cogs
     }
+}
+
+const convertListToArray = (list, separator) => {
+    if (!separator) {
+        if (list.includes(',')) {
+            separator = ','
+        } else if (list.includes(' ')) {
+            separator = ' '
+        } else if (list.includes('-')) {
+            separator = '-'
+        } else if (list.includes(';')) {
+            separator = ';'
+        }
+    }
+    return list.split(separator)
 }
 
 module.exports = {
     round: round,
-    validateQueryString: validateQueryString
+    validateQueryString: validateQueryString,
+    convertListToArray: convertListToArray
 }

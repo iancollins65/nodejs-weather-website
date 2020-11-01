@@ -101,6 +101,24 @@ const getGearInfo = (chainRing, cog, tyreWidth = 23, rimType = '700c', speed, ca
     }
 }
 
+const getGearInfoForCassette = (chainRings = [], cogs = [], tyreWidth = 23, rimType = '700c', speed, cadence, 
+lapLength, lapTime) => {
+    // Sort chainRings descending
+    chainRings.sort((a, b) => (a <= b) ? 1 : -1)
+    // Sort cogs ascending
+    cogs.sort((a, b) => (a >= b) ? 1 : -1)
+    // Get gear info for each combination
+    let gearInfoForCassette = []
+    for (chainRing of chainRings) {
+        for (cog of cogs) {
+            const gearInfo = getGearInfo(chainRing, cog, tyreWidth, rimType, speed, cadence, 
+                lapLength, lapTime)
+            gearInfoForCassette.push(gearInfo)
+        }
+    }
+    return gearInfoForCassette
+}
+
 const getCogGivenChainRingAndGearInches = (chainRing, gearInches, fraction = 0.4) => {
     const decimalCog = (27 * chainRing) / gearInches
     const floorCog = Math.floor(decimalCog)
@@ -252,5 +270,6 @@ module.exports = {
     getChainRingAndCogOptionsForRollOut: getChainRingAndCogOptionsForRollOut,
     getCogGivenChainRingAndWheelForSpeedAndCadence: getCogGivenChainRingAndWheelForSpeedAndCadence,
     getChainRingAndCogOptionsForSpeedAndCadence: getChainRingAndCogOptionsForSpeedAndCadence,
-    getChainRingAndCogOptionsForLapTimeAndCadence: getChainRingAndCogOptionsForLapTimeAndCadence
+    getChainRingAndCogOptionsForLapTimeAndCadence: getChainRingAndCogOptionsForLapTimeAndCadence,
+    getGearInfoForCassette: getGearInfoForCassette
 }
