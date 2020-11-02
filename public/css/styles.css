@@ -61,6 +61,10 @@ input {
     width: 40px;
 }
 
+.long-input {
+    width: 240px;
+}
+
 label {
     width: 100px;
     display: inline-block;
@@ -126,6 +130,10 @@ th {
 
 .output-table {
     margin-top: 8px;
+}
+
+.index-link {
+    margin-top: 16px;
 }
 
 /*

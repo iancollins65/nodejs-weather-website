@@ -3,7 +3,7 @@
 <html>
 
 <head>
-    <title>Gear Details</title>
+    <title>Cassette Details</title>
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1.0">
     <link rel="icon" href="/img/weather.png">
     <link rel="stylesheet" href="/css/styles.css">
@@ -13,13 +13,13 @@
     <div class="main-content">
         {{>header}}
 
-        <p>Enter information about your gear.</p>
+        <p>Enter information about your cassette.</p>
 
         <form>
-            <label for="chainRing">Chain Ring:</label>
-            <input type="number" id="chainRing" name="chainRing" value={{chainRing}}><br>
-            <label for="cog">Cog:</label>
-            <input type="number" id="cog" name="cog" value={{cog}}><br>
+            <label for="chainRings">Chain Rings:</label>
+            <input id="chainRings" name="chainRings" value={{chainRings}}><br>
+            <label for="cogs">Cogs:</label>
+            <input class="long-input" id="cogs" name="cogs" value={{cogs}}><br>
             <label for="tyreWidth">Tyre Width:</label>
             <input type="number" id="tyreWidth" name="tyreWidth" placeholder="23" value={{tyreWidth}}><br>
             <label for="rimType">Rim Type:</label>
@@ -55,55 +55,28 @@
             <button class="fields-button">Calculate</button>
         </form>
 
-        <p class="bold-text" id="message-1">Your gear details...</p>
+        <p class="bold-text" id="message-1">Your cassette details...</p>
 
-        <div id="gearData">
-            <table>
-                <tr>
-                    <td>Gear Ratio:</td>
-                    <td id="gearRatio"></td>
-                </tr>
-                <tr>
-                    <td>Gear Inches:</td>
-                    <td id="gearInches"></td>
-                </tr>
-                <tr>
-                    <td>Roll Out (Approx.):</td>
-                    <td id="rollOut"></td>
-                </tr>
-            </table>
+        <div id="showSection">
+            <form>
+                <label for="showData">Show:</label>
+                <select id="showData" name="showData">
+                    <option value="gearRatio">Gear Ratio</option>
+                    <option value="gearInches">Gear Inches</option>
+                    <option value="rollOut">Roll Out</option>
+                </select>
+            </form>
         </div>
 
-        <div id="extrasData">
-            <p class="bold-text">Your extras...</p>
-
-            <table>
-                <tr>
-                    <td>Speed:</td>
-                    <td id="speedCell"></td>
-                </tr>
-                <tr>
-                    <td>Cadence:</td>
-                    <td id="cadenceCell"></td>
-                </tr>
-                <div id="lapSection">
-                    <tr>
-                        <td>Lap Time:</td>
-                        <td id="lapTimeCell"></td>
-                    </tr>
-                    <tr>
-                        <td>Lap Pedal Count:</td>
-                        <td id="lapPedalCountCell"></td>
-                    </tr>
-                </div>
-            </table>
+        <div class="output-table" id="outputTable">
+            <p>Placeholder</p>
         </div>
 
     </div>
 
     {{>footer}}
 
-    <script src="/js/gearDetails.js"></script>
+    <script src="/js/cassetteDetails.js"></script>
 </body>
 
 </html>

@@ -477,6 +477,8 @@ const buildSortSelect = (findFor) => {
     }
 }
 
+// Dynamic output table
+
 const buildOutputTable = (findFor, gearOptions) => {
     // Sort gearOptions
     if (sortByFld.value === 'gearInches' && findFor === 'gearInches') {

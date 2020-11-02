@@ -94,6 +94,52 @@ app.get('/gearDetails', (req, res) => {
     }
 })
 
+app.get('/cassetteDetails', (req, res) => {
+
+    const {error, chainRings, cogs, tyreWidth, rimType, extras, speed, cadence, lapLength, lapTime} = 
+        hpcUtils.validateQueryString(req.query, [
+            { name: 'chainRings', type: 'list', subType: 'integer', sign: 'positive', returnEmpty: true },
+            { name: 'cogs', type: 'list', subType: 'integer', sign: 'positive', returnEmpty: true },
+            { name: 'tyreWidth', type: 'integer', sign: 'positive', returnEmpty: true },
+            { name: 'rimType', type: 'string', options: ['700c', '650c'], returnEmpty: true },
+            { name: 'extras', type: 'string', options: ['none', 'cadenceAtSpeed', 'speedAtCadence', 'cadenceAtLapTime'], returnEmpty: true },
+            { name: 'speed', type: 'decimal', sign: 'positive', returnEmpty: true },
+            { name: 'cadence', type: 'decimal', sign: 'positive', returnEmpty: true },
+            { name: 'lapTime', type: 'decimal', sign: 'positive', returnEmpty: true },
+            { name: 'lapLength', type: 'decimal', sign: 'positive', returnEmpty: true }
+    ])
+
+    if (error) {
+        res.render('cassetteDetails', {
+            title: 'Cassette Details',
+            name: 'Hot Pursuit Cycling',
+            chainRings: '',
+            cogs: '',
+            tyreWidth: '',
+            rimType: '',
+            extras: '',
+            speed: '',
+            cadence: '',
+            lapTime: '',
+            lapLength: ''
+        })
+    } else {
+        res.render('cassetteDetails', {
+            title: 'Cassette Details',
+            name: 'Hot Pursuit Cycling',
+            chainRings,
+            cogs,
+            tyreWidth,
+            rimType,
+            extras,
+            speed,
+            cadence,
+            lapTime,
+            lapLength
+        })
+    }
+})
+
 app.get('/findGear', (req, res) => {
 
     const {error, findFor, gearInches, plusOrMinus, rollOut, maxDiff, speed, cadence, lapTime, lapLength, 
