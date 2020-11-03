@@ -46,11 +46,13 @@ const handleSubmit = () => {
     const cogs = cogsFld.value
     const tyreWidth = tyreWidthFld.value
     const rimType = rimTypeFld.value
+    const extras = extrasSelect.value
     const speed = speedFld.value
     const cadence = cadenceFld.value
     const lapTime = lapTimeFld.value
     const lapLength = lapLengthFld.value
-    var url = '/cassetteInfo?chainRings=' + chainRings + '&cogs=' + cogs + '&rimType=' + rimType
+    var url = '/cassetteInfo?chainRings=' + chainRings + '&cogs=' + cogs 
+        + '&rimType=' + rimType + '&extras=' + extras
     if (tyreWidth !== '') {
         url = url + '&tyreWidth=' + tyreWidth
     }
@@ -107,6 +109,7 @@ extrasSelect.addEventListener('change', (e) => {
 })
 
 const actOnExtrasSelect = () => {
+    const showCookie = getCookie('show')
     if (extrasSelect.value === 'none') {
         speedFld.value = ''
         cadenceFld.value = ''
@@ -116,6 +119,9 @@ const actOnExtrasSelect = () => {
         cadenceSection.style.display = 'none'
         lapTimeSection.style.display = 'none'
         lapLengthSection.style.display = 'none'
+        if (showCookie === 'cadence' || showCookie === 'speed' || showCookie === 'lapTime' || showCookie === 'lapPedalCount') {
+            setCookie('show', 'gearRatio', 1)
+        }
     } else if (extrasSelect.value === 'speed') {
         speedFld.value = ''
         lapTimeFld.value = ''
@@ -124,6 +130,7 @@ const actOnExtrasSelect = () => {
         cadenceSection.style.display = 'block'
         lapTimeSection.style.display = 'none'
         lapLengthSection.style.display = 'block'
+        setCookie('show', 'speed', 1)
     } else if (extrasSelect.value === 'cadence') {
         cadenceFld.value = ''
         lapTimeFld.value = ''
@@ -132,6 +139,7 @@ const actOnExtrasSelect = () => {
         cadenceSection.style.display = 'none'
         lapTimeSection.style.display = 'none'
         lapLengthSection.style.display = 'block'
+        setCookie('show', 'cadence', 1)
     } else if (extrasSelect.value === 'cadenceLapTime') {
         speedFld.value = ''
         cadenceFld.value = ''
@@ -140,11 +148,13 @@ const actOnExtrasSelect = () => {
         cadenceSection.style.display = 'none'
         lapTimeSection.style.display = 'block'
         lapLengthSection.style.display = 'block'
+        setCookie('show', 'cadence', 1)
     }
 }
 
 showSelect.addEventListener('change', (e) => {
     const show = showSelect.value
+    setCookie('show', show, 1)
     outputTable.innerHTML = ""
     outputTable.appendChild(buildOutputTable(chainRingsGlobal, cogsGlobal, responseGlobal, show))
 })
@@ -195,6 +205,10 @@ const buildShowSelect = () => {
         option3.setAttribute('value', 'lapPedalCount')
         showSelect.appendChild(option3)
     }
+    const showCookie = getCookie('show')
+    if (showCookie !== '') {
+        showSelect.value = showCookie
+    }
 }
 
 // Dynamic output table
@@ -243,7 +257,7 @@ const buildOutputTable = (chainRings, cogs, cassetteInfo, show) => {
                 } else if (show === 'speed') {
                     cell.innerHTML = round(gearInfo.speed, 3) + ' km/h'
                 } else if (show === 'lapTime') {
-                    cell.innerHTML = round(gearInfo.lapTime, 3) + 'sec'
+                    cell.innerHTML = round(gearInfo.lapTime, 3) + ' sec'
                 } else if (show === 'lapPedalCount') {
                     cell.innerHTML = round(gearInfo.lapPedalCount, 3)
                 }
@@ -259,6 +273,29 @@ const buildOutputTable = (chainRings, cogs, cassetteInfo, show) => {
 const round = (value, places) => {
     const rounder = Math.pow(10, places)
     return Math.round(value * rounder) / rounder
+}
+
+// Cookie functions copied from https://www.w3schools.com/js/js_cookies.asp
+const setCookie = (cname, cvalue, exdays) => {
+    var d = new Date();
+    d.setTime(d.getTime() + (exdays * 24 * 60 * 60 * 1000));
+    var expires = "expires="+d.toUTCString();
+    document.cookie = cname + "=" + cvalue + ";" + expires // + ";path=/";
+}
+  
+const getCookie = (cname) => {
+    var name = cname + "=";
+    var ca = document.cookie.split(';');
+    for(var i = 0; i < ca.length; i++) {
+      var c = ca[i];
+      while (c.charAt(0) == ' ') {
+        c = c.substring(1);
+      }
+      if (c.indexOf(name) == 0) {
+        return c.substring(name.length, c.length);
+      }
+    }
+    return "";
 }
 
 // On load

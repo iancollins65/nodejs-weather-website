@@ -281,16 +281,17 @@ app.get('/gearInfo', (req, res) => {
 
 app.get('/cassetteInfo', (req, res) => {
 
+    const extras = req.query.extras
     const {error, chainRings, cogs, tyreWidth, rimType, speed, cadence, lapLength, lapTime} = 
         hpcUtils.validateQueryString(req.query, [
             { name: 'chainRings', mandatory: true, type: 'list', subType: 'integer', sign: 'positive' },
             { name: 'cogs', mandatory: true, type: 'list', subType: 'integer', sign: 'positive' },
             { name: 'tyreWidth', default: 23, type: 'integer', sign: 'positive' },
             { name: 'rimType', default: '700c', type: 'string', options: ['700c', '650c'] },
-            { name: 'speed', type: 'decimal', sign: 'positive' },
-            { name: 'cadence', type: 'decimal', sign: 'positive' },
-            { name: 'lapLength', type: 'decimal', sign: 'positive' },
-            { name: 'lapTime', type: 'decimal', sign: 'positive' }
+            { name: 'speed', mandatory: Boolean(extras === 'cadence'), type: 'decimal', sign: 'positive' },
+            { name: 'cadence', mandatory: Boolean(extras === 'speed'), type: 'decimal', sign: 'positive' },
+            { name: 'lapTime', mandatory: Boolean(extras === 'cadenceLapTime'), type: 'decimal', sign: 'positive' },
+            { name: 'lapLength', mandatory: Boolean(extras === 'cadenceLapTime'), type: 'decimal', sign: 'positive' }
     ])
 
     if (error) {
