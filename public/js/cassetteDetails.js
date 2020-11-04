@@ -246,26 +246,52 @@ const buildOutputTable = (chainRings, cogs, cassetteInfo, show) => {
             let cell = tr.insertCell(-1)
             const gearInfo = cassetteInfo.find((gearInf) => (gearInf.chainRing === chainRing && gearInf.cog === cog))
             if (gearInfo) {
+                let cellText = ''
                 if (show === 'gearRatio') {
-                    cell.innerHTML = round(gearInfo.gearRatio, 3)
+                    cellText = round(gearInfo.gearRatio, 3)
                 } else if (show === 'gearInches') {
-                    cell.innerHTML = round(gearInfo.gearInches, 3)
+                    cellText = round(gearInfo.gearInches, 3)
                 } else if (show === 'rollOut') {
-                    cell.innerHTML = round(gearInfo.rollOut / 1000, 3) + ' m'
+                    cellText = round(gearInfo.rollOut / 1000, 3) + ' m'
                 } else if (show === 'cadence') {
-                    cell.innerHTML = round(gearInfo.cadence, 3) + ' rpm'
+                    cellText = round(gearInfo.cadence, 3) + ' rpm'
                 } else if (show === 'speed') {
-                    cell.innerHTML = round(gearInfo.speed, 3) + ' km/h'
+                    cellText = round(gearInfo.speed, 3) + ' km/h'
                 } else if (show === 'lapTime') {
-                    cell.innerHTML = round(gearInfo.lapTime, 3) + ' sec'
+                    cellText = round(gearInfo.lapTime, 3) + ' sec'
                 } else if (show === 'lapPedalCount') {
-                    cell.innerHTML = round(gearInfo.lapPedalCount, 3)
+                    cellText = round(gearInfo.lapPedalCount, 3)
                 }
+                let a = document.createElement('A')
+                a.text = cellText
+                a.title = cellText
+                a.href = linkToGearDetails(extrasSelect.value, chainRing, cog)
+                a.className = 'link-cell'
+                cell.appendChild(a)
             }
         }
     }
 
     return table
+}
+
+const linkToGearDetails = (extras, chainRing, cog) => {
+    let url = '/gearDetails?chainRing=' + chainRing + '&cog=' + cog
+    if (tyreWidthFld.value !== '') {
+        url = url + '&tyreWidth=' + tyreWidthFld.value
+    }
+    url = url + '&rimType=' + rimTypeFld.value
+    if (extras === 'speed') {
+        url = url + '&extras=speedAtCadence&cadence=' + cadenceFld.value
+    } else if (extras === 'cadence') {
+        url = url + '&extras=cadenceAtSpeed&speed=' + speedFld.value
+    } else if (extras === 'cadenceLapTime') {
+        url = url + '&extras=cadenceAtLapTime&lapTime=' + lapTimeFld.value + '&lapLength=' + lapLengthFld.value
+    }
+    if ((extras === 'speed' || extras === 'cadence') && (lapLengthFld.value !== '')) {
+        url = url + '&lapLength=' + lapLengthFld.value
+    }
+    return url
 }
 
 // Utilities

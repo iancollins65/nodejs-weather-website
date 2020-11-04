@@ -46,6 +46,24 @@ header a {
     text-decoration: none;
 }
 
+a.link-cell:link {
+    color: #333456;
+    text-decoration: none;
+}
+
+a.link-cell:visited {
+    color: #888888;
+    text-decoration: none;
+}
+
+a.link-cell:hover {
+    text-decoration: underline;
+}
+
+a.link-cell:active {
+    text-decoration: underline;
+}
+
 .portrait {
     width: 250px;
 }
