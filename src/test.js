@@ -2,6 +2,8 @@ const hpcUtils = require('./utils/hpc-utils')
 
 const gears = require('./utils/gears.js')
 
+const cassettes = require('./utils/cassettes.js')
+
 // const test = gears.getGearInfo(54, 11, 25, '700c', 60, undefined, 250)
 
 // const test = gears.getCogGivenChainRingAndGearInches(50, 119)
@@ -26,33 +28,35 @@ const gears = require('./utils/gears.js')
 
 // console.log(test)
 
-const fields = [
-    { name: 'chainRing', mandatory: true, type: 'integer', sign: 'positive' },
-    { name: 'cog', mandatory: true, type: 'integer', sign: 'positive' },
-    { name: 'rimType', default: '700c', type: 'string', options: ['700c', '650c'] },
-    { name: 'speed', type: 'decimal', sign: 'positive' },
-    { name: 'sortByDiff', default: 'true', type: 'boolean'},
-    { name: 'chainRings', type: 'list', subType: 'integer', sign: 'positive' },
-    { name: 'cogs', type: 'list', subType: 'integer', sign: 'positive' }
-]
+// const fields = [
+//     { name: 'chainRing', mandatory: true, type: 'integer', sign: 'positive' },
+//     { name: 'cog', mandatory: true, type: 'integer', sign: 'positive' },
+//     { name: 'rimType', default: '700c', type: 'string', options: ['700c', '650c'] },
+//     { name: 'speed', type: 'decimal', sign: 'positive' },
+//     { name: 'sortByDiff', default: 'true', type: 'boolean'},
+//     { name: 'chainRings', type: 'list', subType: 'integer', sign: 'positive' },
+//     { name: 'cogs', type: 'list', subType: 'integer', sign: 'positive' }
+// ]
 
-const query = {
-    chainRing: '49',
-    cog: '15',
-    rimType: '700c',
-    speed: '50',
-    sortByDiff: 'true',
-    chainRings: '50,34',
-    cogs: '11,12,13,14,15,17,19,22,25,28'
-}
+// const query = {
+//     chainRing: '49',
+//     cog: '15',
+//     rimType: '700c',
+//     speed: '50',
+//     sortByDiff: 'true',
+//     chainRings: '50,34',
+//     cogs: '11,12,13,14,15,17,19,22,25,28'
+// }
 
-// console.log(hpcUtils.validateQueryString(query , fields))
+// // console.log(hpcUtils.validateQueryString(query , fields))
 
-const {chainRings, cogs} = hpcUtils.validateQueryString(query , fields)
+// const {chainRings, cogs} = hpcUtils.validateQueryString(query , fields)
 
-console.log(gears.getGearInfoForCassette(chainRings, cogs))
+// console.log(gears.getGearInfoForCassette(chainRings, cogs))
 
 // const test = hpcUtils.convertListToArray('a b c')
 
-// console.log(test)
+const test = cassettes.getCassettesBySpeed(10)
 
+console.log(test)
+console.log(cassettes.getCogsString(test[0].cogs))
