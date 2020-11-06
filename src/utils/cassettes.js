@@ -61,19 +61,21 @@ const getCassetteSpeedOptions = (min = 1, max = 12) => {
     return options
 }
 
-const getCassettesBySpeed = (speed = 11, getName = true) => {
+const getCassettesBySpeed = (speed = 11, deriveName = true) => {
     const cassetteOptions = cassettes.filter((c) => c.speed === speed)
-    if (getName === true) {
+    if (deriveName === true) {
         for (cassette of cassetteOptions) {
             const cogs = cassette.cogs
-            var name = ''
-            if (cogs.length === 1) {
-                name = cogs[0] + 'T'
-            } else if (cogs.length > 1) {
-                name = cogs[0] + '-' + cogs[cogs.length - 1] + 'T'
-            }
-            if (name !== '') {
-                cassette.name = name
+            if (!cassette.name) {
+                var name = ''
+                if (cogs.length === 1) {
+                    name = cogs[0] + 'T'
+                } else if (cogs.length > 1) {
+                    name = cogs[0] + '-' + cogs[cogs.length - 1] + 'T'
+                }
+                if (name !== '') {
+                    cassette.name = name
+                }
             }
         }
     }

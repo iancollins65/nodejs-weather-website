@@ -59,4 +59,4 @@ const cassettes = require('./utils/cassettes.js')
 const test = cassettes.getCassettesBySpeed(10)
 
 console.log(test)
-console.log(cassettes.getCogsString(test[0].cogs))
+console.log(cassettes.getCogsString(test[1].cogs))
