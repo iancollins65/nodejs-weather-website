@@ -5,6 +5,7 @@ const hbs = require('hbs')
 const geocode = require('./utils/geocode')
 const forecast = require('./utils/forecast')
 const gears = require('./utils/gears')
+const cassettes = require('./utils/cassettes')
 const hpcUtils = require('./utils/hpc-utils')
 
 const app = express()
@@ -26,6 +27,8 @@ hbs.registerPartials(partialsPath)
 
 // Setup static directory to serve
 app.use(express.static(publicDirectoryPath))
+
+// Page renders
 
 app.get('', (req, res) => {
     res.render('index', {
@@ -109,10 +112,13 @@ app.get('/cassetteDetails', (req, res) => {
             { name: 'lapLength', type: 'decimal', sign: 'positive', returnEmpty: true }
     ])
 
+    const cassetteSpeedOptionsString = cassettes.getCassetteSpeedOptionsString()
+
     if (error) {
         res.render('cassetteDetails', {
             title: 'Cassette Details',
             name: 'Hot Pursuit Cycling',
+            speedOptions: cassetteSpeedOptionsString,
             chainRings: '',
             cogs: '',
             tyreWidth: '',
@@ -127,6 +133,7 @@ app.get('/cassetteDetails', (req, res) => {
         res.render('cassetteDetails', {
             title: 'Cassette Details',
             name: 'Hot Pursuit Cycling',
+            speedOptions: cassetteSpeedOptionsString,
             chainRings,
             cogs,
             tyreWidth,
@@ -254,6 +261,8 @@ app.get('/weather', (req, res) => {
     })
 })
 
+// End-points
+
 app.get('/gearInfo', (req, res) => {
 
     const {error, chainRing, cog, tyreWidth, rimType, speed, cadence, lapLength, lapTime} = 
@@ -277,6 +286,23 @@ app.get('/gearInfo', (req, res) => {
         lapLength, lapTime)
 
     res.send(gearInfo)
+})
+
+app.get('/cassettesBySpeed', (req, res) => {
+
+    const {error, speed} = 
+        hpcUtils.validateQueryString(req.query, [
+            { name: 'speed', mandatory: true, type: 'integer', sign: 'positive' }
+    ])
+
+    if (error) {
+        return res.send({ error })
+    }
+
+    // Get the gear info
+    const cassettesBySpeed = cassettes.getCassettesBySpeed(speed)
+
+    res.send(cassettesBySpeed)
 })
 
 app.get('/cassetteInfo', (req, res) => {

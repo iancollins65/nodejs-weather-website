@@ -61,6 +61,10 @@ const getCassetteSpeedOptions = (min = 1, max = 12) => {
     return options
 }
 
+const getCassetteSpeedOptionsString = (min = 1, max = 12) => {
+    return getArrayString(getCassetteSpeedOptions(min, max))
+}
+
 const getCassettesBySpeed = (speed = 11, deriveName = true) => {
     const cassetteOptions = cassettes.filter((c) => c.speed === speed)
     if (deriveName === true) {
@@ -77,24 +81,26 @@ const getCassettesBySpeed = (speed = 11, deriveName = true) => {
                     cassette.name = name
                 }
             }
+            cassette.cogsString = getArrayString(cogs)
         }
     }
     return cassetteOptions
 }
 
-const getCogsString = (cogsArray) => {
-    var cogsString = ''
-    for (cog of cogsArray) {
-        if (cogsString !== '') {
-            cogsString = cogsString + ','
+const getArrayString = (array) => {
+    var arrayString = ''
+    for (element of array) {
+        if (arrayString !== '') {
+            arrayString = arrayString + ','
         }
-        cogsString = cogsString + cog
+        arrayString = arrayString + element
     }
-    return cogsString
+    return arrayString
 }
 
 module.exports = {
     getCassetteSpeedOptions: getCassetteSpeedOptions,
+    getCassetteSpeedOptionsString: getCassetteSpeedOptionsString,
     getCassettesBySpeed: getCassettesBySpeed,
-    getCogsString: getCogsString
+    getArrayString: getArrayString
 }

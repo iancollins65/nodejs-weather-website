@@ -16,10 +16,18 @@
         <p>Enter information about your cassette.</p>
 
         <form>
-            <label for="chainRings">Chain Rings:</label>
-            <input id="chainRings" name="chainRings" value={{chainRings}}><br>
+            <label for="speedSelect">Sp / Cass:</label>
+            <select id="speedSelect" name="speedSelect">
+                <option value="none">(optional)</option>
+            </select>
+            <select id="cassetteSelect" name="cassetteSelect">
+                <option value="none">(optional)</option>
+            </select><br>
+            <input type="hidden" id="speedOptionsHidden" name="speedOptionsHidden" value={{speedOptions}}>
             <label for="cogs">Cogs:</label>
             <input class="long-input" id="cogs" name="cogs" value={{cogs}}><br>
+            <label for="chainRings">Chain Rings:</label>
+            <input id="chainRings" name="chainRings" value={{chainRings}}><br>
             <label for="tyreWidth">Tyre Width:</label>
             <input type="number" id="tyreWidth" name="tyreWidth" placeholder="23" value={{tyreWidth}}><br>
             <label for="rimType">Rim Type:</label>

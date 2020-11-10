@@ -1,4 +1,7 @@
 const cassetteDetailsForm = document.querySelector('form')
+const speedSelect = document.querySelector('#speedSelect')
+const cassetteSelect = document.querySelector('#cassetteSelect')
+const speedOptionsHiddenFld = document.querySelector('#speedOptionsHidden')
 const chainRingsFld = document.querySelector('#chainRings')
 const cogsFld = document.querySelector('#cogs')
 const tyreWidthFld = document.querySelector('#tyreWidth')
@@ -211,6 +214,21 @@ const buildShowSelect = () => {
     }
 }
 
+const buildSpeedSelect = () => {
+    while (speedSelect.options.length > 1) {
+        speedSelect.remove(1);
+    }
+    const speedOptionsString = speedOptionsHiddenFld.value
+    const speedOptions = speedOptionsString.split(',')
+    for (speed of speedOptions) {
+        const option = document.createElement('option')
+        const text = document.createTextNode(speed)
+        option.appendChild(text)
+        option.setAttribute('value', speed)
+        speedSelect.appendChild(option)
+    }
+}
+
 // Dynamic output table
 
 const buildOutputTable = (chainRings, cogs, cassetteInfo, show) => {
@@ -327,6 +345,9 @@ const getCookie = (cname) => {
 // On load
 
 const handleOnLoad = () => {
+
+    buildSpeedSelect()
+
     if (rimTypeHiddenFld.value !== '') {
         rimTypeFld.value = rimTypeHiddenFld.value
     }
