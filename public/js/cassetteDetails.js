@@ -24,6 +24,7 @@ const outputTable = document.querySelector('#outputTable')
 var chainRingsGlobal = []
 var cogsGlobal = []
 var responseGlobal = []
+var cassetteOptionsGlobal = []
 
 speedSection.style.display = 'none'
 cadenceSection.style.display = 'none'
@@ -228,6 +229,54 @@ const buildSpeedSelect = () => {
         speedSelect.appendChild(option)
     }
 }
+
+speedSelect.addEventListener('change', (e) => {
+    const speed = speedSelect.value
+    if (speed === 'none') {
+        buildCassetteSelect()
+        return
+    }
+    var url = '/cassettesBySpeed?speed=' + speed
+    fetch(url).then((res) => {
+        res.json().then((cassetteOptions) => {
+            if (cassetteOptions.error) {
+                var errorStr = cassetteOptions.error + '.'
+                errorStr = errorStr.replace('speed', 'Speed')
+                messageOne.style.color = 'red'
+                messageOne.textContent = errorStr
+            } else {
+                cassetteOptionsGlobal = cassetteOptions
+                buildCassetteSelect()
+            }
+        })
+    })    
+})
+
+const buildCassetteSelect = () => {
+    while (cassetteSelect.options.length > 1) {
+        cassetteSelect.remove(1);
+    }
+    if (speedSelect.value !== 'none' && cassetteOptionsGlobal.length > 0) {
+        for (cassette of cassetteOptionsGlobal) {
+            const option = document.createElement('option')
+            const text = document.createTextNode(cassette.name)
+            option.appendChild(text)
+            option.setAttribute('value', cassette.name)
+            cassetteSelect.appendChild(option)
+        }
+    }
+}
+
+cassetteSelect.addEventListener('change', (e) => {
+    const cassetteName = cassetteSelect.value
+    if (cassetteName === 'none') {
+        return
+    }
+    const cassette = cassetteOptionsGlobal.find((c) => c.name === cassetteName)
+    if (cassette) {
+        cogsFld.value = cassette.cogsString
+    }
+})
 
 // Dynamic output table
 
