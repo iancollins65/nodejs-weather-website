@@ -231,6 +231,12 @@ const buildSpeedSelect = () => {
 }
 
 speedSelect.addEventListener('change', (e) => {
+    setCookie('speedSelect', speedSelect.value)
+    setCookie('cassetteSelect', 'none')
+    actOnSpeedSelect()
+})
+
+const actOnSpeedSelect = () => {
     const speed = speedSelect.value
     if (speed === 'none') {
         buildCassetteSelect()
@@ -249,8 +255,8 @@ speedSelect.addEventListener('change', (e) => {
                 buildCassetteSelect()
             }
         })
-    })    
-})
+    })
+}
 
 const buildCassetteSelect = () => {
     while (cassetteSelect.options.length > 1) {
@@ -265,9 +271,24 @@ const buildCassetteSelect = () => {
             cassetteSelect.appendChild(option)
         }
     }
+    cassetteSelect.value = 'none'
+    const cassetteCookie = getCookie('cassetteSelect')
+    if (cassetteCookie !== '') {
+        if (selectContains('#cassetteSelect', cassetteCookie) === true) {
+            cassetteSelect.value = cassetteCookie
+            if (cogsFld.value === '') {
+                actOnCassetteSelect()
+            }
+        }
+    }
 }
 
 cassetteSelect.addEventListener('change', (e) => {
+    setCookie('cassetteSelect', cassetteSelect.value)
+    actOnCassetteSelect()
+})
+
+const actOnCassetteSelect = () => {
     const cassetteName = cassetteSelect.value
     if (cassetteName === 'none') {
         return
@@ -276,7 +297,7 @@ cassetteSelect.addEventListener('change', (e) => {
     if (cassette) {
         cogsFld.value = cassette.cogsString
     }
-})
+}
 
 // Dynamic output table
 
@@ -368,6 +389,16 @@ const round = (value, places) => {
     return Math.round(value * rounder) / rounder
 }
 
+const selectContains = (select, value) => {
+    const selectObj = document.querySelector(select)
+    for (var i = 0; i < selectObj.options.length; i++) {
+        if (selectObj.options[i].value === value) {
+            return true
+        }
+    }
+    return false
+}
+
 // Cookie functions copied from https://www.w3schools.com/js/js_cookies.asp
 const setCookie = (cname, cvalue, exdays) => {
     var d = new Date();
@@ -396,6 +427,15 @@ const getCookie = (cname) => {
 const handleOnLoad = () => {
 
     buildSpeedSelect()
+    speedSelect.value = 'none'
+    cassetteSelect.value = 'none'
+    const speedCookie = getCookie('speedSelect')
+    if (speedCookie !== '') {
+        if (selectContains('#speedSelect', speedCookie) === true) {
+            speedSelect.value = speedCookie
+            actOnSpeedSelect()
+        }
+    }
 
     if (rimTypeHiddenFld.value !== '') {
         rimTypeFld.value = rimTypeHiddenFld.value
