@@ -110,6 +110,11 @@ cassetteDetailsForm.addEventListener('input', (e) => {
 
 extrasSelect.addEventListener('change', (e) => {
     actOnExtrasSelect()
+    if (extrasSelect.value === 'speed') {
+        setCookie('show', 'speed', 1)
+    } else if (extrasSelect.value === 'cadence' || extrasSelect.value === 'cadenceLapTime') {
+        setCookie('show', 'cadence', 1)
+    }
 })
 
 const actOnExtrasSelect = () => {
@@ -123,9 +128,6 @@ const actOnExtrasSelect = () => {
         cadenceSection.style.display = 'none'
         lapTimeSection.style.display = 'none'
         lapLengthSection.style.display = 'none'
-        if (showCookie === 'cadence' || showCookie === 'speed' || showCookie === 'lapTime' || showCookie === 'lapPedalCount') {
-            setCookie('show', 'gearRatio', 1)
-        }
     } else if (extrasSelect.value === 'speed') {
         speedFld.value = ''
         lapTimeFld.value = ''
@@ -134,7 +136,6 @@ const actOnExtrasSelect = () => {
         cadenceSection.style.display = 'block'
         lapTimeSection.style.display = 'none'
         lapLengthSection.style.display = 'block'
-        setCookie('show', 'speed', 1)
     } else if (extrasSelect.value === 'cadence') {
         cadenceFld.value = ''
         lapTimeFld.value = ''
@@ -143,7 +144,6 @@ const actOnExtrasSelect = () => {
         cadenceSection.style.display = 'none'
         lapTimeSection.style.display = 'none'
         lapLengthSection.style.display = 'block'
-        setCookie('show', 'cadence', 1)
     } else if (extrasSelect.value === 'cadenceLapTime') {
         speedFld.value = ''
         cadenceFld.value = ''
@@ -152,7 +152,6 @@ const actOnExtrasSelect = () => {
         cadenceSection.style.display = 'none'
         lapTimeSection.style.display = 'block'
         lapLengthSection.style.display = 'block'
-        setCookie('show', 'cadence', 1)
     }
 }
 
@@ -209,9 +208,19 @@ const buildShowSelect = () => {
         option3.setAttribute('value', 'lapPedalCount')
         showSelect.appendChild(option3)
     }
+    const option = document.createElement('option')
+    const text = document.createTextNode('Everything (wide)')
+    option.appendChild(text)
+    option.setAttribute('value', 'everything')
+    showSelect.appendChild(option)
+    
     const showCookie = getCookie('show')
     if (showCookie !== '') {
-        showSelect.value = showCookie
+        if (selectContains('#showData', showCookie) === true) {
+            showSelect.value = showCookie
+        } else {
+            showSelect.value = 'gearRatio'
+        }
     }
 }
 
@@ -306,56 +315,161 @@ const buildOutputTable = (chainRings, cogs, cassetteInfo, show) => {
     // Build the table
     var table = document.createElement('table')
 
-    // Top-top row
-    let tr = table.insertRow(-1)
-    let th = document.createElement('th')
-    tr.appendChild(th)
-    th = document.createElement('th')
-    th.innerHTML = 'Chain Rings'
-    th.colSpan = chainRings.length
-    tr.appendChild(th)
-
-    // Top row
-    tr = table.insertRow(-1)
-    th = document.createElement('th')
-    th.innerHTML = 'Cogs'
-    tr.appendChild(th)
-    for (chainRing of chainRings) {
-        let topRowCell = tr.insertCell(-1)
-        topRowCell.innerHTML = '<strong>' + chainRing + '</strong>'
-    }
-
-    // Remaining rows
-    for (cog of cogs) {
+    if (show !== 'everything') {
+        // Top-top row
         let tr = table.insertRow(-1)
-        let leftColCell = tr.insertCell(-1)
-        leftColCell.innerHTML = '<strong>' + cog + '</strong>'
+        let th = document.createElement('th')
+        tr.appendChild(th)
+        th = document.createElement('th')
+        th.innerHTML = 'Chain Rings'
+        th.colSpan = chainRings.length
+        tr.appendChild(th)
+
+        // Top row
+        tr = table.insertRow(-1)
+        th = document.createElement('th')
+        th.innerHTML = 'Cogs'
+        tr.appendChild(th)
         for (chainRing of chainRings) {
-            let cell = tr.insertCell(-1)
-            const gearInfo = cassetteInfo.find((gearInf) => (gearInf.chainRing === chainRing && gearInf.cog === cog))
-            if (gearInfo) {
-                let cellText = ''
-                if (show === 'gearRatio') {
-                    cellText = round(gearInfo.gearRatio, 3)
-                } else if (show === 'gearInches') {
-                    cellText = round(gearInfo.gearInches, 3)
-                } else if (show === 'rollOut') {
-                    cellText = round(gearInfo.rollOut / 1000, 3) + ' m'
-                } else if (show === 'cadence') {
-                    cellText = round(gearInfo.cadence, 3) + ' rpm'
-                } else if (show === 'speed') {
-                    cellText = round(gearInfo.speed, 3) + ' km/h'
-                } else if (show === 'lapTime') {
-                    cellText = round(gearInfo.lapTime, 3) + ' sec'
-                } else if (show === 'lapPedalCount') {
-                    cellText = round(gearInfo.lapPedalCount, 3)
+            let topRowCell = tr.insertCell(-1)
+            topRowCell.innerHTML = '<strong>' + chainRing + '</strong>'
+        }
+
+        // Remaining rows
+        for (cog of cogs) {
+            let tr = table.insertRow(-1)
+            let leftColCell = tr.insertCell(-1)
+            leftColCell.innerHTML = '<strong>' + cog + '</strong>'
+            for (chainRing of chainRings) {
+                let cell = tr.insertCell(-1)
+                const gearInfo = cassetteInfo.find((gearInf) => (gearInf.chainRing === chainRing && gearInf.cog === cog))
+                if (gearInfo) {
+                    let cellText = ''
+                    if (show === 'gearRatio') {
+                        cellText = round(gearInfo.gearRatio, 3)
+                    } else if (show === 'gearInches') {
+                        cellText = round(gearInfo.gearInches, 3)
+                    } else if (show === 'rollOut') {
+                        cellText = round(gearInfo.rollOut / 1000, 3) + ' m'
+                    } else if (show === 'cadence') {
+                        cellText = round(gearInfo.cadence, 3) + ' rpm'
+                    } else if (show === 'speed') {
+                        cellText = round(gearInfo.speed, 3) + ' km/h'
+                    } else if (show === 'lapTime') {
+                        cellText = round(gearInfo.lapTime, 3) + ' sec'
+                    } else if (show === 'lapPedalCount') {
+                        cellText = round(gearInfo.lapPedalCount, 3)
+                    }
+                    let a = document.createElement('A')
+                    a.text = cellText
+                    a.title = cellText
+                    a.href = linkToGearDetails(extrasSelect.value, chainRing, cog)
+                    a.className = 'link-cell'
+                    cell.appendChild(a)
                 }
-                let a = document.createElement('A')
-                a.text = cellText
-                a.title = cellText
-                a.href = linkToGearDetails(extrasSelect.value, chainRing, cog)
-                a.className = 'link-cell'
-                cell.appendChild(a)
+            }
+        }
+    } else { // show everything
+        const extras = extrasSelect.value
+
+        // Headings row
+        tr = table.insertRow(-1)
+        th = document.createElement('th')
+        th.innerHTML = 'Gear'
+        tr.appendChild(th)
+        th = document.createElement('th')
+        th.innerHTML = 'Ratio'
+        tr.appendChild(th)
+        th = document.createElement('th')
+        th.innerHTML = 'Inches'
+        tr.appendChild(th)
+        th = document.createElement('th')
+        th.innerHTML = 'Roll Out'
+        tr.appendChild(th)
+        if (extras === 'cadence') {
+            th = document.createElement('th')
+            th.innerHTML = 'Cadence'
+            tr.appendChild(th)
+        } else if (extras === 'speed') {
+            th = document.createElement('th')
+            th.innerHTML = 'Speed'
+            tr.appendChild(th)
+        } else if (extras === 'cadenceLapTime') {
+            th = document.createElement('th')
+            th.innerHTML = 'Cadence'
+            tr.appendChild(th)
+            th = document.createElement('th')
+            th.innerHTML = 'Speed'
+            tr.appendChild(th)
+            th = document.createElement('th')
+            th.innerHTML = 'Lap Pedals'
+            tr.appendChild(th)
+        }
+        if ((extras === 'cadence' || extras === 'speed') && (lapLengthFld.value !== '')) {
+            th = document.createElement('th')
+            th.innerHTML = 'Lap Time'
+            tr.appendChild(th)
+            th = document.createElement('th')
+            th.innerHTML = 'Lap Pedals'
+            tr.appendChild(th)
+        }
+
+        // Data rows
+        for (gearInfo of cassetteInfo) {
+            let tr = table.insertRow(-1)
+            // Gear cell as a link
+            let gearCell = tr.insertCell(-1)
+            let a = document.createElement('A')
+            a.text = gearInfo.chainRing + ' x ' + gearInfo.cog
+            a.title = 'Chain Ring ' + gearInfo.chainRing + ' Cog ' + gearInfo.cog
+            a.href = linkToGearDetails(extras, gearInfo.chainRing, gearInfo.cog)
+            gearCell.appendChild(a)
+            // Ratio cell
+            let ratioCell = tr.insertCell(-1)
+            let rawValue = gearInfo.gearRatio
+            ratioCell.innerHTML = round(rawValue, 3)
+            // Inches cell
+            let inchesCell = tr.insertCell(-1)
+            rawValue = gearInfo.gearInches
+            inchesCell.innerHTML = round(rawValue, 3)
+            // Roll Out cell
+            let rollOutCell = tr.insertCell(-1)
+            rawValue = gearInfo.rollOut
+            rollOutCell.innerHTML = round(rawValue / 1000, 3) + ' m'
+            // Extras
+            if (extras === 'cadence') {
+                // Cadence cell
+                let cadenceCell = tr.insertCell(-1)
+                rawValue = gearInfo.cadence
+                cadenceCell.innerHTML = round(rawValue, 3) + ' rpm'
+            } else if (extras === 'speed') {
+                // Speed cell
+                let speedCell = tr.insertCell(-1)
+                rawValue = gearInfo.speed
+                speedCell.innerHTML = round(rawValue, 3) + ' km/h'
+            } else if (extras === 'cadenceLapTime') {
+                // Cadence cell
+                let cadenceCell = tr.insertCell(-1)
+                rawValue = gearInfo.cadence
+                cadenceCell.innerHTML = round(rawValue, 3) + ' rpm'
+                // Speed cell
+                let speedCell = tr.insertCell(-1)
+                rawValue = gearInfo.speed
+                speedCell.innerHTML = round(rawValue, 3) + ' km/h'
+                // Lap Pedals cell
+                let lapPedalsCell = tr.insertCell(-1)
+                rawValue = gearInfo.lapPedalCount
+                lapPedalsCell.innerHTML = round(rawValue, 3)
+            }
+            if ((extras === 'cadence' || extras === 'speed') && (lapLengthFld.value !== '')) {
+                // Lap Time cell
+                let lapTimeCell = tr.insertCell(-1)
+                rawValue = gearInfo.lapTime
+                lapTimeCell.innerHTML = round(rawValue, 3) + ' sec'
+                // Lap Pedals cell
+                let lapPedalsCell = tr.insertCell(-1)
+                rawValue = gearInfo.lapPedalCount
+                lapPedalsCell.innerHTML = round(rawValue, 3)
             }
         }
     }
