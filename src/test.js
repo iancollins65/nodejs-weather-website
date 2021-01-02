@@ -4,6 +4,8 @@ const gears = require('./utils/gears.js')
 
 const cassettes = require('./utils/cassettes.js')
 
+const schedules = require('./utils/schedules.js')
+
 // const test = gears.getGearInfo(54, 11, 25, '700c', 60, undefined, 250)
 
 // const test = gears.getCogGivenChainRingAndGearInches(50, 119)
@@ -56,8 +58,83 @@ const cassettes = require('./utils/cassettes.js')
 
 // const test = hpcUtils.convertListToArray('a b c')
 
-const test = cassettes.getCassettesBySpeed(10)
+//const test = cassettes.getCassettesBySpeed(10)
 
 // const test = cassettes.getCassetteSpeedOptionsString()
+
+// const test = schedules.defaultScheduleParams
+
+const scheduleParams_tempo = {
+    label: "",
+    scheduleType: schedules.scheduleType.distance,
+    scheduleBy: schedules.scheduleBy.tempo,
+    lapDistance: 250.0,
+    distanceLaps: 4.0,
+    timeSeconds: 0.0,
+    tempoTarget: 15.0,
+    startType: schedules.startType.standing,
+    upToSpeedTime: 4.0,
+    timingsAt: schedules.timingsAt.both,
+    speedTempo: 0.0,
+    cadenceTempo: 0.0
+}
+
+const scheduleParams_time = {
+    label: "",
+    scheduleType: schedules.scheduleType.distance,
+    scheduleBy: schedules.scheduleBy.time,
+    lapDistance: 250.0,
+    distanceLaps: 4.0,
+    timeSeconds: 68.0,
+    tempoTarget: 0.0,
+    startType: schedules.startType.standing,
+    upToSpeedTime: 4.0,
+    timingsAt: schedules.timingsAt.fullLap,
+    speedTempo: 0.0,
+    cadenceTempo: 0.0
+}
+
+const scheduleParams_speed = {
+    label: "",
+    scheduleType: schedules.scheduleType.distance,
+    scheduleBy: schedules.scheduleBy.speed,
+    lapDistance: 250.0,
+    distanceLaps: 0.0,
+    timeSeconds: 0.0,
+    tempoTarget: 0.0,
+    startType: schedules.startType.standing,
+    upToSpeedTime: 4.0,
+    timingsAt: schedules.timingsAt.fullLap,
+    speedTempo: 60.0,
+    cadenceTempo: 0.0
+}
+
+const scheduleParams_cadence = {
+    label: "",
+    scheduleType: schedules.scheduleType.distance,
+    scheduleBy: schedules.scheduleBy.cadence,
+    lapDistance: 250.0,
+    distanceLaps: 0.0,
+    timeSeconds: 0.0,
+    tempoTarget: 0.0,
+    startType: schedules.startType.standing,
+    upToSpeedTime: 4.0,
+    timingsAt: schedules.timingsAt.fullLap,
+    speedTempo: 0.0,
+    cadenceTempo: 100.0,
+    gear: {
+        rollOut: 7000
+    }
+}
+
+const test = schedules.calcDistanceSchedule(scheduleParams_tempo)
+
+// const test = schedules.calcDistanceSchedule(scheduleParams_time)
+
+// const test = schedules.calcDistanceSchedule(scheduleParams_speed)
+
+// const test = schedules.calcDistanceSchedule(scheduleParams_cadence)
+
+// const test = schedules.getNextLapCountForDistanceSchedule(2.0, scheduleParams_tempo)
 
 console.log(test)
