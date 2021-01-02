@@ -145,6 +145,114 @@ const getNextLapCountForDistanceSchedule = (currentLapCount, scheduleParams) => 
     return newLapCount
 }
 
+const calcTimeSchedule = (scheduleParams) => {
+    const s = scheduleParams
+    //var nextSegmentIndex = 0
+    //var nextLapCount = 0.0
+    let points = []
+
+    var tempo = 0.0
+    if (s.scheduleBy === scheduleBy.tempo) {
+        tempo = s.tempoTarget
+    } else if (s.scheduleBy === scheduleBy.distance) {
+        tempo = (s.timeSeconds - s.upToSpeedTime) / s.distanceLaps
+    } else if (s.scheduleBy === scheduleBy.speed) {
+        tempo = (3.6 * s.lapDistance) / s.speedTempo
+    } else if (s.scheduleBy === scheduleBy.cadence) {
+        tempo = (60000 * s.lapDistance) / (s.cadenceTempo * s.gear.rollOut)
+    }
+
+    const tempoHrs = tempo / 3600.0
+    const lapDistance = s.lapDistance
+    const lapDistanceKm = lapDistance / 1000.0
+    const tempoSpeed = lapDistanceKm / tempoHrs  // km/h
+    const upToSpeedTime = s.upToSpeedTime
+    var rollOutMetres = 0.0
+    var tempoCadence = 0.0
+    var lapPedals = 0.0
+    if (s.gear) {
+        rollOutMetres = s.gear.rollOut / 1000.0
+        lapPedals = lapDistance / rollOutMetres
+        tempoCadence = lapPedals / tempo * 60.0  // rpm
+    }
+    var prevTime = 0.0
+    var prevDistance = 0.0
+    var firstPoint = true
+    var currentLapCount = 0.0
+    var timeLeft = s.timeSeconds
+
+    while (timeLeft > 0.0) {
+        const prevLapCount = currentLapCount
+        currentLapCount = getNextLapCountForTimeSchedule(currentLapCount, scheduleParams)
+        var currentTimingsAt = ((currentLapCount - Math.trunc(currentLapCount)) === 0.0) ? timingsAt.fullLap : timingsAt.halfLap
+        var time = (currentLapCount * tempo) + upToSpeedTime
+        if (time > s.timeSeconds) {
+            const lapPortion = timeLeft / tempo
+            currentLapCount = prevLapCount + lapPortion
+            currentTimingsAt = timingsAt.partLap
+            time = s.timeSeconds
+        }
+        const segmentTime = time - prevTime
+        prevTime = time
+        const distance = currentLapCount * lapDistance
+        let segmentDistance = distance - prevDistance
+        prevDistance = distance
+        var speed = tempoSpeed
+        var cadence = tempoCadence
+        var aveSpeed = speed
+        var aveCadence = cadence
+        if (firstPoint === true && upToSpeedTime > 0.0) {
+            speed = (distance / 1000.0) / (time / 3600.0)
+            aveSpeed = speed
+            if (rollOutMetres !== 0.0) {
+                cadence = lapPedals * currentLapCount / time * 60.0
+                aveCadence = cadence
+            }
+            firstPoint = false
+        } else if (upToSpeedTime > 0) {
+            aveSpeed = (distance / 1000.0) / (time / 3600.0)
+            if (rollOutMetres != 0.0) {
+                aveCadence = lapPedals * currentLapCount / time * 60.0
+            }
+        }
+        const newPoint = {
+            timingAt: currentTimingsAt.id,
+            lapNumber: currentLapCount,
+            distance: distance, 
+            time: time, 
+            tempo: tempo, 
+            segmentTime: segmentTime,
+            segmentDistance: segmentDistance, 
+            speed: speed, 
+            aveSpeed: aveSpeed, 
+            cadence: cadence,
+            aveCadence: aveCadence
+        }
+        points.push(newPoint)
+        timeLeft = s.timeSeconds - time
+    }
+
+    return {
+        points: points
+    }
+}
+
+const getNextLapCountForTimeSchedule = (currentLapCount, scheduleParams) => {
+    const s = scheduleParams
+    // Handle start
+    if (currentLapCount === 0.0) {
+        if (s.timingsAt === timingsAt.fullLap) {
+            return 1.0
+        } else {
+            return 0.5
+        }
+    }
+    // Handle progressive cases
+    const increment = (s.timingsAt === timingsAt.both) ? 0.5 : 1.0
+    var newLapCount = currentLapCount + increment
+    return newLapCount
+}
+
 module.exports = {
     scheduleType: scheduleType,
     scheduleBy: scheduleBy,
@@ -152,5 +260,5 @@ module.exports = {
     timingsAt: timingsAt,
     defaultScheduleParams: defaultScheduleParams,
     calcDistanceSchedule: calcDistanceSchedule,
-    getNextLapCountForDistanceSchedule: getNextLapCountForDistanceSchedule
+    calcTimeSchedule: calcTimeSchedule
 }

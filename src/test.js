@@ -127,7 +127,70 @@ const scheduleParams_cadence = {
     }
 }
 
-const test = schedules.calcDistanceSchedule(scheduleParams_tempo)
+const scheduleParams_tempo_time = {
+    label: "",
+    scheduleType: schedules.scheduleType.time,
+    scheduleBy: schedules.scheduleBy.tempo,
+    lapDistance: 250.0,
+    distanceLaps: 0.0,
+    timeSeconds: 60.0,
+    tempoTarget: 15.0,
+    startType: schedules.startType.standing,
+    upToSpeedTime: 4.0,
+    timingsAt: schedules.timingsAt.fullLap,
+    speedTempo: 0.0,
+    cadenceTempo: 0.0
+}
+
+const scheduleParams_distance_time = {
+    label: "",
+    scheduleType: schedules.scheduleType.time,
+    scheduleBy: schedules.scheduleBy.distance,
+    lapDistance: 250.0,
+    distanceLaps: 4.0,
+    timeSeconds: 60.0,
+    tempoTarget: 0.0,
+    startType: schedules.startType.standing,
+    upToSpeedTime: 4.0,
+    timingsAt: schedules.timingsAt.fullLap,
+    speedTempo: 0.0,
+    cadenceTempo: 0.0
+}
+
+const scheduleParams_speed_time = {
+    label: "",
+    scheduleType: schedules.scheduleType.time,
+    scheduleBy: schedules.scheduleBy.speed,
+    lapDistance: 250.0,
+    distanceLaps: 0.0,
+    timeSeconds: 60.0,
+    tempoTarget: 0.0,
+    startType: schedules.startType.standing,
+    upToSpeedTime: 4.0,
+    timingsAt: schedules.timingsAt.fullLap,
+    speedTempo: 55.0,
+    cadenceTempo: 0.0
+}
+
+const scheduleParams_cadence_time = {
+    label: "",
+    scheduleType: schedules.scheduleType.time,
+    scheduleBy: schedules.scheduleBy.cadence,
+    lapDistance: 250.0,
+    distanceLaps: 0.0,
+    timeSeconds: 60.0,
+    tempoTarget: 0.0,
+    startType: schedules.startType.standing,
+    upToSpeedTime: 4.0,
+    timingsAt: schedules.timingsAt.fullLap,
+    speedTempo: 0.0,
+    cadenceTempo: 100.0,
+    gear: {
+        rollOut: 7000
+    }
+}
+
+// const test = schedules.calcDistanceSchedule(scheduleParams_tempo)
 
 // const test = schedules.calcDistanceSchedule(scheduleParams_time)
 
@@ -136,5 +199,13 @@ const test = schedules.calcDistanceSchedule(scheduleParams_tempo)
 // const test = schedules.calcDistanceSchedule(scheduleParams_cadence)
 
 // const test = schedules.getNextLapCountForDistanceSchedule(2.0, scheduleParams_tempo)
+
+// const test = schedules.calcTimeSchedule(scheduleParams_tempo_time)
+
+// const test = schedules.calcTimeSchedule(scheduleParams_distance_time)
+
+const test = schedules.calcTimeSchedule(scheduleParams_speed_time)
+
+// const test = schedules.calcTimeSchedule(scheduleParams_cadence_time)
 
 console.log(test)
