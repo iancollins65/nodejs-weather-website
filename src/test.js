@@ -204,8 +204,30 @@ const scheduleParams_cadence_time = {
 
 // const test = schedules.calcTimeSchedule(scheduleParams_distance_time)
 
-const test = schedules.calcTimeSchedule(scheduleParams_speed_time)
+// const test = schedules.calcTimeSchedule(scheduleParams_speed_time)
 
 // const test = schedules.calcTimeSchedule(scheduleParams_cadence_time)
+
+const scheduleParams = {
+    label: "",
+    scheduleType: schedules.scheduleType.distance,
+    scheduleBy: schedules.scheduleBy.cadence,
+    lapDistance: 250.0,
+    distanceLaps: 4.0,
+    timeSeconds: 60.0,
+    tempoTarget: 15.0,
+    startType: schedules.startType.standing,
+    upToSpeedTime: 4.0,
+    timingsAt: schedules.timingsAt.both,
+    speedTempo: 50.0,
+    cadenceTempo: 100.0,
+    gear: {
+        rollOut: 7000
+    }
+}
+
+// const test = schedules.canCalculate(scheduleParams)
+
+const test = schedules.calcSchedule(scheduleParams)
 
 console.log(test)

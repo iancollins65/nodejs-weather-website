@@ -38,6 +38,27 @@ const defaultScheduleParams = {
     cadenceTempo: 0.0
 }
 
+const calcSchedule = (scheduleParams) => {
+    const canCalcSchedule = canCalculate(scheduleParams)
+    if (canCalcSchedule.canCalc === false) {
+        return {
+            error: canCalcSchedule.error,
+            points: undefined
+        }
+    } else {
+        var points = []
+        if (scheduleParams.scheduleType === scheduleType.distance) {
+            points = calcDistanceSchedule(scheduleParams)
+        } else if (scheduleParams.scheduleType === scheduleType.time) {
+            points = calcTimeSchedule(scheduleParams)
+        }
+        return {
+            error: undefined,
+            points: points
+        }
+    }
+}
+
 const calcDistanceSchedule = (scheduleParams) => {
     const s = scheduleParams
     //var nextSegmentIndex = 0
@@ -59,7 +80,10 @@ const calcDistanceSchedule = (scheduleParams) => {
     const lapDistance = s.lapDistance
     const lapDistanceKm = lapDistance / 1000.0
     const tempoSpeed = lapDistanceKm / tempoHrs  // km/h
-    const upToSpeedTime = s.upToSpeedTime
+    var upToSpeedTime = 0.0
+    if (s.startType === startType.standing) {
+        upToSpeedTime = s.upToSpeedTime
+    }
     var rollOutMetres = 0.0
     var tempoCadence = 0.0
     var lapPedals = 0.0
@@ -117,9 +141,7 @@ const calcDistanceSchedule = (scheduleParams) => {
         currentLapCount = getNextLapCountForDistanceSchedule(currentLapCount, scheduleParams)
     }
 
-    return {
-        points: points
-    }
+    return points
 }
 
 const getNextLapCountForDistanceSchedule = (currentLapCount, scheduleParams) => {
@@ -166,7 +188,10 @@ const calcTimeSchedule = (scheduleParams) => {
     const lapDistance = s.lapDistance
     const lapDistanceKm = lapDistance / 1000.0
     const tempoSpeed = lapDistanceKm / tempoHrs  // km/h
-    const upToSpeedTime = s.upToSpeedTime
+    var upToSpeedTime = 0.0
+    if (s.startType === startType.standing) {
+        upToSpeedTime = s.upToSpeedTime
+    }
     var rollOutMetres = 0.0
     var tempoCadence = 0.0
     var lapPedals = 0.0
@@ -232,9 +257,7 @@ const calcTimeSchedule = (scheduleParams) => {
         timeLeft = s.timeSeconds - time
     }
 
-    return {
-        points: points
-    }
+    return points
 }
 
 const getNextLapCountForTimeSchedule = (currentLapCount, scheduleParams) => {
@@ -253,6 +276,49 @@ const getNextLapCountForTimeSchedule = (currentLapCount, scheduleParams) => {
     return newLapCount
 }
 
+const canCalculate = (scheduleParams) => {
+    const s = scheduleParams
+    if (!s.scheduleType) {
+        return cannotCalculate("Schedule Type value of distance or time is required")
+    } else if (!s.scheduleBy) {
+        return cannotCalculate("Schedule By value of tempo, time, distance, speed or cadence is required")
+    } else if (!s.lapDistance || s.lapDistance === 0.0) {
+        return cannotCalculate("Lap Distance value greater than zero is required")
+    } else if (!s.startType) {
+        return cannotCalculate("Start Type value of standing or flying is required")
+    } else if (!s.timingsAt) {
+        return cannotCalculate("Timings At value of fullLap, halfLap or both is required")
+    } else if (s.scheduleType === scheduleType.distance && (!s.distanceLaps || s.distanceLaps === 0.0)) {
+        return cannotCalculate("Distance (Laps) value is required for Schedule Type of distance")
+    } else if (s.scheduleType === scheduleType.time && (!s.timeSeconds || s.timeSeconds === 0.0)) {
+        return cannotCalculate("Time (Seconds) value is required for Schedule Type of time")
+    } else if (s.scheduleBy === scheduleBy.time && (!s.timeSeconds || s.timeSeconds === 0.0)) {
+        return cannotCalculate("Time (Seconds) value is required for Schedule By of time")
+    } else if (s.scheduleBy === scheduleBy.tempo && (!s.tempoTarget || s.tempoTarget === 0.0)) {
+        return cannotCalculate("Tempo (Seconds) value is required for Schedule By of tempo")
+    } else if (s.scheduleBy === scheduleBy.speed && (!s.speedTempo || s.speedTempo === 0.0)) {
+        return cannotCalculate("Speed Tempo value is required for Schedule By of speed")
+    } else if (s.scheduleBy === scheduleBy.cadence && (!s.cadenceTempo || s.cadenceTempo === 0.0)) {
+        return cannotCalculate("Cadence Tempo value is required for Schedule By of cadence")
+    } else if (s.scheduleBy === scheduleBy.cadence && (!s.gear || !s.gear.rollOut || s.gear.rollOut === 0.0)) {
+        return cannotCalculate("Gear Rollout value is required for Schedule By of cadence")
+    } else if (s.startType === startType.standing && (!s.upToSpeedTime || s.upToSpeedTime === 0.0)) {
+        return cannotCalculate("Up To Speed Time value is required for Start Type of standing")
+    } else {
+        return {
+            canCalc: true,
+            error: undefined
+        }
+    }
+}
+
+const cannotCalculate = (message) => {
+    return {
+        canCalc: false,
+        error: message
+    }
+}
+
 module.exports = {
     scheduleType: scheduleType,
     scheduleBy: scheduleBy,
@@ -260,5 +326,7 @@ module.exports = {
     timingsAt: timingsAt,
     defaultScheduleParams: defaultScheduleParams,
     calcDistanceSchedule: calcDistanceSchedule,
-    calcTimeSchedule: calcTimeSchedule
+    calcTimeSchedule: calcTimeSchedule,
+    canCalculate: canCalculate,
+    calcSchedule: calcSchedule
 }
