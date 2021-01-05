@@ -6,6 +6,7 @@ const geocode = require('./utils/geocode')
 const forecast = require('./utils/forecast')
 const gears = require('./utils/gears')
 const cassettes = require('./utils/cassettes')
+const schedules = require('./utils/schedules')
 const hpcUtils = require('./utils/hpc-utils')
 
 const app = express()
@@ -445,6 +446,54 @@ app.get('/lapTimeCadenceOptions', (req, res) => {
         cadence, tyreWidth, rimType, minChainRing, maxChainRing, minCog, maxCog, minTeeth, maxTeeth)
 
     res.send(lapTimeCadenceOptions)
+})
+
+app.get('/calculateSchedule', (req, res) => {
+
+    const {error, label, scheduleType, scheduleBy, lapDistance, distanceLaps, timeSeconds, 
+        tempoTarget, startType, upToSpeedTime, timingsAt, speedTempo, cadenceTempo, rollOut} = 
+        schedules.validateQueryString(req.query, [
+            { name: 'label', type: 'string' },
+            { name: 'scheduleType', default: 'distance', type: 'string', options: ['distance', 'time'] },
+            { name: 'scheduleBy', default: 'tempo', type: 'string', options: ['tempo', 'time', 'distance', 'speed', 'cadence'] },
+            { name: 'lapDistance', mandatory: true, type: 'decimal', sign: 'positive' },
+            { name: 'distanceLaps', type: 'decimal', sign: 'positive' },
+            { name: 'timeSeconds', type: 'decimal', sign: 'positive' },
+            { name: 'tempoTarget', type: 'decimal', sign: 'positive' },
+            { name: 'startType', default: 'standing', type: 'string', options: ['standing', 'flying'] },
+            { name: 'upToSpeedTime', default: 4.0, type: 'decimal', sign: 'positive' },
+            { name: 'timingsAt', default: 'fullLap', type: 'string', options: ['halfLap', 'fullLap', 'both'] },
+            { name: 'speedTempo', type: 'decimal', sign: 'positive' },
+            { name: 'cadenceTempo', type: 'decimal', sign: 'positive' },
+            { name: 'rollOut', type: 'decimal', sign: 'positive' }
+    ])
+
+    if (error) {
+        return res.send({ error })
+    }
+
+    const scheduleParams = {
+        label,
+        scheduleType, 
+        scheduleBy, 
+        lapDistance, 
+        distanceLaps, 
+        timeSeconds, 
+        tempoTarget, 
+        startType,
+        upToSpeedTime,
+        timingsAt,
+        speedTempo,
+        cadenceTempo,
+        gear: {
+            rollOut: rollOut
+        }
+    }
+
+    // Calculate the schedule
+    const schedule = schedules.calcSchedule(scheduleParams)
+
+    res.send(schedule)
 })
 
 app.get('/help/*', (req, res) => {
