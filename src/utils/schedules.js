@@ -43,6 +43,8 @@ const calcSchedule = (scheduleParams) => {
     if (canCalcSchedule.canCalc === false) {
         return {
             error: canCalcSchedule.error,
+            label: undefined,
+            description: undefined,
             points: undefined
         }
     } else {
@@ -52,17 +54,19 @@ const calcSchedule = (scheduleParams) => {
         } else if (scheduleParams.scheduleType === scheduleType.time.code) {
             points = calcTimeSchedule(scheduleParams)
         }
+        const label = getScheduleLabel(scheduleParams)
+        const description = getScheduleDescription(scheduleParams)
         return {
             error: undefined,
-            points: points
+            label,
+            description,
+            points
         }
     }
 }
 
 const calcDistanceSchedule = (scheduleParams) => {
     const s = scheduleParams
-    //var nextSegmentIndex = 0
-    //var nextLapCount = 0.0
     let points = []
 
     var tempo = 0.0
@@ -169,8 +173,6 @@ const getNextLapCountForDistanceSchedule = (currentLapCount, scheduleParams) => 
 
 const calcTimeSchedule = (scheduleParams) => {
     const s = scheduleParams
-    //var nextSegmentIndex = 0
-    //var nextLapCount = 0.0
     let points = []
 
     var tempo = 0.0
@@ -450,6 +452,88 @@ const validateQueryString = (query, fields) => {
     }
 }
 
+const getScheduleLabel = (scheduleParams) => {
+    var label = ''
+    if (scheduleParams.label) {
+        label = scheduleParams.label
+    }
+    if (label === '') {
+        label = getShortDefaultScheduleLabel(scheduleParams)
+    }
+    return label
+}
+
+const getShortDefaultScheduleLabel = (scheduleParams) => {
+    const s = scheduleParams
+    var defaultLabel = ""
+    if (s.scheduleType === scheduleType.distance.code) {
+        defaultLabel = "Distance "
+        if (s.scheduleBy === scheduleBy.time.code) {
+            defaultLabel = defaultLabel + "in time"
+        } else if (s.scheduleBy === scheduleBy.tempo.code) {
+            defaultLabel = defaultLabel + "at tempo"
+        } else if (s.scheduleBy === scheduleBy.speed.code) {
+            defaultLabel = defaultLabel + "at speed"
+        } else if (s.scheduleBy === scheduleBy.cadence.code) {
+            defaultLabel = defaultLabel + "at cadence"
+        }
+    } else if (s.scheduleType === scheduleType.time.code) {
+        defaultLabel = "Time "
+        if (s.scheduleBy === scheduleBy.distance.code) {
+            defaultLabel = defaultLabel + "for distance"
+        } else if (s.scheduleBy === scheduleBy.tempo.code) {
+            defaultLabel = defaultLabel + "at tempo"
+        } else if (s.scheduleBy === scheduleBy.speed.code) {
+            defaultLabel = defaultLabel + "at speed"
+        } else if (s.scheduleBy === scheduleBy.cadence.code) {
+            defaultLabel = defaultLabel + "at cadence"
+        }
+    }
+    return defaultLabel
+}
+
+const getScheduleDescription = (scheduleParams) => {
+    const s = scheduleParams
+    var description = ""
+    if (s.scheduleType === scheduleType.distance.code) {
+        description = "Distance " + s.distanceLaps + " x " + s.lapDistance + "m laps"
+        if (s.scheduleBy === scheduleBy.time.code) {
+            description = description + " in time " + s.timeSeconds + " seconds"
+        } else if (s.scheduleBy === scheduleBy.tempo.code) {
+            description = description + " at tempo " + s.tempoTarget + " seconds"
+        } else if (s.scheduleBy === scheduleBy.speed.code) {
+            description = description + " at speed " + s.speedTempo + " km/h"
+        } else if (s.scheduleBy === scheduleBy.cadence.code) {
+            description = description + " at cadence " + s.cadenceTempo + " rpm"
+        }
+    } else if (s.scheduleType === scheduleType.time.code) {
+        description = "Time " + s.timeSeconds + " seconds on " + s.lapDistance + "m lap"
+        if (s.scheduleBy === scheduleBy.distance.code) {
+            description = description + " for distance " + s.distanceLaps + " laps"
+        } else if (s.scheduleBy === scheduleBy.tempo.code) {
+            description = description + " at tempo " + s.tempoTarget + " seconds"
+        } else if (s.scheduleBy === scheduleBy.speed.code) {
+            description = description + " at speed " + s.speedTempo + " km/h"
+        } else if (s.scheduleBy === scheduleBy.cadence.code) {
+            description = description + " at cadence " + s.cadenceTempo + " rpm"
+        }
+    }
+    if (s.startType === startType.flying.code) {
+        description = description + ", flying start"
+    } else if (s.startType === startType.standing.code) {
+        description = description + ", standing start, with " + s.upToSpeedTime + " seconds up to speed time"
+    }
+    if (s.timingsAt === timingsAt.fullLap.code) {
+        description = description + ", full lap"
+    } else if (s.timingsAt === timingsAt.halfLap.code) {
+        description = description + ", half lap"
+    } else if (s.timingsAt === timingsAt.both.code) {
+        description = description + ", half & full lap"
+    }
+    description = description + " timings"
+    return description
+}
+
 module.exports = {
     scheduleType: scheduleType,
     scheduleBy: scheduleBy,
@@ -460,5 +544,7 @@ module.exports = {
     calcTimeSchedule: calcTimeSchedule,
     canCalculate: canCalculate,
     calcSchedule: calcSchedule,
-    validateQueryString: validateQueryString
+    validateQueryString: validateQueryString,
+    getScheduleLabel: getScheduleLabel,
+    getScheduleDescription: getScheduleDescription
 }
