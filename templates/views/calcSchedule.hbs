@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+
+<html>
+
+<head>
+    <title>Calculate Schedule</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1.0">
+    <link rel="icon" href="/img/weather.png">
+    <link rel="stylesheet" href="/css/styles.css">
+</head>
+
+<body onpageshow="handleOnLoad()">
+    <div class="main-content">
+        {{>header}}
+
+        <p>Enter the schedule details.</p>
+
+        <form>
+            <label for="lapLength">Lap Length:</label>
+            <input type="number" id="lapLength" name="lapLength" step="0.001" placeholder="(metres)" value={{lapLength}}><br>
+            <label for="scheduleType">Schedule Type:</label>
+            <select id="scheduleType" name="scheduleType">
+                <option value="rideDistance">Ride Distance</option>
+                <option value="rideTime">Ride Time</option>
+            </select><br>
+            <input type="hidden" id="scheduleTypeHidden" name="scheduleTypeHidden" value={{scheduleType}}>
+            <div id="distanceLapsSection">
+                <label for="distanceLaps">Distance (Laps):</label>
+                <input type="number" id="distanceLaps" name="distanceLaps" step="0.001" value={{distanceLaps}}><br>
+            </div>
+            <div id="rideTimeSection">
+                <label for="rideTime">Ride Time:</label>
+                <input type="number" id="rideTime" name="rideTime" step="0.001" placeholder="(seconds)" value={{rideTime}}><br>
+            </div>
+            <label for="scheduleBy">Schedule By:</label>
+            <select id="scheduleBy" name="scheduleBy">
+                <option value="tempo">Lap Tempo Target</option>
+                <option value="time">Time Target</option>
+                <option value="distance">Distance Target</option>
+                <option value="speed">Speed Tempo Target</option>
+                <option value="cadence">Cadence Tempo Target</option>
+            </select><br>
+            <input type="hidden" id="scheduleByHidden" name="scheduleByHidden" value={{scheduleBy}}>
+            <div id="tempoSection">
+                <label for="tempo">Target Tempo:</label>
+                <input type="number" id="tempo" name="tempo" step="0.001" placeholder="(seconds)" value={{tempo}}><br>
+            </div>
+            <div id="timeSection">
+                <label for="time">Target Time:</label>
+                <input id="time" name="time" placeholder="(H:MM:SS)" value={{time}}><br>
+            </div>
+            <div id="distanceSection">
+                <label for="distance">Target Distance:</label>
+                <input type="number" id="distance" name="distance" step="0.001" placeholder="(metres)" value={{distance}}><br>
+            </div>
+            <div id="speedSection">
+                <label for="speed">Target Speed:</label>
+                <input type="number" id="speed" name="speed" step="0.001" placeholder="(km/h)" value={{speed}}><br>
+            </div>
+           <div id="cadenceSection">
+                <label for="cadence">Target Cadence:</label>
+                <input type="number" id="cadence" name="cadence" step="0.001" placeholder="(rpm)" value={{cadence}}><br>
+            </div>
+            <label for="startType">Start Type:</label>
+            <select id="startType" name="startType">
+                <option value="standing">Standing</option>
+                <option value="flying">Flying</option>
+            </select><br>
+            <input type="hidden" id="startTypeHidden" name="startTypeHidden" value={{startType}}>
+            <div id="upToSpeedSection">
+                <label for="upToSpeed">Up To Speed:</label>
+                <input type="number" id="upToSpeed" name="upToSpeed" step="0.001" placeholder="(seconds)" value={{upToSpeed}}><br>
+            </div>
+            <button class="fields-button">Calculate</button>
+            <label for="timingsAt">Timings At:</label>
+            <select id="timingsAt" name="timingsAt">
+                <option value="halfLap">Half Lap and Finish</option>
+                <option value="fullLap">Full Lap</option>
+                <option value="both">Both Half and Full Lap</option>
+            </select><br>
+            <input type="hidden" id="timingsAtHidden" name="timingsAtHidden" value={{timingsAt}}>
+        </form>
+
+        <p class="bold-text" id="message-1">Your calculated schedule...</p>
+
+        <div class="output-table" id="outputTable">
+            <p>Placeholder</p>
+        </div>
+
+        <p id="outputText">Output</p>
+
+    </div>
+
+    {{>footer}}
+
+    <script src="/js/calcSchedule.js"></script>
+</body>
+
+</html>
