@@ -71,7 +71,6 @@
                 <label for="upToSpeed">Up To Speed:</label>
                 <input type="number" id="upToSpeed" name="upToSpeed" step="0.001" placeholder="(seconds)" value={{upToSpeed}}><br>
             </div>
-            <button class="fields-button">Calculate</button>
             <label for="timingsAt">Timings At:</label>
             <select id="timingsAt" name="timingsAt">
                 <option value="halfLap">Half Lap and Finish</option>
@@ -79,6 +78,7 @@
                 <option value="both">Both Half and Full Lap</option>
             </select><br>
             <input type="hidden" id="timingsAtHidden" name="timingsAtHidden" value={{timingsAt}}>
+            <button class="fields-button">Calculate</button>
         </form>
 
         <p class="bold-text" id="message-1">Your calculated schedule...</p>
