@@ -413,6 +413,13 @@ const validateQueryString = (query, fields) => {
                     }
                 }
             }
+            else if (field.type === 'H:MM:SS') {
+                const timeString = query[field.name]
+                fieldValue = convertHMMSStimeToSeconds(timeString)
+                if (fieldValue === -1) {
+                    return { error: field.name + ' does not apply the H:MM:SS time format' }
+                }
+            }
         } else if (fieldValue === undefined && field.returnEmpty === true) {
             fieldValue = ''
         }
@@ -534,6 +541,41 @@ const getScheduleDescription = (scheduleParams) => {
     return description
 }
 
+const convertHMMSStimeToSeconds = (timeString) => {
+    if (timeString === '') {
+        return -1
+    }
+    const timeArray = timeString.split(':')
+    if (timeArray.length > 3) {
+        return -1
+    } 
+    var numArray = []
+    for (timeElement of timeArray) {
+        const elementValue = Number(timeElement)
+        if (isNaN(elementValue) || !Number.isInteger(elementValue) || elementValue < 0) {
+            return -1
+        }
+        numArray.push(elementValue)
+    }
+    var hours = 0
+    var minutes = 0
+    var seconds = 0
+    if (numArray.length === 3) {
+        hours = numArray[0]
+        minutes = numArray[1]
+        seconds = numArray[2]
+    } else if (numArray.length === 2) {
+        minutes = numArray[0]
+        seconds = numArray[1]
+    } else if (numArray.length === 1) {
+        seconds = numArray[0]
+    }
+    if (minutes > 59 || seconds > 59) {
+        return -1
+    }
+    return (hours * 60 * 60) + (minutes * 60) + seconds
+}
+
 module.exports = {
     scheduleType: scheduleType,
     scheduleBy: scheduleBy,
@@ -546,5 +588,6 @@ module.exports = {
     calcSchedule: calcSchedule,
     validateQueryString: validateQueryString,
     getScheduleLabel: getScheduleLabel,
-    getScheduleDescription: getScheduleDescription
+    getScheduleDescription: getScheduleDescription,
+    convertHMMSStimeToSeconds: convertHMMSStimeToSeconds
 }

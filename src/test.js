@@ -64,131 +64,131 @@ const schedules = require('./utils/schedules.js')
 
 // const test = schedules.defaultScheduleParams
 
-const scheduleParams_tempo = {
-    label: "",
-    scheduleType: schedules.scheduleType.distance,
-    scheduleBy: schedules.scheduleBy.tempo,
-    lapDistance: 250.0,
-    distanceLaps: 4.0,
-    timeSeconds: 0.0,
-    tempoTarget: 15.0,
-    startType: schedules.startType.standing,
-    upToSpeedTime: 4.0,
-    timingsAt: schedules.timingsAt.both,
-    speedTempo: 0.0,
-    cadenceTempo: 0.0
-}
+// const scheduleParams_tempo = {
+//     label: "",
+//     scheduleType: schedules.scheduleType.distance,
+//     scheduleBy: schedules.scheduleBy.tempo,
+//     lapDistance: 250.0,
+//     distanceLaps: 4.0,
+//     timeSeconds: 0.0,
+//     tempoTarget: 15.0,
+//     startType: schedules.startType.standing,
+//     upToSpeedTime: 4.0,
+//     timingsAt: schedules.timingsAt.both,
+//     speedTempo: 0.0,
+//     cadenceTempo: 0.0
+// }
 
-const scheduleParams_time = {
-    label: "",
-    scheduleType: schedules.scheduleType.distance,
-    scheduleBy: schedules.scheduleBy.time,
-    lapDistance: 250.0,
-    distanceLaps: 4.0,
-    timeSeconds: 68.0,
-    tempoTarget: 0.0,
-    startType: schedules.startType.standing,
-    upToSpeedTime: 4.0,
-    timingsAt: schedules.timingsAt.fullLap,
-    speedTempo: 0.0,
-    cadenceTempo: 0.0
-}
+// const scheduleParams_time = {
+//     label: "",
+//     scheduleType: schedules.scheduleType.distance,
+//     scheduleBy: schedules.scheduleBy.time,
+//     lapDistance: 250.0,
+//     distanceLaps: 4.0,
+//     timeSeconds: 68.0,
+//     tempoTarget: 0.0,
+//     startType: schedules.startType.standing,
+//     upToSpeedTime: 4.0,
+//     timingsAt: schedules.timingsAt.fullLap,
+//     speedTempo: 0.0,
+//     cadenceTempo: 0.0
+// }
 
-const scheduleParams_speed = {
-    label: "",
-    scheduleType: schedules.scheduleType.distance,
-    scheduleBy: schedules.scheduleBy.speed,
-    lapDistance: 250.0,
-    distanceLaps: 0.0,
-    timeSeconds: 0.0,
-    tempoTarget: 0.0,
-    startType: schedules.startType.standing,
-    upToSpeedTime: 4.0,
-    timingsAt: schedules.timingsAt.fullLap,
-    speedTempo: 60.0,
-    cadenceTempo: 0.0
-}
+// const scheduleParams_speed = {
+//     label: "",
+//     scheduleType: schedules.scheduleType.distance,
+//     scheduleBy: schedules.scheduleBy.speed,
+//     lapDistance: 250.0,
+//     distanceLaps: 0.0,
+//     timeSeconds: 0.0,
+//     tempoTarget: 0.0,
+//     startType: schedules.startType.standing,
+//     upToSpeedTime: 4.0,
+//     timingsAt: schedules.timingsAt.fullLap,
+//     speedTempo: 60.0,
+//     cadenceTempo: 0.0
+// }
 
-const scheduleParams_cadence = {
-    label: "",
-    scheduleType: schedules.scheduleType.distance,
-    scheduleBy: schedules.scheduleBy.cadence,
-    lapDistance: 250.0,
-    distanceLaps: 0.0,
-    timeSeconds: 0.0,
-    tempoTarget: 0.0,
-    startType: schedules.startType.standing,
-    upToSpeedTime: 4.0,
-    timingsAt: schedules.timingsAt.fullLap,
-    speedTempo: 0.0,
-    cadenceTempo: 100.0,
-    gear: {
-        rollOut: 7000
-    }
-}
+// const scheduleParams_cadence = {
+//     label: "",
+//     scheduleType: schedules.scheduleType.distance,
+//     scheduleBy: schedules.scheduleBy.cadence,
+//     lapDistance: 250.0,
+//     distanceLaps: 0.0,
+//     timeSeconds: 0.0,
+//     tempoTarget: 0.0,
+//     startType: schedules.startType.standing,
+//     upToSpeedTime: 4.0,
+//     timingsAt: schedules.timingsAt.fullLap,
+//     speedTempo: 0.0,
+//     cadenceTempo: 100.0,
+//     gear: {
+//         rollOut: 7000
+//     }
+// }
 
-const scheduleParams_tempo_time = {
-    label: "",
-    scheduleType: schedules.scheduleType.time,
-    scheduleBy: schedules.scheduleBy.tempo,
-    lapDistance: 250.0,
-    distanceLaps: 0.0,
-    timeSeconds: 60.0,
-    tempoTarget: 15.0,
-    startType: schedules.startType.standing,
-    upToSpeedTime: 4.0,
-    timingsAt: schedules.timingsAt.fullLap,
-    speedTempo: 0.0,
-    cadenceTempo: 0.0
-}
+// const scheduleParams_tempo_time = {
+//     label: "",
+//     scheduleType: schedules.scheduleType.time,
+//     scheduleBy: schedules.scheduleBy.tempo,
+//     lapDistance: 250.0,
+//     distanceLaps: 0.0,
+//     timeSeconds: 60.0,
+//     tempoTarget: 15.0,
+//     startType: schedules.startType.standing,
+//     upToSpeedTime: 4.0,
+//     timingsAt: schedules.timingsAt.fullLap,
+//     speedTempo: 0.0,
+//     cadenceTempo: 0.0
+// }
 
-const scheduleParams_distance_time = {
-    label: "",
-    scheduleType: schedules.scheduleType.time,
-    scheduleBy: schedules.scheduleBy.distance,
-    lapDistance: 250.0,
-    distanceLaps: 4.0,
-    timeSeconds: 60.0,
-    tempoTarget: 0.0,
-    startType: schedules.startType.standing,
-    upToSpeedTime: 4.0,
-    timingsAt: schedules.timingsAt.fullLap,
-    speedTempo: 0.0,
-    cadenceTempo: 0.0
-}
+// const scheduleParams_distance_time = {
+//     label: "",
+//     scheduleType: schedules.scheduleType.time,
+//     scheduleBy: schedules.scheduleBy.distance,
+//     lapDistance: 250.0,
+//     distanceLaps: 4.0,
+//     timeSeconds: 60.0,
+//     tempoTarget: 0.0,
+//     startType: schedules.startType.standing,
+//     upToSpeedTime: 4.0,
+//     timingsAt: schedules.timingsAt.fullLap,
+//     speedTempo: 0.0,
+//     cadenceTempo: 0.0
+// }
 
-const scheduleParams_speed_time = {
-    label: "",
-    scheduleType: schedules.scheduleType.time,
-    scheduleBy: schedules.scheduleBy.speed,
-    lapDistance: 250.0,
-    distanceLaps: 0.0,
-    timeSeconds: 60.0,
-    tempoTarget: 0.0,
-    startType: schedules.startType.standing,
-    upToSpeedTime: 4.0,
-    timingsAt: schedules.timingsAt.fullLap,
-    speedTempo: 55.0,
-    cadenceTempo: 0.0
-}
+// const scheduleParams_speed_time = {
+//     label: "",
+//     scheduleType: schedules.scheduleType.time,
+//     scheduleBy: schedules.scheduleBy.speed,
+//     lapDistance: 250.0,
+//     distanceLaps: 0.0,
+//     timeSeconds: 60.0,
+//     tempoTarget: 0.0,
+//     startType: schedules.startType.standing,
+//     upToSpeedTime: 4.0,
+//     timingsAt: schedules.timingsAt.fullLap,
+//     speedTempo: 55.0,
+//     cadenceTempo: 0.0
+// }
 
-const scheduleParams_cadence_time = {
-    label: "",
-    scheduleType: schedules.scheduleType.time,
-    scheduleBy: schedules.scheduleBy.cadence,
-    lapDistance: 250.0,
-    distanceLaps: 0.0,
-    timeSeconds: 60.0,
-    tempoTarget: 0.0,
-    startType: schedules.startType.standing,
-    upToSpeedTime: 4.0,
-    timingsAt: schedules.timingsAt.fullLap,
-    speedTempo: 0.0,
-    cadenceTempo: 100.0,
-    gear: {
-        rollOut: 7000
-    }
-}
+// const scheduleParams_cadence_time = {
+//     label: "",
+//     scheduleType: schedules.scheduleType.time,
+//     scheduleBy: schedules.scheduleBy.cadence,
+//     lapDistance: 250.0,
+//     distanceLaps: 0.0,
+//     timeSeconds: 60.0,
+//     tempoTarget: 0.0,
+//     startType: schedules.startType.standing,
+//     upToSpeedTime: 4.0,
+//     timingsAt: schedules.timingsAt.fullLap,
+//     speedTempo: 0.0,
+//     cadenceTempo: 100.0,
+//     gear: {
+//         rollOut: 7000
+//     }
+// }
 
 // const test = schedules.calcDistanceSchedule(scheduleParams_tempo)
 
@@ -208,26 +208,28 @@ const scheduleParams_cadence_time = {
 
 // const test = schedules.calcTimeSchedule(scheduleParams_cadence_time)
 
-const scheduleParams = {
-    label: "",
-    scheduleType: schedules.scheduleType.distance,
-    scheduleBy: schedules.scheduleBy.cadence,
-    lapDistance: 250.0,
-    distanceLaps: 4.0,
-    timeSeconds: 60.0,
-    tempoTarget: 15.0,
-    startType: schedules.startType.standing,
-    upToSpeedTime: 4.0,
-    timingsAt: schedules.timingsAt.both,
-    speedTempo: 50.0,
-    cadenceTempo: 100.0,
-    gear: {
-        rollOut: 7000
-    }
-}
+// const scheduleParams = {
+//     label: "",
+//     scheduleType: schedules.scheduleType.distance,
+//     scheduleBy: schedules.scheduleBy.cadence,
+//     lapDistance: 250.0,
+//     distanceLaps: 4.0,
+//     timeSeconds: 60.0,
+//     tempoTarget: 15.0,
+//     startType: schedules.startType.standing,
+//     upToSpeedTime: 4.0,
+//     timingsAt: schedules.timingsAt.both,
+//     speedTempo: 50.0,
+//     cadenceTempo: 100.0,
+//     gear: {
+//         rollOut: 7000
+//     }
+// }
 
 // const test = schedules.canCalculate(scheduleParams)
 
-const test = schedules.calcSchedule(scheduleParams)
+// const test = schedules.calcSchedule(scheduleParams)
+
+const test = schedules.convertHMMSStimeToSeconds('60:59:59')
 
 console.log(test)

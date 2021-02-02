@@ -231,7 +231,7 @@ app.get('/calcSchedule', (req, res) => {
     res.render('calcSchedule', {
         title: 'Calculate Schedule',
         name: 'Hot Pursuit Cycling',
-        lapLength: '',
+        lapLength: '250',
         scheduleType: '',
         distanceLaps: '',
         rideTime: '',
