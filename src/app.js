@@ -547,20 +547,25 @@ app.get('/lapTimeCadenceOptions', (req, res) => {
 app.get('/calculateSchedule', (req, res) => {
 
     const {error, label, scheduleType, scheduleBy, lapDistance, distanceLaps, timeSeconds, 
-        tempoTarget, startType, upToSpeedTime, timingsAt, speedTempo, cadenceTempo, rollOut} = 
+        tempoTarget, startType, upToSpeedTime, timingsAt, speedTempo, cadenceTempo, rollOut,
+        chainRing, cog, tyreWidth, rimType} = 
         schedules.validateQueryString(req.query, [
             { name: 'label', type: 'string' },
-            { name: 'scheduleType', default: 'distance', type: 'string', options: ['distance', 'time'] },
+            { name: 'scheduleType', default: 'rideDistance', type: 'string', options: ['rideDistance', 'rideTime'] },
             { name: 'scheduleBy', default: 'tempo', type: 'string', options: ['tempo', 'time', 'distance', 'speed', 'cadence'] },
             { name: 'lapDistance', mandatory: true, type: 'decimal', sign: 'positive' },
             { name: 'distanceLaps', type: 'decimal', sign: 'positive' },
-            { name: 'timeSeconds', type: 'decimal', sign: 'positive' },
+            { name: 'timeSeconds', type: 'H:MM:SS' },
             { name: 'tempoTarget', type: 'decimal', sign: 'positive' },
             { name: 'startType', default: 'standing', type: 'string', options: ['standing', 'flying'] },
-            { name: 'upToSpeedTime', default: 4.0, type: 'decimal', sign: 'positive' },
+            { name: 'upToSpeedTime', type: 'decimal', sign: 'positive' },
             { name: 'timingsAt', default: 'fullLap', type: 'string', options: ['halfLap', 'fullLap', 'both'] },
             { name: 'speedTempo', type: 'decimal', sign: 'positive' },
             { name: 'cadenceTempo', type: 'decimal', sign: 'positive' },
+            { name: 'chainRing', type: 'integer', sign: 'positive' },
+            { name: 'cog', type: 'integer', sign: 'positive' },
+            { name: 'tyreWidth', default: 23, type: 'integer', sign: 'positive' },
+            { name: 'rimType', default: '700c', type: 'string', options: ['700c', '650c'] },
             { name: 'rollOut', type: 'decimal', sign: 'positive' }
     ])
 
@@ -582,6 +587,10 @@ app.get('/calculateSchedule', (req, res) => {
         speedTempo,
         cadenceTempo,
         gear: {
+            chainRing: chainRing,
+            cog: cog,
+            tyreWidth: tyreWidth,
+            rimType: rimType,
             rollOut: rollOut
         }
     }

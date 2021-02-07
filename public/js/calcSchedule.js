@@ -45,6 +45,82 @@ calcScheduleForm.addEventListener('submit', (e) => {
 })
 
 const handleSubmit = () => {
+    messageOne.style.display = 'block'
+    messageOne.style.color = '#333456'   
+    messageOne.textContent = 'Loading...'
+    outputText.style.display = 'none'    
+    outputTable.style.display = 'none'    
+
+    const lapLength = lapLengthFld.value
+    const scheduleType = scheduleTypeSelect.value
+    const distanceLaps = distanceLapsFld.value
+    const rideTime = rideTimeFld.value
+    const scheduleBy = scheduleBySelect.value
+    const tempo = tempoFld.value
+    const time = timeFld.value
+    const distance = distanceFld.value
+    const speed = speedFld.value
+    const cadence = cadenceFld.value
+    const startType = startTypeSelect.value
+    const upToSpeed = upToSpeedFld.value
+    const timingsAt = timingsAtSelect.value
+
+    var url = '/calculateSchedule?lapDistance=' + lapLength + '&scheduleType=' + scheduleType 
+        + '&scheduleBy=' + scheduleBy + '&startType=' + startType + '&timingsAt=' + timingsAt
+
+    if (scheduleType === 'rideDistance') {
+        url = url + '&distanceLaps=' + distanceLaps
+    } else if (scheduleType === 'rideTime') {
+        url = url + '&timeSeconds=' + rideTime
+    }
+
+    if (scheduleBy === 'tempo') {
+        url = url + '&tempoTarget=' + tempo
+    } else if (scheduleBy === 'time') {
+        url = url + '&timeSeconds=' + time
+    } else if (scheduleBy === 'distance') {
+        url = url + '&distanceLaps=' + distance
+    } else if (scheduleBy === 'speed') {
+        url = url + '&speedTempo=' + speed
+    } else if (scheduleBy === 'time') {
+        url = url + '&cadenceTempo=' + cadence
+    }
+
+    if (startType === 'standing') {
+        url = url + '&upToSpeedTime=' + upToSpeed
+    }
+
+    console.log(url)
+
+    fetch(url).then((response) => {
+        response.json().then((response) => {
+            if (response.error) {
+                var errorStr = response.error + '.'
+                errorStr = errorStr.replace('lapDistance', 'Lap Length')
+                errorStr = errorStr.replace('distanceLaps', 'Distance')
+                if (errorStr.includes('timeSeconds') === true) {
+                    if (scheduleType === 'rideTime') {
+                        errorStr = errorStr.replace('timeSeconds', 'Ride Time')
+                    } else if (scheduleType === 'rideDistance') {
+                        errorStr = errorStr.replace('timeSeconds', 'Time')
+                    }
+                }
+                errorStr = errorStr.replace('tempoTarget', 'Tempo')
+                errorStr = errorStr.replace('speedTempo', 'Speed')
+                errorStr = errorStr.replace('cadenceTempo', 'Cadence')
+                errorStr = errorStr.replace('upToSpeedTime', 'Up To Speed')
+                messageOne.style.color = 'red'
+                messageOne.textContent = errorStr
+            } else {
+                messageOne.textContent = 'Your calculated schedule...'
+                // outputTable.style.display = 'block'
+                // outputTable.innerHTML = ""
+                // outputTable.appendChild(buildOutputTable(findFor, gearOptions))
+                outputText.style.display = 'block'
+                outputText.textContent = JSON.stringify(response.points)
+            }
+        })
+    }) 
 }
 
 // Drop down box selection

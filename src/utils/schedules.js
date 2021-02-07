@@ -1,6 +1,8 @@
+const gears = require('./gears')
+
 const scheduleType = {
-    distance: { code: 'distance', name: "Ride Distance", id: 0 },
-    time: { code: 'time', name: "Ride Time", id: 1 }
+    distance: { code: 'rideDistance', name: "Ride Distance", id: 0 },
+    time: { code: 'rideTime', name: "Ride Time", id: 1 }
 }
 
 const scheduleBy = {
@@ -66,36 +68,47 @@ const calcSchedule = (scheduleParams) => {
 }
 
 const calcDistanceSchedule = (scheduleParams) => {
+    console.log(scheduleParams)
     const s = scheduleParams
     let points = []
+
+    var upToSpeedTime = 0.0
+    if (s.startType === startType.standing.code) {
+        upToSpeedTime = s.upToSpeedTime
+    }
+
+    var rollOut = 0.0
+    if (s.gear) {
+        if (s.gear.rollOut) {
+            rollOut = s.gear.rollOut
+        } else if (s.gear.chainRing && s.gear.cog) {
+            const gearInfo = gears.getGearInfo(s.gear.chainRing, s.gear.cog, s.gear.tyreWidth, s.gear.rimType)
+            rollOut = gearInfo.rollOut
+        }
+    }
 
     var tempo = 0.0
     if (s.scheduleBy === scheduleBy.tempo.code) {
         tempo = s.tempoTarget
     } else if (s.scheduleBy === scheduleBy.time.code) {
-        tempo = (s.timeSeconds - s.upToSpeedTime) / s.distanceLaps
+        tempo = (s.timeSeconds - upToSpeedTime) / s.distanceLaps
     } else if (s.scheduleBy === scheduleBy.speed.code) {
         tempo = (3.6 * s.lapDistance) / s.speedTempo
     } else if (s.scheduleBy === scheduleBy.cadence.code) {
-        tempo = (60000 * s.lapDistance) / (s.cadenceTempo * s.gear.rollOut)
+        tempo = (60000 * s.lapDistance) / (s.cadenceTempo * rollOut)
     }
 
     const tempoHrs = tempo / 3600.0
     const lapDistance = s.lapDistance
     const lapDistanceKm = lapDistance / 1000.0
     const tempoSpeed = lapDistanceKm / tempoHrs  // km/h
-    var upToSpeedTime = 0.0
-    if (s.startType === startType.standing.code) {
-        upToSpeedTime = s.upToSpeedTime
-    }
-    var rollOutMetres = 0.0
+    const rollOutMetres = rollOut / 1000.0
     var tempoCadence = 0.0
     var lapPedals = 0.0
-    if (s.gear) {
-        rollOutMetres = s.gear.rollOut / 1000.0
+    if (rollOutMetres > 0.0) {
         lapPedals = lapDistance / rollOutMetres
         tempoCadence = lapPedals / tempo * 60.0  // rpm
-    }
+    }       
     var time = 0.0
     var prevTime = 0.0
     var prevDistance = 0.0
@@ -175,33 +188,43 @@ const calcTimeSchedule = (scheduleParams) => {
     const s = scheduleParams
     let points = []
 
+    var upToSpeedTime = 0.0
+    if (s.startType === startType.standing.code) {
+        upToSpeedTime = s.upToSpeedTime
+    }
+
+    var rollOut = 0.0
+    if (s.gear) {
+        if (s.gear.rollOut) {
+            rollOut = s.gear.rollOut
+        } else if (s.gear.chainRing && s.gear.cog) {
+            const gearInfo = gears.getGearInfo(s.gear.chainRing, s.gear.cog, s.gear.tyreWidth, s.gear.rimType)
+            rollOut = gearInfo.rollOut
+        }
+    }
+
     var tempo = 0.0
     if (s.scheduleBy === scheduleBy.tempo.code) {
         tempo = s.tempoTarget
     } else if (s.scheduleBy === scheduleBy.distance.code) {
-        tempo = (s.timeSeconds - s.upToSpeedTime) / s.distanceLaps
+        tempo = (s.timeSeconds - upToSpeedTime) / s.distanceLaps
     } else if (s.scheduleBy === scheduleBy.speed.code) {
         tempo = (3.6 * s.lapDistance) / s.speedTempo
     } else if (s.scheduleBy === scheduleBy.cadence.code) {
-        tempo = (60000 * s.lapDistance) / (s.cadenceTempo * s.gear.rollOut)
+        tempo = (60000 * s.lapDistance) / (s.cadenceTempo * rollOut)
     }
 
     const tempoHrs = tempo / 3600.0
     const lapDistance = s.lapDistance
     const lapDistanceKm = lapDistance / 1000.0
     const tempoSpeed = lapDistanceKm / tempoHrs  // km/h
-    var upToSpeedTime = 0.0
-    if (s.startType === startType.standing.code) {
-        upToSpeedTime = s.upToSpeedTime
-    }
-    var rollOutMetres = 0.0
+    const rollOutMetres = rollOut / 1000.0
     var tempoCadence = 0.0
     var lapPedals = 0.0
-    if (s.gear) {
-        rollOutMetres = s.gear.rollOut / 1000.0
+    if (rollOutMetres > 0.0) {
         lapPedals = lapDistance / rollOutMetres
         tempoCadence = lapPedals / tempo * 60.0  // rpm
-    }
+    }       
     var prevTime = 0.0
     var prevDistance = 0.0
     var firstPoint = true
@@ -291,21 +314,21 @@ const canCalculate = (scheduleParams) => {
     } else if (!s.timingsAt) {
         return cannotCalculate("Timings At value of fullLap, halfLap or both is required")
     } else if (s.scheduleType === scheduleType.distance.code && (!s.distanceLaps || s.distanceLaps === 0.0)) {
-        return cannotCalculate("Distance (Laps) value is required for Schedule Type of distance")
+        return cannotCalculate("Distance (Laps) value is required for Schedule Type of Ride Distance")
     } else if (s.scheduleType === scheduleType.time.code && (!s.timeSeconds || s.timeSeconds === 0.0)) {
-        return cannotCalculate("Time (Seconds) value is required for Schedule Type of time")
+        return cannotCalculate("Time (H:MM:SS) value is required for Schedule Type of Ride Time")
     } else if (s.scheduleBy === scheduleBy.time.code && (!s.timeSeconds || s.timeSeconds === 0.0)) {
-        return cannotCalculate("Time (Seconds) value is required for Schedule By of time")
+        return cannotCalculate("Time (H:MM:SS) value is required for Schedule By of Time Target")
     } else if (s.scheduleBy === scheduleBy.tempo.code && (!s.tempoTarget || s.tempoTarget === 0.0)) {
-        return cannotCalculate("Tempo (Seconds) value is required for Schedule By of tempo")
+        return cannotCalculate("Tempo (Seconds) value is required for Schedule By of Tempo Target")
     } else if (s.scheduleBy === scheduleBy.speed.code && (!s.speedTempo || s.speedTempo === 0.0)) {
-        return cannotCalculate("Speed Tempo value is required for Schedule By of speed")
+        return cannotCalculate("Speed Tempo value is required for Schedule By of Speed Tempo Target")
     } else if (s.scheduleBy === scheduleBy.cadence.code && (!s.cadenceTempo || s.cadenceTempo === 0.0)) {
-        return cannotCalculate("Cadence Tempo value is required for Schedule By of cadence")
-    } else if (s.scheduleBy === scheduleBy.cadence.code && (!s.gear || !s.gear.rollOut || s.gear.rollOut === 0.0)) {
-        return cannotCalculate("Gear Rollout value is required for Schedule By of cadence")
+        return cannotCalculate("Cadence Tempo value is required for Schedule By of Cadence Tempo Target")
+    } else if (s.scheduleBy === scheduleBy.cadence.code && (!s.gear || (!s.gear.rollOut && (!s.gear.chainRing || !s.gear.cog)))) {
+        return cannotCalculate("Gear Chain Ring and Cog or Rollout value is required for Schedule By of Cadence Tempo Target")
     } else if (s.startType === startType.standing.code && (!s.upToSpeedTime || s.upToSpeedTime === 0.0)) {
-        return cannotCalculate("Up To Speed Time value is required for Start Type of standing")
+        return cannotCalculate("Up To Speed Time value (Seconds) is required for Start Type of Standing")
     } else {
         return {
             canCalc: true,
@@ -339,6 +362,10 @@ const validateQueryString = (query, fields) => {
     let timingsAt = undefined
     let speedTempo = undefined
     let cadenceTempo = undefined
+    let chainRing = undefined
+    let cog = undefined
+    let tyreWidth = undefined
+    let rimType = undefined
     let rollOut = undefined
 
     for (field of fields) {
@@ -437,6 +464,10 @@ const validateQueryString = (query, fields) => {
             case 'timingsAt': timingsAt = fieldValue; break;
             case 'speedTempo': speedTempo = fieldValue; break;
             case 'cadenceTempo': cadenceTempo = fieldValue; break;
+            case 'chainRing': chainRing = fieldValue; break;
+            case 'cog': cog = fieldValue; break;
+            case 'tyreWidth': tyreWidth = fieldValue; break;
+            case 'rimType': rimType = fieldValue; break;
             case 'rollOut': rollOut = fieldValue; break;
         }
     }
@@ -455,6 +486,10 @@ const validateQueryString = (query, fields) => {
         timingsAt,
         speedTempo,
         cadenceTempo,
+        chainRing,
+        cog,
+        tyreWidth,
+        rimType,
         rollOut
     }
 }
