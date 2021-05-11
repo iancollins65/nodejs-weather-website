@@ -113,9 +113,9 @@ const handleSubmit = () => {
                 messageOne.textContent = errorStr
             } else {
                 messageOne.textContent = 'Your calculated schedule...'
-                // outputTable.style.display = 'block'
-                // outputTable.innerHTML = ""
-                // outputTable.appendChild(buildOutputTable(findFor, gearOptions))
+                outputTable.style.display = 'block'
+                outputTable.innerHTML = ""
+                outputTable.appendChild(buildScheduleDetailsTable(response.points))
                 outputText.style.display = 'block'
                 outputText.textContent = JSON.stringify(response.points)
             }
@@ -237,6 +237,45 @@ const actOnStartTypeSelection = () => {
     } else if (startTypeSelect.value === 'flying') {
         upToSpeedSection.style.display = 'none'
     }
+}
+
+// Dynamic output table
+
+const buildScheduleDetailsTable = (points) => {
+
+    // Build the table
+    var table = document.createElement('table')
+
+    // Create header row
+    let tr = table.insertRow(-1)
+    let th = document.createElement('th')
+    th.innerHTML = 'Lap'
+    tr.appendChild(th)
+    th = document.createElement('th')
+    th.innerHTML = 'Distance'
+    tr.appendChild(th)
+    th = document.createElement('th')
+    th.innerHTML = 'Time'
+    tr.appendChild(th)
+
+    // Create data rows
+    for (point of points) {
+        let tr = table.insertRow(-1)
+        // Lap cell
+        let lapCell = tr.insertCell(-1)
+        let rawValue = point.lapNumber
+        lapCell.innerHTML = round(rawValue, 1)
+        // Distance cell
+        let distanceCell = tr.insertCell(-1)
+        rawValue = point.distance
+        distanceCell.innerHTML = round(rawValue, 1)
+        // Time cell
+        let timeCell = tr.insertCell(-1)
+        rawValue = point.time
+        timeCell.innerHTML = round(rawValue, 1)
+    }    
+
+    return table
 }
 
 // Utilities
