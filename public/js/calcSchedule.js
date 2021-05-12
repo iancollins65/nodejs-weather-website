@@ -252,7 +252,7 @@ const buildScheduleDetailsTable = (points) => {
     th.innerHTML = 'Lap'
     tr.appendChild(th)
     th = document.createElement('th')
-    th.innerHTML = 'Distance'
+    th.innerHTML = 'Distance (km)'
     tr.appendChild(th)
     th = document.createElement('th')
     th.innerHTML = 'Time'
@@ -267,12 +267,13 @@ const buildScheduleDetailsTable = (points) => {
         lapCell.innerHTML = round(rawValue, 1)
         // Distance cell
         let distanceCell = tr.insertCell(-1)
-        rawValue = point.distance
-        distanceCell.innerHTML = round(rawValue, 1)
+        rawValue = convertMtoKM(point.distance)
+        distanceCell.innerHTML = round(rawValue, 3)
         // Time cell
         let timeCell = tr.insertCell(-1)
-        rawValue = point.time
-        timeCell.innerHTML = round(rawValue, 1)
+        rawValue = round(point.time, 3)
+        let rawStr = convertSecondsToHMMSS(rawValue)
+        timeCell.innerHTML = rawStr
     }    
 
     return table
@@ -283,6 +284,38 @@ const buildScheduleDetailsTable = (points) => {
 const round = (value, places) => {
     const rounder = Math.pow(10, places)
     return Math.round(value * rounder) / rounder
+}
+
+const div = (x, y) => {
+    return Math.floor(x / y)
+}
+
+const convertMtoKM = (metres) => {
+    return metres / 1000
+}
+
+const convertSecondsToHMMSS = (seconds) => {
+    var answer = ''
+    var h = div(seconds, 3600)
+    var remainder = seconds % 3600
+    var m = div(remainder, 60)
+    var s = round(remainder % 60, 3)
+    var mStr = m.toString()
+    if (m < 10) {
+        mStr = '0' + mStr
+    }
+    var sStr = s.toString()
+    if (s < 10) {
+        sStr = '0' + sStr
+    }
+    if (h > 0) {
+        answer = answer + h + ':' + mStr + ':' + sStr
+    } else if (m > 0) {
+        answer = answer + m + ':' + sStr
+    } else {
+        answer = answer + s
+    }
+    return answer
 }
 
 // On load
