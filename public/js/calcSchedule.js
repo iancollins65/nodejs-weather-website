@@ -25,7 +25,9 @@ const upToSpeedFld = document.querySelector('#upToSpeed')
 const timingsAtSelect = document.querySelector('#timingsAt')
 const timingsAtHiddenFld = document.querySelector('#timingsAtHidden')
 const messageOne = document.querySelector('#message-1')
+const messageTwo = document.querySelector('#message-2')
 const outputText = document.querySelector('#outputText')
+const outcomeTable = document.querySelector('#outcomeTable')
 const outputTable = document.querySelector('#outputTable')
 
 rideTimeSection.style.display = 'none'
@@ -34,7 +36,9 @@ distanceSection.style.display = 'none'
 speedSection.style.display = 'none'
 cadenceSection.style.display = 'none'
 messageOne.style.display = 'none'
+messageTwo.style.display = 'none'
 outputText.style.display = 'none'
+outcomeTable.style.display = 'none'
 outputTable.style.display = 'none'
 
 // Form submit
@@ -48,7 +52,9 @@ const handleSubmit = () => {
     messageOne.style.display = 'block'
     messageOne.style.color = '#333456'   
     messageOne.textContent = 'Loading...'
+    messageTwo.style.display = 'none'    
     outputText.style.display = 'none'    
+    outcomeTable.style.display = 'none'    
     outputTable.style.display = 'none'    
 
     const lapLength = lapLengthFld.value
@@ -112,7 +118,11 @@ const handleSubmit = () => {
                 messageOne.style.color = 'red'
                 messageOne.textContent = errorStr
             } else {
-                messageOne.textContent = 'Your calculated schedule...'
+                messageOne.textContent = 'Schedule outcome'
+                outcomeTable.style.display = 'block'
+                outcomeTable.innerHTML = ""
+                outcomeTable.appendChild(buildScheduleOutcomeTable(response.points[response.points.length - 1]))
+                messageTwo.style.display = 'block'
                 outputTable.style.display = 'block'
                 outputTable.innerHTML = ""
                 outputTable.appendChild(buildScheduleDetailsTable(response.points))
@@ -239,7 +249,73 @@ const actOnStartTypeSelection = () => {
     }
 }
 
-// Dynamic output table
+// Dynamic output tables
+
+const buildScheduleOutcomeTable = (endPoint) => {
+
+    // Build the table
+    var table = document.createElement('table')
+
+    // Table contents
+    // Laps row
+    let tr = table.insertRow(-1)
+    let th = document.createElement('th')
+    th.innerHTML = 'Laps'
+    tr.appendChild(th)
+    let tc = tr.insertCell(-1)
+    let rawValue = endPoint.lapNumber
+    tc.innerHTML = round(rawValue, 1)
+
+    // Distance row
+    tr = table.insertRow(-1)
+    th = document.createElement('th')
+    th.innerHTML = 'Distance'
+    tr.appendChild(th)
+    tc = tr.insertCell(-1)
+    rawValue = convertMtoKM(endPoint.distance)
+    tc.innerHTML = round(rawValue, 3) + ' km'
+
+    // Time row
+    tr = table.insertRow(-1)
+    th = document.createElement('th')
+    th.innerHTML = 'Time'
+    tr.appendChild(th)
+    tc = tr.insertCell(-1)
+    rawValue = round(endPoint.time, 3)
+    let rawStr = convertSecondsToHMMSS(rawValue)
+    tc.innerHTML = rawStr
+
+    // Tempo row
+    tr = table.insertRow(-1)
+    th = document.createElement('th')
+    th.innerHTML = 'Tempo'
+    tr.appendChild(th)
+    tc = tr.insertCell(-1)
+    rawValue = endPoint.tempo
+    tc.innerHTML = round(rawValue, 3) + ' sec'
+
+    // Ave Speed row
+    tr = table.insertRow(-1)
+    th = document.createElement('th')
+    th.innerHTML = 'Ave. Speed'
+    tr.appendChild(th)
+    tc = tr.insertCell(-1)
+    rawValue = endPoint.aveSpeed
+    tc.innerHTML = round(rawValue, 3) + ' km/h'
+
+    // Ave Cadence row
+    if (endPoint.aveCadence !== 0) {
+        tr = table.insertRow(-1)
+        th = document.createElement('th')
+        th.innerHTML = 'Ave. Cadence'
+        tr.appendChild(th)
+        tc = tr.insertCell(-1)
+        rawValue = endPoint.aveCadence
+        tc.innerHTML = round(rawValue, 3) + ' rpm'
+    }
+
+    return table
+}
 
 const buildScheduleDetailsTable = (points) => {
 
