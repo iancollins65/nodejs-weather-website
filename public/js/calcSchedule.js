@@ -24,6 +24,13 @@ const upToSpeedSection = document.querySelector('#upToSpeedSection')
 const upToSpeedFld = document.querySelector('#upToSpeed')
 const timingsAtSelect = document.querySelector('#timingsAt')
 const timingsAtHiddenFld = document.querySelector('#timingsAtHidden')
+const provideGearCheckBox = document.querySelector('#provideGearCheckBox')
+const gearSection = document.querySelector('#gearSection')
+const chainRingFld = document.querySelector('#chainRing')
+const cogFld = document.querySelector('#cog')
+const tyreWidthFld = document.querySelector('#tyreWidth')
+const rimTypeFld = document.querySelector('#rimType')
+const rimTypeHiddenFld = document.querySelector('#rimTypeHidden')
 const messageOne = document.querySelector('#message-1')
 const messageTwo = document.querySelector('#message-2')
 const outputText = document.querySelector('#outputText')
@@ -35,6 +42,7 @@ timeSection.style.display = 'none'
 distanceSection.style.display = 'none'
 speedSection.style.display = 'none'
 cadenceSection.style.display = 'none'
+gearSection.style.display = 'none'
 messageOne.style.display = 'none'
 messageTwo.style.display = 'none'
 outputText.style.display = 'none'
@@ -70,6 +78,10 @@ const handleSubmit = () => {
     const startType = startTypeSelect.value
     const upToSpeed = upToSpeedFld.value
     const timingsAt = timingsAtSelect.value
+    const chainRing = chainRingFld.value
+    const cog = cogFld.value
+    const tyreWidth = tyreWidthFld.value
+    const rimType = rimTypeFld.value
 
     var url = '/calculateSchedule?lapDistance=' + lapLength + '&scheduleType=' + scheduleType 
         + '&scheduleBy=' + scheduleBy + '&startType=' + startType + '&timingsAt=' + timingsAt
@@ -96,6 +108,13 @@ const handleSubmit = () => {
         url = url + '&upToSpeedTime=' + upToSpeed
     }
 
+    if (provideGearCheckBox.checked === true) {
+        url = url + '&chainRing=' + chainRing + '&cog=' + cog + '&rimType=' + rimType
+        if (tyreWidth !== '') {
+            url = url + '&tyreWidth=' + tyreWidth
+        }    
+    }
+
     console.log(url)
 
     fetch(url).then((response) => {
@@ -115,6 +134,10 @@ const handleSubmit = () => {
                 errorStr = errorStr.replace('speedTempo', 'Speed')
                 errorStr = errorStr.replace('cadenceTempo', 'Cadence')
                 errorStr = errorStr.replace('upToSpeedTime', 'Up To Speed')
+                errorStr = errorStr.replace('chainRing', 'Chain Ring')
+                errorStr = errorStr.replace('cog', 'Cog')
+                errorStr = errorStr.replace('tyreWidth', 'Tyre Width')
+                errorStr = errorStr.replace('rimType', 'Rim Type')
                 messageOne.style.color = 'red'
                 messageOne.textContent = errorStr
             } else {
@@ -131,6 +154,32 @@ const handleSubmit = () => {
             }
         })
     }) 
+}
+
+// Handle form input
+
+calcScheduleForm.addEventListener('input', (e) => {
+    //if (e.target !== provideGearCheckBox) {
+        messageOne.style.display = 'none'
+        messageTwo.style.display = 'none'
+        outputText.style.display = 'none'
+        outcomeTable.style.display = 'none'
+        outputTable.style.display = 'none'
+    //}
+})
+
+// Handle Provide Gear checkbox setting
+
+provideGearCheckBox.addEventListener('input', (e) => {
+    actOnProvideGearSet()
+})
+
+const actOnProvideGearSet = () => {
+    if (provideGearCheckBox.checked === true) {
+        gearSection.style.display = 'block'
+    } else {
+        gearSection.style.display = 'none'
+    }
 }
 
 // Drop down box selection
