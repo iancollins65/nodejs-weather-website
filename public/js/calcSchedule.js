@@ -35,7 +35,10 @@ const messageOne = document.querySelector('#message-1')
 const messageTwo = document.querySelector('#message-2')
 const outputText = document.querySelector('#outputText')
 const outcomeTable = document.querySelector('#outcomeTable')
+const showSection = document.querySelector('#showSection')
+const showSelect = document.querySelector('#showData')
 const outputTable = document.querySelector('#outputTable')
+var pointsGlobal = []
 
 rideTimeSection.style.display = 'none'
 timeSection.style.display = 'none'
@@ -47,6 +50,7 @@ messageOne.style.display = 'none'
 messageTwo.style.display = 'none'
 outputText.style.display = 'none'
 outcomeTable.style.display = 'none'
+showSection.style.display = 'none'
 outputTable.style.display = 'none'
 
 // Form submit
@@ -63,6 +67,7 @@ const handleSubmit = () => {
     messageTwo.style.display = 'none'    
     outputText.style.display = 'none'    
     outcomeTable.style.display = 'none'    
+    showSection.style.display = 'none'
     outputTable.style.display = 'none'    
 
     const lapLength = lapLengthFld.value
@@ -146,11 +151,13 @@ const handleSubmit = () => {
                 outcomeTable.innerHTML = ""
                 outcomeTable.appendChild(buildScheduleOutcomeTable(response.points[response.points.length - 1]))
                 messageTwo.style.display = 'block'
+                showSection.style.display = 'block'
                 outputTable.style.display = 'block'
                 outputTable.innerHTML = ""
-                outputTable.appendChild(buildScheduleDetailsTable(response.points))
-                outputText.style.display = 'block'
-                outputText.textContent = JSON.stringify(response.points)
+                outputTable.appendChild(buildScheduleDetailsTable(response.points, showSelect.value))
+                //outputText.style.display = 'block'
+                //outputText.textContent = JSON.stringify(response.points)
+                pointsGlobal = response.points
             }
         })
     }) 
@@ -163,6 +170,7 @@ calcScheduleForm.addEventListener('input', (e) => {
         messageOne.style.display = 'none'
         messageTwo.style.display = 'none'
         outputText.style.display = 'none'
+        showSection.style.display = 'none'
         outcomeTable.style.display = 'none'
         outputTable.style.display = 'none'
     //}
@@ -181,6 +189,14 @@ const actOnProvideGearSet = () => {
         gearSection.style.display = 'none'
     }
 }
+
+// Handle show selection
+
+showSelect.addEventListener('change', (e) => {
+    const show = showSelect.value
+    outputTable.innerHTML = ""
+    outputTable.appendChild(buildScheduleDetailsTable(pointsGlobal, show))
+})
 
 // Drop down box selection
 
@@ -366,7 +382,15 @@ const buildScheduleOutcomeTable = (endPoint) => {
     return table
 }
 
-const buildScheduleDetailsTable = (points) => {
+const buildScheduleDetailsTable = (points, show) => {
+
+    var showCadence = false
+    if (points.length > 0) {
+        let endPoint = points[points.length - 1]
+        if (endPoint.aveCadence !== 0) {
+            showCadence = true
+        }
+    }
 
     // Build the table
     var table = document.createElement('table')
@@ -377,11 +401,27 @@ const buildScheduleDetailsTable = (points) => {
     th.innerHTML = 'Lap'
     tr.appendChild(th)
     th = document.createElement('th')
-    th.innerHTML = 'Distance (km)'
+    th.innerHTML = 'Distance'
     tr.appendChild(th)
     th = document.createElement('th')
     th.innerHTML = 'Time'
     tr.appendChild(th)
+    if (show === 'incSegmentData') {
+        th = document.createElement('th')
+        th.innerHTML = 'Seg. Dist'
+        tr.appendChild(th)
+        th = document.createElement('th')
+        th.innerHTML = 'Seg. Time'
+        tr.appendChild(th)
+        th = document.createElement('th')
+        th.innerHTML = 'Seg. Speed'
+        tr.appendChild(th)
+        if (showCadence === true) {
+            th = document.createElement('th')
+            th.innerHTML = 'Seg. Cadence'
+            tr.appendChild(th)
+        }
+    }
 
     // Create data rows
     for (point of points) {
@@ -393,12 +433,33 @@ const buildScheduleDetailsTable = (points) => {
         // Distance cell
         let distanceCell = tr.insertCell(-1)
         rawValue = convertMtoKM(point.distance)
-        distanceCell.innerHTML = round(rawValue, 3)
+        distanceCell.innerHTML = round(rawValue, 3) + ' km'
         // Time cell
         let timeCell = tr.insertCell(-1)
         rawValue = round(point.time, 3)
         let rawStr = convertSecondsToHMMSS(rawValue)
         timeCell.innerHTML = rawStr
+        if (show === 'incSegmentData') {
+            // Segment Distance cell
+            let segDistanceCell = tr.insertCell(-1)
+            rawValue = point.segmentDistance
+            segDistanceCell.innerHTML = round(rawValue, 1) + ' m'
+            // Segment Time cell
+            let segTimeCell = tr.insertCell(-1)
+            rawValue = round(point.segmentTime, 3)
+            rawStr = convertSecondsToHMMSS(rawValue)
+            segTimeCell.innerHTML = rawStr
+            // Segment Speed cell
+            let segSpeedCell = tr.insertCell(-1)
+            rawValue = point.speed
+            segSpeedCell.innerHTML = round(rawValue, 3) + ' km/h'
+            // Segment Cadence cell
+            if (showCadence === true) {
+                let segCadenceCell = tr.insertCell(-1)
+                rawValue = point.cadence
+                segCadenceCell.innerHTML = round(rawValue, 3) + ' rpm'
+            }
+        }
     }    
 
     return table
