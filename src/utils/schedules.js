@@ -446,6 +446,9 @@ const validateQueryString = (query, fields) => {
                 if (fieldValue === -1) {
                     return { error: field.name + ' does not apply the H:MM:SS time format' }
                 }
+                if (field.convert === false) {
+                    fieldValue = timeString
+                }
             }
         } else if (fieldValue === undefined && field.returnEmpty === true) {
             fieldValue = ''

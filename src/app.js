@@ -228,98 +228,75 @@ app.get('/findGear', (req, res) => {
 
 app.get('/calcSchedule', (req, res) => {
 
-    res.render('calcSchedule', {
-        title: 'Calculate Schedule',
-        name: 'Hot Pursuit Cycling',
-        lapLength: '250',
-        scheduleType: '',
-        distanceLaps: '',
-        rideTime: '',
-        scheduleBy: '',
-        tempo: '',
-        time: '',
-        distance: '',
-        speed: '',
-        cadence: '',
-        startType: '',
-        upToSpeed: '',
-        timingsAt: ''
-    })    
+    const {error, label, scheduleType, scheduleBy, lapDistance, distanceLaps, timeSeconds, 
+        tempoTarget, startType, upToSpeedTime, timingsAt, speedTempo, cadenceTempo, 
+        chainRing, cog, tyreWidth, rimType} = 
+        schedules.validateQueryString(req.query, [
+            { name: 'label', type: 'string', returnEmpty: true },
+            { name: 'scheduleType', type: 'string', options: ['rideDistance', 'rideTime'], returnEmpty: true },
+            { name: 'scheduleBy', type: 'string', options: ['tempo', 'time', 'distance', 'speed', 'cadence'], returnEmpty: true },
+            { name: 'lapDistance', default: 250, type: 'decimal', sign: 'positive' },
+            { name: 'distanceLaps', type: 'decimal', sign: 'positive', returnEmpty: true },
+            { name: 'timeSeconds', type: 'H:MM:SS', convert: false, returnEmpty: true },
+            { name: 'tempoTarget', type: 'decimal', sign: 'positive', returnEmpty: true },
+            { name: 'startType', type: 'string', options: ['standing', 'flying'], returnEmpty: true },
+            { name: 'upToSpeedTime', type: 'decimal', sign: 'positive', returnEmpty: true },
+            { name: 'timingsAt', type: 'string', options: ['halfLap', 'fullLap', 'both'], returnEmpty: true },
+            { name: 'speedTempo', type: 'decimal', sign: 'positive', returnEmpty: true },
+            { name: 'cadenceTempo', type: 'decimal', sign: 'positive', returnEmpty: true },
+            { name: 'chainRing', type: 'integer', sign: 'positive', returnEmpty: true },
+            { name: 'cog', type: 'integer', sign: 'positive', returnEmpty: true },
+            { name: 'tyreWidth', type: 'integer', sign: 'positive', returnEmpty: true },
+            { name: 'rimType', type: 'string', options: ['700c', '650c'], returnEmpty: true }
+    ])
 
-    // const {error, findFor, gearInches, plusOrMinus, rollOut, maxDiff, speed, cadence, lapTime, lapLength, 
-    //     fixed, tyreWidth, rimType, showMinMax, 
-    //     minChainRing, maxChainRing, minCog, maxCog, minTeeth, maxTeeth} = 
-    //     hpcUtils.validateQueryString(req.query, [
-    //         { name: 'findFor', type: 'string', options: ['gearInches', 'rollOut', 'speedCadence', 'lapTimeCadence'], returnEmpty: true },
-    //         { name: 'gearInches', type: 'decimal', sign: 'positive', returnEmpty: true },
-    //         { name: 'plusOrMinus', type: 'decimal', sign: 'positive', returnEmpty: true },
-    //         { name: 'rollOut', type: 'decimal', sign: 'positive', returnEmpty: true },
-    //         { name: 'maxDiff', type: 'decimal', sign: 'positive', returnEmpty: true },
-    //         { name: 'speed', type: 'decimal', sign: 'positive', returnEmpty: true },
-    //         { name: 'cadence', type: 'decimal', sign: 'positive', returnEmpty: true },
-    //         { name: 'fixed', type: 'string', options: ['cadence', 'speed'], returnEmpty: true },
-    //         { name: 'lapTime', type: 'decimal', sign: 'positive', returnEmpty: true },
-    //         { name: 'lapLength', type: 'decimal', sign: 'positive', returnEmpty: true },
-    //         { name: 'tyreWidth', type: 'integer', sign: 'positive', returnEmpty: true },
-    //         { name: 'rimType', type: 'string', options: ['700c', '650c'], returnEmpty: true },
-    //         { name: 'showMinMax', type: 'string', options: ['yes', 'no'], returnEmpty: true },
-    //         { name: 'minChainRing', type: 'integer', sign: 'positive', returnEmpty: true },
-    //         { name: 'maxChainRing', type: 'integer', sign: 'positive', returnEmpty: true },
-    //         { name: 'minCog', type: 'integer', sign: 'positive', returnEmpty: true },
-    //         { name: 'maxCog', type: 'integer', sign: 'positive', returnEmpty: true },
-    //         { name: 'minTeeth', type: 'integer', sign: 'positive', returnEmpty: true },
-    //         { name: 'maxTeeth', type: 'integer', sign: 'positive', returnEmpty: true }
-    // ])
-
-    // if (error) {
-    //     res.render('findGear', {
-    //         title: 'Find Gear',
-    //         name: 'Hot Pursuit Cycling', 
-    //         findFor: '',
-    //         gearInches: '', 
-    //         plusOrMinus: '', 
-    //         rollOut: '', 
-    //         maxDiff: '', 
-    //         speed: '', 
-    //         cadence: '', 
-    //         fixed: '', 
-    //         lapTime: '', 
-    //         lapLength: '', 
-    //         tyreWidth: '', 
-    //         rimType: '', 
-    //         showMinMax: '',
-    //         minChainRing: '', 
-    //         maxChainRing: '', 
-    //         minCog: '', 
-    //         maxCog: '', 
-    //         minTeeth: '', 
-    //         maxTeeth: ''
-    //     })
-    // } else {
-    //     res.render('findGear', {
-    //         title: 'Find Gear',
-    //         name: 'Hot Pursuit Cycling', 
-    //         findFor,
-    //         gearInches, 
-    //         plusOrMinus, 
-    //         rollOut, 
-    //         maxDiff, 
-    //         speed, 
-    //         cadence, 
-    //         fixed, 
-    //         lapTime, 
-    //         lapLength, 
-    //         tyreWidth, 
-    //         rimType, 
-    //         showMinMax,
-    //         minChainRing, 
-    //         maxChainRing, 
-    //         minCog, 
-    //         maxCog, 
-    //         minTeeth, 
-    //         maxTeeth
-    //     })    
-    // }
+    if (error) {
+        res.render('calcSchedule', {
+            title: 'Calculate Schedule',
+            name: 'Hot Pursuit Cycling',
+            label: '',
+            lapLength: '250',
+            scheduleType: '',
+            distanceLaps: '',
+            rideTime: '',
+            scheduleBy: '',
+            tempo: '',
+            time: '',
+            distance: '',
+            speed: '',
+            cadence: '',
+            startType: '',
+            upToSpeed: '',
+            timingsAt: '',
+            chainRing: '',
+            cog: '',
+            tyreWidth: '',
+            rimType: ''
+        })
+    } else {
+        res.render('calcSchedule', {
+            title: 'Calculate Schedule',
+            name: 'Hot Pursuit Cycling',
+            label,
+            lapLength: lapDistance,
+            scheduleType,
+            distanceLaps,
+            rideTime: timeSeconds,
+            scheduleBy,
+            tempo: tempoTarget,
+            time: timeSeconds,
+            distance: distanceLaps,
+            speed: speedTempo,
+            cadence: cadenceTempo,
+            startType,
+            upToSpeed: upToSpeedTime,
+            timingsAt,
+            chainRing,
+            cog,
+            tyreWidth,
+            rimType
+        })
+    }
 })
 
 app.get('/help', (req, res) => {

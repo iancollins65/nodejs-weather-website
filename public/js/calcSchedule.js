@@ -507,7 +507,34 @@ const convertSecondsToHMMSS = (seconds) => {
 // On load
 
 const handleOnLoad = () => {
+
+    if (rimTypeHiddenFld.value !== '') {
+        rimTypeFld.value = rimTypeHiddenFld.value
+    }
+
+    provideGearCheckBox.checked = Boolean(chainRingFld.value !== '' || cogFld.value !== '')
+    
+    actOnProvideGearSet()
+
+    if (timingsAtHiddenFld.value !== '') {
+        timingsAtSelect.value = timingsAtHiddenFld.value
+    }
+
+    if (startTypeHiddenFld.value !== '') {
+        startTypeSelect.value = startTypeHiddenFld.value
+    }
+
     actOnStartTypeSelection()
+
+    if (scheduleByHiddenFld.value !== '') {
+        scheduleBySelect.value = scheduleByHiddenFld.value
+    }
+
     actOnScheduleBySelection()
+
+    if (scheduleTypeHiddenFld.value !== '') {
+        scheduleTypeSelect.value = scheduleTypeHiddenFld.value
+    }
+
     actOnScheduleTypeSelection()
 }
