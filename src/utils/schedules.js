@@ -319,6 +319,8 @@ const canCalculate = (scheduleParams) => {
         return cannotCalculate("Time (H:MM:SS) value is required for Schedule Type of Ride Time")
     } else if (s.scheduleBy === scheduleBy.time.code && (!s.timeSeconds || s.timeSeconds === 0.0)) {
         return cannotCalculate("Time (H:MM:SS) value is required for Schedule By of Time Target")
+    } else if (s.scheduleBy === scheduleBy.distance.code && (!s.distanceLaps || s.distanceLaps === 0.0)) {
+        return cannotCalculate("Distance (Laps) value is required for Schedule By of Distance Target")
     } else if (s.scheduleBy === scheduleBy.tempo.code && (!s.tempoTarget || s.tempoTarget === 0.0)) {
         return cannotCalculate("Tempo (Seconds) value is required for Schedule By of Tempo Target")
     } else if (s.scheduleBy === scheduleBy.speed.code && (!s.speedTempo || s.speedTempo === 0.0)) {

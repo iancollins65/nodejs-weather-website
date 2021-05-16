@@ -105,7 +105,7 @@ const handleSubmit = () => {
         url = url + '&distanceLaps=' + distance
     } else if (scheduleBy === 'speed') {
         url = url + '&speedTempo=' + speed
-    } else if (scheduleBy === 'time') {
+    } else if (scheduleBy === 'cadence') {
         url = url + '&cadenceTempo=' + cadence
     }
 
@@ -143,6 +143,7 @@ const handleSubmit = () => {
                 errorStr = errorStr.replace('cog', 'Cog')
                 errorStr = errorStr.replace('tyreWidth', 'Tyre Width')
                 errorStr = errorStr.replace('rimType', 'Rim Type')
+                errorStr = errorStr.replace('or Rollout value is', 'are')
                 messageOne.style.color = 'red'
                 messageOne.textContent = errorStr
             } else {
@@ -161,6 +162,48 @@ const handleSubmit = () => {
             }
         })
     }) 
+}
+
+const canAutoCalculate = () => {
+
+    const lapLength = lapLengthFld.value
+    const scheduleType = scheduleTypeSelect.value
+    const distanceLaps = distanceLapsFld.value
+    const rideTime = rideTimeFld.value
+    const scheduleBy = scheduleBySelect.value
+    const tempo = tempoFld.value
+    const time = timeFld.value
+    const distance = distanceFld.value
+    const speed = speedFld.value
+    const cadence = cadenceFld.value
+    const startType = startTypeSelect.value
+    const upToSpeed = upToSpeedFld.value
+    const chainRing = chainRingFld.value
+    const cog = cogFld.value
+
+    if (lapLength === '' || lapLength <= 0.0) {
+        return false
+    } else if (scheduleType === 'rideDistance' && (distanceLaps === '' || distanceLaps === 0.0)) {
+        return false
+    } else if (scheduleType === 'rideTime' && rideTime === '') {
+        return false
+    } else if (scheduleBy === 'time' && time === '') {
+        return false
+    } else if (scheduleBy === 'tempo' && (tempo === '' || tempo === 0.0)) {
+        return false
+    } else if (scheduleBy === 'distance' && (distance === '' || distance === 0.0)) {
+        return false
+    } else if (scheduleBy === 'speed' && (speed === '' || speed === 0.0)) {
+        return false
+    } else if (scheduleBy === 'cadence' && (cadence === '' || cadence === 0.0)) {
+        return false
+    } else if (scheduleBy === 'cadence' && (chainRing === '' || cog === '')) {
+        return false
+    } else if (startType === 'standing' && (upToSpeed === '' || upToSpeed === 0.0)) {
+        return false
+    } else {
+        return true
+    }
 }
 
 // Handle form input
@@ -513,7 +556,7 @@ const handleOnLoad = () => {
     }
 
     provideGearCheckBox.checked = Boolean(chainRingFld.value !== '' || cogFld.value !== '')
-    
+
     actOnProvideGearSet()
 
     if (timingsAtHiddenFld.value !== '') {
@@ -537,4 +580,8 @@ const handleOnLoad = () => {
     }
 
     actOnScheduleTypeSelection()
+
+    if (canAutoCalculate() === true) {
+        handleSubmit()
+    }
 }
