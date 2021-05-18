@@ -38,6 +38,9 @@ const outcomeTable = document.querySelector('#outcomeTable')
 const showSection = document.querySelector('#showSection')
 const showSelect = document.querySelector('#showData')
 const outputTable = document.querySelector('#outputTable')
+const scheduleText = document.querySelector('#scheduleText')
+const scheduleLabel = document.querySelector('#scheduleLabel')
+const scheduleDescription = document.querySelector('#scheduleDescription')
 var pointsGlobal = []
 
 rideTimeSection.style.display = 'none'
@@ -46,6 +49,7 @@ distanceSection.style.display = 'none'
 speedSection.style.display = 'none'
 cadenceSection.style.display = 'none'
 gearSection.style.display = 'none'
+scheduleText.style.display = 'none'
 messageOne.style.display = 'none'
 messageTwo.style.display = 'none'
 outputText.style.display = 'none'
@@ -64,6 +68,7 @@ const handleSubmit = () => {
     messageOne.style.display = 'block'
     messageOne.style.color = '#333456'   
     messageOne.textContent = 'Loading...'
+    scheduleText.style.display = 'none'
     messageTwo.style.display = 'none'    
     outputText.style.display = 'none'    
     outcomeTable.style.display = 'none'    
@@ -147,6 +152,9 @@ const handleSubmit = () => {
                 messageOne.style.color = 'red'
                 messageOne.textContent = errorStr
             } else {
+                scheduleText.style.display = 'block'
+                scheduleLabel.textContent = response.label
+                scheduleDescription.textContent = response.description
                 messageOne.textContent = 'Schedule outcome'
                 outcomeTable.style.display = 'block'
                 outcomeTable.innerHTML = ""
@@ -216,6 +224,7 @@ calcScheduleForm.addEventListener('input', (e) => {
         showSection.style.display = 'none'
         outcomeTable.style.display = 'none'
         outputTable.style.display = 'none'
+        scheduleText.style.display = 'none'
     //}
 })
 

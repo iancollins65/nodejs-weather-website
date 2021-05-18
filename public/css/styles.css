@@ -40,6 +40,11 @@ h1 {
     margin-bottom: 16px;
 }
 
+h2 {
+    font-size: 20px;
+    margin-bottom: 8px;
+}
+
 header a {
     color: #888888;
     margin-right: 16px;
