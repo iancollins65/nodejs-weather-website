@@ -217,15 +217,13 @@ const canAutoCalculate = () => {
 // Handle form input
 
 calcScheduleForm.addEventListener('input', (e) => {
-    //if (e.target !== provideGearCheckBox) {
-        messageOne.style.display = 'none'
-        messageTwo.style.display = 'none'
-        outputText.style.display = 'none'
-        showSection.style.display = 'none'
-        outcomeTable.style.display = 'none'
-        outputTable.style.display = 'none'
-        scheduleText.style.display = 'none'
-    //}
+    messageOne.style.display = 'none'
+    messageTwo.style.display = 'none'
+    outputText.style.display = 'none'
+    showSection.style.display = 'none'
+    outcomeTable.style.display = 'none'
+    outputTable.style.display = 'none'
+    scheduleText.style.display = 'none'
 })
 
 // Handle Provide Gear checkbox setting
@@ -350,6 +348,8 @@ const actOnScheduleBySelection = () => {
         distanceSection.style.display = 'none'
         speedSection.style.display = 'none'
         cadenceSection.style.display = 'block'
+        provideGearCheckBox.checked = true
+        actOnProvideGearSet()
     }
 }
 
