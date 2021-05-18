@@ -68,7 +68,7 @@ const calcSchedule = (scheduleParams) => {
 }
 
 const calcDistanceSchedule = (scheduleParams) => {
-    console.log(scheduleParams)
+    // console.log(scheduleParams)
     const s = scheduleParams
     let points = []
 
@@ -443,13 +443,26 @@ const validateQueryString = (query, fields) => {
                 }
             }
             else if (field.type === 'H:MM:SS') {
+                // convertSecondsToHMMSS
                 const timeString = query[field.name]
-                fieldValue = convertHMMSStimeToSeconds(timeString)
-                if (fieldValue === -1) {
-                    return { error: field.name + ' does not apply the H:MM:SS time format' }
-                }
-                if (field.convert === false) {
-                    fieldValue = timeString
+                let fieldNumber = Number(timeString)
+                if (isNaN(fieldNumber)) { // H:MM:SS format eas provided
+                    fieldValue = convertHMMSStimeToSeconds(timeString) // convert to total seconds
+                    if (fieldValue === -1) {
+                        return { error: field.name + ' does not apply the H:MM:SS time format' }
+                    }
+                    if (field.convert === false) { // return in H:MM:SS format
+                        fieldValue = timeString
+                    }
+                } else { // total seconds was provided
+                    if (!(fieldNumber > 0)) {
+                        return { error: field.name + ' is not positive' }
+                    }
+                    if (field.convert === false) { // return in H:MM:SS format
+                        fieldValue = convertSecondsToHMMSS(fieldNumber)
+                    } else { // return as total seconds
+                        fieldValue = fieldNumber
+                    }
                 }
             }
         } else if (fieldValue === undefined && field.returnEmpty === true) {
@@ -590,9 +603,9 @@ const convertHMMSStimeToSeconds = (timeString) => {
         return -1
     } 
     var numArray = []
-    for (timeElement of timeArray) {
-        const elementValue = Number(timeElement)
-        if (isNaN(elementValue) || !Number.isInteger(elementValue) || elementValue < 0) {
+    for (var i = 0; i < timeArray.length; i++) {
+        const elementValue = Number(timeArray[i])
+        if (isNaN(elementValue) || ((i < timeArray.length - 1) && !Number.isInteger(elementValue)) || elementValue < 0) {
             return -1
         }
         numArray.push(elementValue)
@@ -614,6 +627,39 @@ const convertHMMSStimeToSeconds = (timeString) => {
         return -1
     }
     return (hours * 60 * 60) + (minutes * 60) + seconds
+}
+
+const convertSecondsToHMMSS = (seconds) => {
+    var answer = ''
+    var h = div(seconds, 3600)
+    var remainder = seconds % 3600
+    var m = div(remainder, 60)
+    var s = round(remainder % 60, 3)
+    var mStr = m.toString()
+    if (m < 10) {
+        mStr = '0' + mStr
+    }
+    var sStr = s.toString()
+    if (s < 10) {
+        sStr = '0' + sStr
+    }
+    if (h > 0) {
+        answer = answer + h + ':' + mStr + ':' + sStr
+    } else if (m > 0) {
+        answer = answer + m + ':' + sStr
+    } else {
+        answer = answer + s
+    }
+    return answer
+}
+
+const round = (value, places) => {
+    const rounder = Math.pow(10, places)
+    return Math.round(value * rounder) / rounder
+}
+
+const div = (x, y) => {
+    return Math.floor(x / y)
 }
 
 module.exports = {
