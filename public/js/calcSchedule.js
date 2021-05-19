@@ -41,6 +41,8 @@ const outputTable = document.querySelector('#outputTable')
 const scheduleText = document.querySelector('#scheduleText')
 const scheduleLabel = document.querySelector('#scheduleLabel')
 const scheduleDescription = document.querySelector('#scheduleDescription')
+const gearInfoSection = document.querySelector('#gearInfoSection')
+const gearInfoTable = document.querySelector('#gearInfoTable')
 var pointsGlobal = []
 
 rideTimeSection.style.display = 'none'
@@ -56,6 +58,7 @@ outputText.style.display = 'none'
 outcomeTable.style.display = 'none'
 showSection.style.display = 'none'
 outputTable.style.display = 'none'
+gearInfoSection.style.display = 'none'
 
 // Form submit
 
@@ -73,7 +76,8 @@ const handleSubmit = () => {
     outputText.style.display = 'none'    
     outcomeTable.style.display = 'none'    
     showSection.style.display = 'none'
-    outputTable.style.display = 'none'    
+    outputTable.style.display = 'none'
+    gearInfoSection.style.display = 'none'
 
     const lapLength = lapLengthFld.value
     const scheduleType = scheduleTypeSelect.value
@@ -125,8 +129,7 @@ const handleSubmit = () => {
         }    
     }
 
-    console.log(url)
-
+    //console.log(url)
     fetch(url).then((response) => {
         response.json().then((response) => {
             if (response.error) {
@@ -164,6 +167,11 @@ const handleSubmit = () => {
                 outputTable.style.display = 'block'
                 outputTable.innerHTML = ""
                 outputTable.appendChild(buildScheduleDetailsTable(response.points, showSelect.value))
+                if (response.gear) {
+                    gearInfoSection.style.display = 'block'
+                    gearInfoTable.innerHTML = ""
+                    gearInfoTable.appendChild(buildGearInfoTable(response.gear))
+                }
                 //outputText.style.display = 'block'
                 //outputText.textContent = JSON.stringify(response.points)
                 pointsGlobal = response.points
@@ -224,6 +232,7 @@ calcScheduleForm.addEventListener('input', (e) => {
     outcomeTable.style.display = 'none'
     outputTable.style.display = 'none'
     scheduleText.style.display = 'none'
+    gearInfoSection.style.display = 'none'
 })
 
 // Handle Provide Gear checkbox setting
@@ -513,6 +522,78 @@ const buildScheduleDetailsTable = (points, show) => {
             }
         }
     }    
+
+    return table
+}
+
+const buildGearInfoTable = (gearInfo) => {
+
+    // Build the table
+    var table = document.createElement('table')
+
+    // Table contents
+    // Chain Ring row
+    let tr = table.insertRow(-1)
+    let th = document.createElement('th')
+    th.innerHTML = 'Chain Ring'
+    tr.appendChild(th)
+    let tc = tr.insertCell(-1)
+    let rawValue = gearInfo.chainRing
+    tc.innerHTML = rawValue
+
+    // Cog row
+    tr = table.insertRow(-1)
+    th = document.createElement('th')
+    th.innerHTML = 'Cog'
+    tr.appendChild(th)
+    tc = tr.insertCell(-1)
+    rawValue = gearInfo.cog
+    tc.innerHTML = rawValue
+
+    // Tyre Width row
+    tr = table.insertRow(-1)
+    th = document.createElement('th')
+    th.innerHTML = 'Tyre Width'
+    tr.appendChild(th)
+    tc = tr.insertCell(-1)
+    rawValue = gearInfo.tyreWidth
+    tc.innerHTML = rawValue
+
+    // Rim Type row
+    tr = table.insertRow(-1)
+    th = document.createElement('th')
+    th.innerHTML = 'Rim Type'
+    tr.appendChild(th)
+    tc = tr.insertCell(-1)
+    rawValue = gearInfo.rimType
+    tc.innerHTML = rawValue
+
+    // Gear Ratio row
+    tr = table.insertRow(-1)
+    th = document.createElement('th')
+    th.innerHTML = 'Gear Ratio'
+    tr.appendChild(th)
+    tc = tr.insertCell(-1)
+    rawValue = gearInfo.gearRatio
+    tc.innerHTML = round(rawValue, 3)
+
+    // Gear Inches row
+    tr = table.insertRow(-1)
+    th = document.createElement('th')
+    th.innerHTML = 'Gear Inches'
+    tr.appendChild(th)
+    tc = tr.insertCell(-1)
+    rawValue = gearInfo.gearInches
+    tc.innerHTML = round(rawValue, 3)
+
+    // Roll Out row
+    tr = table.insertRow(-1)
+    th = document.createElement('th')
+    th.innerHTML = 'Roll Out'
+    tr.appendChild(th)
+    tc = tr.insertCell(-1)
+    rawValue = gearInfo.rollOut
+    tc.innerHTML = round(rawValue / 1000, 3) + ' m'
 
     return table
 }

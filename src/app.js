@@ -574,7 +574,8 @@ app.get('/calculateSchedule', (req, res) => {
 
     // Calculate the schedule
     const schedule = schedules.calcSchedule(scheduleParams)
-
+    //console.log(schedule)
+    
     res.send(schedule)
 })
 

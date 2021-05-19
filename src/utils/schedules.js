@@ -45,9 +45,11 @@ const calcSchedule = (scheduleParams) => {
     if (canCalcSchedule.canCalc === false) {
         return {
             error: canCalcSchedule.error,
+            scheduleParams,
             label: undefined,
             description: undefined,
-            points: undefined
+            points: undefined,
+            gear: undefined
         }
     } else {
         var points = []
@@ -58,11 +60,14 @@ const calcSchedule = (scheduleParams) => {
         }
         const label = getScheduleLabel(scheduleParams)
         const description = getScheduleDescription(scheduleParams)
+        let gear = getGearInfo(scheduleParams)
         return {
             error: undefined,
+            scheduleParams,
             label,
             description,
-            points
+            points,
+            gear
         }
     }
 }
@@ -344,6 +349,17 @@ const cannotCalculate = (message) => {
         canCalc: false,
         error: message
     }
+}
+
+const getGearInfo = (scheduleParams) => {
+    const s = scheduleParams
+    var gearInfo = undefined
+    if (s.gear) {
+        if (!s.gear.rollOut && s.gear.chainRing && s.gear.cog) {
+            gearInfo = gears.getGearInfo(s.gear.chainRing, s.gear.cog, s.gear.tyreWidth, s.gear.rimType)
+        }
+    }
+    return gearInfo
 }
 
 const validateQueryString = (query, fields) => {
