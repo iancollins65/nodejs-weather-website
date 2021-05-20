@@ -383,61 +383,13 @@ const buildScheduleOutcomeTable = (endPoint) => {
     var table = document.createElement('table')
 
     // Table contents
-    // Laps row
-    let tr = table.insertRow(-1)
-    let th = document.createElement('th')
-    th.innerHTML = 'Laps'
-    tr.appendChild(th)
-    let tc = tr.insertCell(-1)
-    let rawValue = endPoint.lapNumber
-    tc.innerHTML = round(rawValue, 1)
-
-    // Distance row
-    tr = table.insertRow(-1)
-    th = document.createElement('th')
-    th.innerHTML = 'Distance'
-    tr.appendChild(th)
-    tc = tr.insertCell(-1)
-    rawValue = convertMtoKM(endPoint.distance)
-    tc.innerHTML = round(rawValue, 3) + ' km'
-
-    // Time row
-    tr = table.insertRow(-1)
-    th = document.createElement('th')
-    th.innerHTML = 'Time'
-    tr.appendChild(th)
-    tc = tr.insertCell(-1)
-    rawValue = round(endPoint.time, 3)
-    let rawStr = convertSecondsToHMMSS(rawValue)
-    tc.innerHTML = rawStr
-
-    // Tempo row
-    tr = table.insertRow(-1)
-    th = document.createElement('th')
-    th.innerHTML = 'Tempo'
-    tr.appendChild(th)
-    tc = tr.insertCell(-1)
-    rawValue = endPoint.tempo
-    tc.innerHTML = round(rawValue, 3) + ' sec'
-
-    // Ave Speed row
-    tr = table.insertRow(-1)
-    th = document.createElement('th')
-    th.innerHTML = 'Ave. Speed'
-    tr.appendChild(th)
-    tc = tr.insertCell(-1)
-    rawValue = endPoint.aveSpeed
-    tc.innerHTML = round(rawValue, 3) + ' km/h'
-
-    // Ave Cadence row
+    insertHeadingValueRow(table, 'Laps', round(endPoint.lapNumber, 1))
+    insertHeadingValueRow(table, 'Distance', round(convertMtoKM(endPoint.distance), 3) + ' km')
+    insertHeadingValueRow(table, 'Time', convertSecondsToHMMSS(round(endPoint.time, 3)))
+    insertHeadingValueRow(table, 'Tempo', round(endPoint.tempo, 3) + ' sec')
+    insertHeadingValueRow(table, 'Ave. Speed', round(endPoint.aveSpeed, 3) + ' km/h')
     if (endPoint.aveCadence !== 0) {
-        tr = table.insertRow(-1)
-        th = document.createElement('th')
-        th.innerHTML = 'Ave. Cadence'
-        tr.appendChild(th)
-        tc = tr.insertCell(-1)
-        rawValue = endPoint.aveCadence
-        tc.innerHTML = round(rawValue, 3) + ' rpm'
+        insertHeadingValueRow(table, 'Ave. Cadence', round(endPoint.aveCadence, 3) + ' rpm')
     }
 
     return table
@@ -532,73 +484,27 @@ const buildGearInfoTable = (gearInfo) => {
     var table = document.createElement('table')
 
     // Table contents
-    // Chain Ring row
-    let tr = table.insertRow(-1)
-    let th = document.createElement('th')
-    th.innerHTML = 'Chain Ring'
-    tr.appendChild(th)
-    let tc = tr.insertCell(-1)
-    let rawValue = gearInfo.chainRing
-    tc.innerHTML = rawValue
-
-    // Cog row
-    tr = table.insertRow(-1)
-    th = document.createElement('th')
-    th.innerHTML = 'Cog'
-    tr.appendChild(th)
-    tc = tr.insertCell(-1)
-    rawValue = gearInfo.cog
-    tc.innerHTML = rawValue
-
-    // Tyre Width row
-    tr = table.insertRow(-1)
-    th = document.createElement('th')
-    th.innerHTML = 'Tyre Width'
-    tr.appendChild(th)
-    tc = tr.insertCell(-1)
-    rawValue = gearInfo.tyreWidth
-    tc.innerHTML = rawValue
-
-    // Rim Type row
-    tr = table.insertRow(-1)
-    th = document.createElement('th')
-    th.innerHTML = 'Rim Type'
-    tr.appendChild(th)
-    tc = tr.insertCell(-1)
-    rawValue = gearInfo.rimType
-    tc.innerHTML = rawValue
-
-    // Gear Ratio row
-    tr = table.insertRow(-1)
-    th = document.createElement('th')
-    th.innerHTML = 'Gear Ratio'
-    tr.appendChild(th)
-    tc = tr.insertCell(-1)
-    rawValue = gearInfo.gearRatio
-    tc.innerHTML = round(rawValue, 3)
-
-    // Gear Inches row
-    tr = table.insertRow(-1)
-    th = document.createElement('th')
-    th.innerHTML = 'Gear Inches'
-    tr.appendChild(th)
-    tc = tr.insertCell(-1)
-    rawValue = gearInfo.gearInches
-    tc.innerHTML = round(rawValue, 3)
-
-    // Roll Out row
-    tr = table.insertRow(-1)
-    th = document.createElement('th')
-    th.innerHTML = 'Roll Out'
-    tr.appendChild(th)
-    tc = tr.insertCell(-1)
-    rawValue = gearInfo.rollOut
-    tc.innerHTML = round(rawValue / 1000, 3) + ' m'
+    insertHeadingValueRow(table, 'Chain Ring', gearInfo.chainRing)
+    insertHeadingValueRow(table, 'Cog', gearInfo.cog)
+    insertHeadingValueRow(table, 'Tyre Width', gearInfo.tyreWidth)
+    insertHeadingValueRow(table, 'Rim Type', gearInfo.rimType)
+    insertHeadingValueRow(table, 'Gear Ratio', round(gearInfo.gearRatio, 3))
+    insertHeadingValueRow(table, 'Gear Inches', round(gearInfo.gearInches, 3))
+    insertHeadingValueRow(table, 'Roll Out', round(gearInfo.rollOut / 1000, 3) + ' m')
 
     return table
 }
 
 // Utilities
+
+const insertHeadingValueRow = (table, heading, value) => {
+    let tr = table.insertRow(-1)
+    let th = document.createElement('th')
+    th.innerHTML = heading
+    tr.appendChild(th)
+    let tc = tr.insertCell(-1)
+    tc.innerHTML = value
+}
 
 const round = (value, places) => {
     const rounder = Math.pow(10, places)
