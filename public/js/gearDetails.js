@@ -5,10 +5,6 @@ const tyreWidthFld = document.querySelector('#tyreWidth')
 const rimTypeFld = document.querySelector('#rimType')
 const rimTypeHiddenFld = document.querySelector('#rimTypeHidden')
 const messageOne = document.querySelector('#message-1')
-const gearDataTable = document.querySelector('#gearData')
-const gearRatioCell = document.querySelector('#gearRatio')
-const gearInchesCell = document.querySelector('#gearInches')
-const rollOutCell = document.querySelector('#rollOut')
 const extrasSelect = document.querySelector('#extras')
 const extrasHiddenFld = document.querySelector('#extrasHidden')
 const speedSection = document.querySelector('#speedSection')
@@ -19,20 +15,14 @@ const speedFld = document.querySelector('#speed')
 const cadenceFld = document.querySelector('#cadence')
 const lapTimeFld = document.querySelector('#lapTime')
 const lapLengthFld = document.querySelector('#lapLength')
-const extrasData = document.querySelector('#extrasData')
-const speedCell = document.querySelector('#speedCell')
-const cadenceCell = document.querySelector('#cadenceCell')
-const lapSection = document.querySelector('#lapSection')
-const lapTimeCell = document.querySelector('#lapTimeCell')
-const lapPedalCountCell = document.querySelector('#lapPedalCountCell')
+const outputTable = document.querySelector('#outputTable')
 
 speedSection.style.display = 'none'
 cadenceSection.style.display = 'none'
 lapTimeSection.style.display = 'none'
 lapLengthSection.style.display = 'none'
 messageOne.style.display = 'none'
-gearDataTable.style.display = 'none'
-extrasData.style.display = 'none'
+outputTable.style.display = 'none'
 
 gearDetailsForm.addEventListener('submit', (e) => {
     e.preventDefault()
@@ -43,13 +33,7 @@ const handleSubmit = () => {
     messageOne.style.display = 'block'
     messageOne.style.color = '#333456'   
     messageOne.textContent = 'Loading...'
-    gearRatioCell.textContent = ''
-    gearInchesCell.textContent = ''
-    rollOutCell.textContent = ''
-    speedCell.textContent = ''
-    cadenceCell.textContent = ''
-    lapTimeCell.textContent = ''
-    lapPedalCountCell.textContent = ''
+    outputTable.style.display = 'none'
 
     const chainRing = chainRingFld.value
     const cog = cogFld.value
@@ -90,32 +74,12 @@ const handleSubmit = () => {
                 errorStr = errorStr.replace('lapLength', 'Lap Length')
                 messageOne.style.color = 'red'
                 messageOne.textContent = errorStr
-                gearDataTable.style.display = 'none'
-                extrasData.style.display = 'none'
+                outputTable.style.display = 'none'
             } else {
                 messageOne.textContent = 'Your gear details...'
-                gearDataTable.style.display = 'block'
-                gearRatioCell.textContent = round(gearRatio, 3)
-                gearInchesCell.textContent = round(gearInches, 3)
-                rollOutCell.textContent = round(rollOut / 1000, 3) + ' m'
-                if (speed) {
-                    extrasData.style.display = 'block'
-                    speedCell.textContent = round(speed, 3) + ' km/h'
-                    if (cadence) {
-                        cadenceCell.textContent = round(cadence, 3) + ' rpm'
-                    }
-                    if (lapTime) {
-                        lapSection.style.display = 'block'
-                        lapTimeCell.textContent = round(lapTime, 3) + ' seconds'
-                        if (lapPedalCount) {
-                            lapPedalCountCell.textContent = round(lapPedalCount, 3)
-                        }
-                    } else {
-                        lapSection.style.display = 'none'
-                    }
-                } else {
-                    extrasData.style.display = 'none'
-                }
+                outputTable.style.display = 'block'
+                outputTable.innerHTML = ""
+                outputTable.appendChild(buildOutputTable(gearRatio, gearInches, rollOut, speed, cadence, lapTime, lapPedalCount))
             }
         })
     })
@@ -123,8 +87,7 @@ const handleSubmit = () => {
 
 gearDetailsForm.addEventListener('input', (e) => {
     messageOne.style.display = 'none'
-    gearDataTable.style.display = 'none'
-    extrasData.style.display = 'none'
+    outputTable.style.display = 'none'
 })
 
 extrasSelect.addEventListener('change', (e) => {
@@ -175,14 +138,42 @@ const round = (value, places) => {
     return Math.round(value * rounder) / rounder
 }
 
-// On load
+const insertHeadingValueRow = (table, heading, value) => {
+    let tr = table.insertRow(-1)
+    let th = document.createElement('th')
+    th.innerHTML = heading
+    tr.appendChild(th)
+    let tc = tr.insertCell(-1)
+    tc.innerHTML = value
+}
 
-// Experimenting with accessing hbs variables in js...
-// let initRimType = JSON.parse('{{rimType}}')
-// console.log(initRimType)
-// if (initRimType !== '') {
-//     rimTypeFld.value = initRimType
-// }
+// Output table
+
+const buildOutputTable = (gearRatio, gearInches, rollOut, speed, cadence, lapTime, lapPedalCount) => {
+    // Build the table
+    var table = document.createElement('table')
+
+    // Table contents
+    insertHeadingValueRow(table, 'Gear Ratio', round(gearRatio, 3))
+    insertHeadingValueRow(table, 'Gear Inches', round(gearInches, 3))
+    insertHeadingValueRow(table, 'Roll Out (approx)', round(rollOut / 1000, 3) + ' m')
+    if (speed) {
+        insertHeadingValueRow(table, 'Speed', round(speed, 3) + ' km/h')
+    }
+    if (cadence) {
+        insertHeadingValueRow(table, 'Cadence', round(cadence, 3) + ' rpm')
+    }
+    if (lapTime) {
+        insertHeadingValueRow(table, 'Lap Time', round(lapTime, 3) + ' seconds')
+    }
+    if (lapPedalCount) {
+        insertHeadingValueRow(table, 'Lap Pedal Count', round(lapPedalCount, 3))
+    }
+
+    return table
+}
+
+// On load
 
 const handleOnLoad = () => {
     if (rimTypeHiddenFld.value !== '') {
@@ -204,4 +195,3 @@ const handleOnLoad = () => {
         handleSubmit()
     }
 }
-
