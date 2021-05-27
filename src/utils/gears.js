@@ -177,6 +177,48 @@ const getChainRingAndCogOptionsForGearInches = (gearInches, plusOrMinus = 1, sor
     return options
 }
 
+const getCogGivenChainRingAndGearRatio = (chainRing, gearRatio, fraction = 0.4) => {
+    const decimalCog = chainRing / gearRatio
+    const floorCog = Math.floor(decimalCog)
+    const ceilingCog = Math.ceil(decimalCog)
+    const floorFraction = decimalCog - floorCog
+    if (floorFraction < fraction) {
+        return [floorCog]
+    } else if (floorFraction > (1 - fraction)) {
+        return [ceilingCog]
+    } else {
+        return [floorCog, ceilingCog]
+    }
+}
+
+const getChainRingAndCogOptionsForGearRatio = (gearRatio, plusOrMinus = 0.1, sortByDiff = true, 
+    minChainRing = 34, maxChainRing = 60, minCog = 10, maxCog = 36, minTeeth = 44, maxTeeth = 96) => {
+    let options = []
+    var chainRing = minChainRing
+    for (; chainRing <= maxChainRing; chainRing++) {
+        const cogCandidates = getCogGivenChainRingAndGearRatio(chainRing, gearRatio)
+        for (cog of cogCandidates) {
+            const teeth = chainRing + cog
+            if ((cog >= minCog) && (cog <= maxCog) && (teeth >= minTeeth) && (teeth <= maxTeeth)) {
+                const candidateGearRatio = getGearRatio(chainRing,cog)
+                const diffGearRatio = Math.abs(candidateGearRatio - gearRatio)
+                if (diffGearRatio <= plusOrMinus) {
+                    options.push({
+                        chainRing,
+                        cog,
+                        gearRatio: candidateGearRatio,
+                        diff: diffGearRatio
+                    })
+                }
+            }
+        }
+    }
+    if (sortByDiff === true) {
+        options.sort((a, b) => (a.diff >= b.diff) ? 1 : -1)
+    }
+    return options
+}
+
 const getCogGivenChainRingAndWheelForRollOut = (chainRing, wheelCircumfrance, rollOut) => {
     const decimalCog = (chainRing * wheelCircumfrance) / rollOut
     const ceilingCog = Math.ceil(decimalCog)
@@ -282,6 +324,7 @@ module.exports = {
     getGearInfo: getGearInfo,
     getCogGivenChainRingAndGearInches: getCogGivenChainRingAndGearInches,
     getChainRingAndCogOptionsForGearInches: getChainRingAndCogOptionsForGearInches,
+    getChainRingAndCogOptionsForGearRatio: getChainRingAndCogOptionsForGearRatio,
     getCogGivenChainRingAndWheelForRollOut: getCogGivenChainRingAndWheelForRollOut,
     getChainRingAndCogOptionsForRollOut: getChainRingAndCogOptionsForRollOut,
     getCogGivenChainRingAndWheelForSpeedAndCadence: getCogGivenChainRingAndWheelForSpeedAndCadence,

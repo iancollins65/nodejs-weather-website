@@ -14,6 +14,8 @@ const schedules = require('./utils/schedules.js')
 
 // const test = gears.getChainRingAndCogOptionsForGearInches(94,0.5,49,56,15,16,50,70)
 
+const test = gears.getChainRingAndCogOptionsForGearRatio(3.1)
+
 // const test = gears.getCogGivenChainRingAndWheelForRollOut(50, 2099, 7000)
 
 // const test = gears.getChainRingAndCogOptionsForRollOut(7000, 100, true, 21, '700c', 47, 56, 12, 18)
@@ -208,49 +210,49 @@ const schedules = require('./utils/schedules.js')
 
 // const test = schedules.calcTimeSchedule(scheduleParams_cadence_time)
 
-const scheduleParams = {
-    label: "",
-    scheduleType: schedules.scheduleType.time.code,
-    scheduleBy: schedules.scheduleBy.distance.code,
-    lapDistance: 250.0,
-    distanceLaps: 4.0,
-    timeSeconds: 60.0,
-    tempoTarget: 15.0,
-    startType: schedules.startType.standing.code,
-    upToSpeedTime: 4.0,
-    timingsAt: schedules.timingsAt.fullLap.code,
-    speedTempo: 50.0,
-    cadenceTempo: 100.0,
-    gear: {
-        rollOut: 7000
-    }
-}
+// const scheduleParams = {
+//     label: "",
+//     scheduleType: schedules.scheduleType.time.code,
+//     scheduleBy: schedules.scheduleBy.distance.code,
+//     lapDistance: 250.0,
+//     distanceLaps: 4.0,
+//     timeSeconds: 60.0,
+//     tempoTarget: 15.0,
+//     startType: schedules.startType.standing.code,
+//     upToSpeedTime: 4.0,
+//     timingsAt: schedules.timingsAt.fullLap.code,
+//     speedTempo: 50.0,
+//     cadenceTempo: 100.0,
+//     gear: {
+//         rollOut: 7000
+//     }
+// }
 
-const scheduleParams1 = {
-    label: "",
-    scheduleType: schedules.scheduleType.distance.code,
-    scheduleBy: schedules.scheduleBy.tempo.code,
-    lapDistance: 250.0,
-    distanceLaps: 4.0,
-    timeSeconds: 60.0,
-    tempoTarget: 15.0,
-    startType: schedules.startType.standing.code,
-    upToSpeedTime: 4.0,
-    timingsAt: schedules.timingsAt.fullLap.code,
-    speedTempo: 50.0,
-    cadenceTempo: 100.0,
-    gear: {
-        chainRing: 54,
-        cog: 14,
-        tyreWidth: 20,
-        rimType: '700c'
-    }
-}
+// const scheduleParams1 = {
+//     label: "",
+//     scheduleType: schedules.scheduleType.distance.code,
+//     scheduleBy: schedules.scheduleBy.tempo.code,
+//     lapDistance: 250.0,
+//     distanceLaps: 4.0,
+//     timeSeconds: 60.0,
+//     tempoTarget: 15.0,
+//     startType: schedules.startType.standing.code,
+//     upToSpeedTime: 4.0,
+//     timingsAt: schedules.timingsAt.fullLap.code,
+//     speedTempo: 50.0,
+//     cadenceTempo: 100.0,
+//     gear: {
+//         chainRing: 54,
+//         cog: 14,
+//         tyreWidth: 20,
+//         rimType: '700c'
+//     }
+// }
 
-// const test = schedules.canCalculate(scheduleParams)
+// // const test = schedules.canCalculate(scheduleParams)
 
-const test = schedules.calcSchedule(scheduleParams1)
+// const test = schedules.calcSchedule(scheduleParams1)
 
-// const test = schedules.convertHMMSStimeToSeconds('60:59:59')
+// // const test = schedules.convertHMMSStimeToSeconds('60:59:59')
 
 console.log(test)
