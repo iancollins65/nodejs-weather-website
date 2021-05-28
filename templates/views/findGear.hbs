@@ -19,6 +19,7 @@
             <label for="findFor">Find For:</label>
             <select id="findFor" name="findFor">
                 <option value="gearInches">Gear Inches</option>
+                <option value="gearRatio">Gear Ratio</option>
                 <option value="rollOut">Roll Out</option>
                 <option value="speedCadence">Speed and Cadence</option>
                 <option value="lapTimeCadence">Lap Time and Cadence</option>
@@ -29,6 +30,12 @@
                 <input type="number" id="gearInches" name="gearInches" step="0.001" value={{gearInches}}>
                 <label class="sub-label" for="plusOrMinus">+/-</label>
                 <input class="sub-input" type="number" id="plusOrMinus" name="plusOrMinus" step="0.001" placeholder="1" value={{plusOrMinus}}><br>
+            </div>
+            <div id="gearRatioSection">
+                <label for="gearRatio">Gear Ratio:</label>
+                <input type="number" id="gearRatio" name="gearRatio" step="0.001" value={{gearRatio}}>
+                <label class="sub-label" for="plusOrMinus2">+/-</label>
+                <input class="sub-input" type="number" id="plusOrMinus2" name="plusOrMinus2" step="0.001" placeholder="0.1" value={{plusOrMinus2}}><br>
             </div>
             <div id="rollOutSection">
                 <label for="rollOut">Roll Out:</label>

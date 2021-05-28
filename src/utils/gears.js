@@ -248,7 +248,8 @@ const getChainRingAndCogOptionsForRollOut = (rollOut, maxDiff = 500, sortDesc = 
                     chainRing,
                     cog,
                     rollOut: candidateRollOut,
-                    gearInches
+                    gearInches,
+                    gearRatio
                 })
             }
         }
@@ -295,7 +296,8 @@ const getChainRingAndCogOptionsForSpeedAndCadence = (speed, cadence, fixed = 'ca
                     speed: candidateSpeed,
                     cadence: candidateCadence,
                     rollOut,
-                    gearInches
+                    gearInches,
+                    gearRatio
                 })
             }
         }

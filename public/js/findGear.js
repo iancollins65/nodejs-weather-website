@@ -4,6 +4,9 @@ const findForHiddenFld = document.querySelector('#findForHidden')
 const gearInchesSection = document.querySelector('#gearInchesSection')
 const gearInchesFld = document.querySelector('#gearInches')
 const plusOrMinusFld = document.querySelector('#plusOrMinus')
+const gearRatioSection = document.querySelector('#gearRatioSection')
+const gearRatioFld = document.querySelector('#gearRatio')
+const plusOrMinus2Fld = document.querySelector('#plusOrMinus2')
 const rollOutSection = document.querySelector('#rollOutSection')
 const rollOutFld = document.querySelector('#rollOut')
 const maxDiffFld = document.querySelector('#maxDiff')
@@ -36,6 +39,7 @@ const sortSelectSection = document.querySelector('#sortSelect')
 const sortByFld = document.querySelector('#sortBy')
 var gearOptionsGlobal = []
 
+gearRatioSection.style.display = 'none'
 rollOutSection.style.display = 'none'
 speedSection.style.display = 'none'
 lapSection.style.display = 'none'
@@ -87,7 +91,6 @@ const handleSubmit = () => {
         setCookie('maxChainRing', maxChainRing, 1)
         setCookie('minCog', minCog, 1)
         setCookie('maxCog', maxCog, 1)
-        // setCookie('rollOut', '', 1)
 
         fetch(url).then((response) => {
             response.json().then((gearOptions) => {
@@ -112,6 +115,52 @@ const handleSubmit = () => {
                     outputTable.appendChild(buildOutputTable(findFor, gearOptions))
                     // outputText.style.display = 'block'
                     // outputText.textContent = JSON.stringify(gearOptions)
+                }
+            })
+        })            
+    } else if (findFor === 'gearRatio') {
+        const gearRatio = gearRatioFld.value
+        const plusOrMinus = plusOrMinus2Fld.value
+        const minChainRing = minChainRingFld.value
+        const maxChainRing = maxChainRingFld.value
+        const minCog = minCogFld.value
+        const maxCog = maxCogFld.value
+
+        var url = '/gearRatioOptions?gearRatio=' + gearRatio
+        if (plusOrMinus !== '') { url = url + "&plusOrMinus=" + plusOrMinus }
+        if (minChainRing !== '') { url = url + "&minChainRing=" + minChainRing }
+        if (maxChainRing !== '') { url = url + "&maxChainRing=" + maxChainRing }
+        if (minCog !== '') { url = url + "&minCog=" + minCog }
+        if (maxCog !== '') { url = url + "&maxCog=" + maxCog }
+
+        setCookie('gearRatio', gearRatio, 1)
+        setCookie('plusOrMinus2', plusOrMinus, 1)
+        setCookie('minChainRing', minChainRing, 1)
+        setCookie('maxChainRing', maxChainRing, 1)
+        setCookie('minCog', minCog, 1)
+        setCookie('maxCog', maxCog, 1)
+    
+        fetch(url).then((response) => {
+            response.json().then((gearOptions) => {
+                if (gearOptions.error) {
+                    var errorStr = gearOptions.error + '.'
+                    errorStr = errorStr.replace('gearRatio', 'Gear Ratio')
+                    errorStr = errorStr.replace('plusOrMinus', '+/-')
+                    errorStr = errorStr.replace('min', 'Min ')
+                    errorStr = errorStr.replace('max', 'Max ')
+                    errorStr = errorStr.replace('ChainRing', 'Chain Ring')
+                    messageOne.style.color = 'red'
+                    messageOne.textContent = errorStr
+                } else if (gearOptions.length === 0) {
+                    messageOne.textContent = 'No gear options found. Please adjust your selections.'
+                } else {
+                    gearOptionsGlobal = gearOptions
+                    messageOne.textContent = 'Your gear options...'
+                    buildSortSelect(findFor)
+                    sortSelectSection.style.display = 'block'
+                    outputTable.style.display = 'block'
+                    outputTable.innerHTML = ""
+                    outputTable.appendChild(buildOutputTable(findFor, gearOptions))
                 }
             })
         })            
@@ -353,6 +402,17 @@ const actOnFindForSelection = () => {
         // rollOut.value = ''
         // tyreWidth.value = ''
         gearInchesSection.style.display = 'block'
+        gearRatioSection.style.display = 'none'
+        rollOutSection.style.display = 'none'
+        speedSection.style.display = 'none'
+        lapSection.style.display = 'none'
+        cadenceSection.style.display = 'none'
+        fixedSection.style.display = 'none'
+        tyreWidthSection.style.display = 'none'
+        rimTypeSection.style.display = 'none'
+    } else if (findForSelect.value === 'gearRatio') {
+        gearInchesSection.style.display = 'none'
+        gearRatioSection.style.display = 'block'
         rollOutSection.style.display = 'none'
         speedSection.style.display = 'none'
         lapSection.style.display = 'none'
@@ -363,6 +423,7 @@ const actOnFindForSelection = () => {
     } else if (findForSelect.value === 'rollOut') {
         // gearInches.value = ''
         gearInchesSection.style.display = 'none'
+        gearRatioSection.style.display = 'none'
         rollOutSection.style.display = 'block'
         speedSection.style.display = 'none'
         lapSection.style.display = 'none'
@@ -372,6 +433,7 @@ const actOnFindForSelection = () => {
         rimTypeSection.style.display = 'block'
     } else if (findForSelect.value === 'speedCadence') {
         gearInchesSection.style.display = 'none'
+        gearRatioSection.style.display = 'none'
         rollOutSection.style.display = 'none'
         speedSection.style.display = 'block'
         lapSection.style.display = 'none'
@@ -381,6 +443,7 @@ const actOnFindForSelection = () => {
         rimTypeSection.style.display = 'block'
     } else if (findForSelect.value === 'lapTimeCadence') {
         gearInchesSection.style.display = 'none'
+        gearRatioSection.style.display = 'none'
         rollOutSection.style.display = 'none'
         speedSection.style.display = 'none'
         lapSection.style.display = 'block'
@@ -411,6 +474,17 @@ const buildSortSelect = (findFor) => {
         const text2 = document.createTextNode('Gear Inches (asc)')
         option2.appendChild(text2)
         option2.setAttribute('value', 'gearInches')
+        sortByFld.appendChild(option2)
+    } else if (findFor === 'gearRatio') {
+        const option1 = document.createElement('option')
+        const text1 = document.createTextNode('Closest to ' + gearRatioFld.value)
+        option1.appendChild(text1)
+        option1.setAttribute('value', 'closestGearRatio')
+        sortByFld.appendChild(option1)
+        const option2 = document.createElement('option')
+        const text2 = document.createTextNode('Gear Ratio (asc)')
+        option2.appendChild(text2)
+        option2.setAttribute('value', 'gearRatio')
         sortByFld.appendChild(option2)
     } else if (findFor === 'rollOut') {
         const option1 = document.createElement('option')
@@ -455,10 +529,16 @@ const buildSortSelect = (findFor) => {
             sortByFld.value = 'gearInches'
         } else if (sortBy === 'closestGearInches' && findFor === 'gearInches') {
             sortByFld.value = 'closestGearInches'
+        } else if (sortBy === 'gearRatio' && findFor === 'gearRatio') {
+            sortByFld.value = 'gearRatio'
+        } else if (sortBy === 'closestGearRatio' && findFor === 'gearRatio') {
+            sortByFld.value = 'closestGearRatio'
         } else if (sortBy === 'closestRollOut' && findFor === 'rollOut') {
             sortByFld.value = 'closestRollOut'
         } else if (findFor === 'gearInches') {
             sortByFld.value = 'closestGearInches'
+        } else if (findFor === 'gearRatio') {
+            sortByFld.value = 'closestGearRatio'
         } else if (findFor === 'rollOut') {
             sortByFld.value = 'closestRollOut'
         } else if ((sortBy === 'speed') && (findFor === 'speedCadence' || findFor === 'lapTimeCadence')) {
@@ -470,6 +550,8 @@ const buildSortSelect = (findFor) => {
         }
     } else if (findFor === 'gearInches') {
         sortByFld.value = 'closestGearInches'
+    } else if (findFor === 'gearRatio') {
+        sortByFld.value = 'closestGearRatio'
     } else if (findFor === 'rollOut') {
         sortByFld.value = 'closestRollOut'
     } else {
@@ -483,15 +565,22 @@ const buildOutputTable = (findFor, gearOptions) => {
     // Sort gearOptions
     if (sortByFld.value === 'gearInches' && findFor === 'gearInches') {
         gearOptions.sort((a, b) => (a.gearInches >= b.gearInches) ? 1 : -1)
+    } else if (sortByFld.value === 'gearRatio' && findFor === 'gearRatio') {
+        gearOptions.sort((a, b) => (a.gearRatio >= b.gearRatio) ? 1 : -1)
     } else if (sortByFld.value === 'chainRing') {
         gearOptions.sort((a, b) => (a.chainRing >= b.chainRing) ? 1 : -1)
     } else if (sortByFld.value === 'closestGearInches' && findFor === 'gearInches') {
+        gearOptions.sort((a, b) => (a.diff >= b.diff) ? 1 : -1)
+    } else if (sortByFld.value === 'closestGearRatio' && findFor === 'gearRatio') {
         gearOptions.sort((a, b) => (a.diff >= b.diff) ? 1 : -1)
     } else if (sortByFld.value === 'closestRollOut' && findFor === 'rollOut') {
         gearOptions.sort((a, b) => (a.rollOut <= b.rollOut) ? 1 : -1)
     } else if (findFor === 'gearInches') {
         gearOptions.sort((a, b) => (a.diff >= b.diff) ? 1 : -1)
         sortByFld.value = 'closestGearInches'
+    } else if (findFor === 'gearRatio') {
+        gearOptions.sort((a, b) => (a.diff >= b.diff) ? 1 : -1)
+        sortByFld.value = 'closestGearRatio'
     } else if (findFor === 'rollOut') {
         gearOptions.sort((a, b) => (a.rollOut <= b.rollOut) ? 1 : -1)
         sortByFld.value = 'closestRollOut'
@@ -533,6 +622,32 @@ const buildOutputTable = (findFor, gearOptions) => {
             let gearInchesCell = tr.insertCell(-1)
             let rawValue = gearOption.gearInches
             gearInchesCell.innerHTML = round(rawValue, 3)
+        }    
+    } else if (findFor === 'gearRatio') {
+        // Create header row
+        let tr = table.insertRow(-1)
+        let th = document.createElement('th')
+        th.innerHTML = 'Gear'
+        tr.appendChild(th)
+        th = document.createElement('th')
+        th.innerHTML = 'Gear Ratio'
+        tr.appendChild(th)
+
+        // Create data rows
+        for (gearOption of gearOptions) {
+            let tr = table.insertRow(-1)
+            // Gear cell as a link
+            let gearCell = tr.insertCell(-1)
+            let a = document.createElement('A')
+            a.text = gearOption.chainRing + ' x ' + gearOption.cog
+            a.title = 'Chain Ring ' + gearOption.chainRing + ' Cog ' + gearOption.cog
+            a.href = linkToGearDetails(findFor, gearOption.chainRing, gearOption.cog)
+            // a.onclick = 'gearLink()' Doesn't seem to work
+            gearCell.appendChild(a)
+            // Gear Ratio cell
+            let gearRatioCell = tr.insertCell(-1)
+            let rawValue = gearOption.gearRatio
+            gearRatioCell.innerHTML = round(rawValue, 3)
         }    
     } else if (findFor === 'rollOut') {
         // Create header row
@@ -646,6 +761,8 @@ const clearCookies = () => {
     setCookie('findFor', '', 1)
     setCookie('gearInches', '', 1)
     setCookie('plusOrMinus', '', 1)
+    setCookie('gearRatio', '', 1)
+    setCookie('plusOrMinus2', '', 1)
     setCookie('rollOut', '', 1)
     setCookie('maxDiff', '', 1)
     setCookie('speed', '', 1)
@@ -719,6 +836,8 @@ const handleOnLoad = () => {
         actOnFindForSelection()
         if (findForSelect.value === 'gearInches' && gearInchesFld.value !== '') {
             handleSubmit()
+        } else if (findForSelect.value === 'gearRatio' && gearRatioFld.value !== '') {
+            handleSubmit()
         } else if (findForSelect.value === 'rollOut' && rollOutFld.value !== '') {
             handleSubmit()
         } else if (findForSelect.value === 'speedCadence' && speedFld.value !== '' 
@@ -747,6 +866,19 @@ const handleOnLoad = () => {
                 const plusOrMinus = getCookie('plusOrMinus')
                 if (plusOrMinus !== '') {
                     plusOrMinusFld.value = plusOrMinus
+                }
+                applyMinMaxCookies()
+                handleSubmit()
+            }
+        } else if (findFor === 'gearRatio') {
+            const gearRatio = getCookie('gearRatio')
+            if (gearRatio !== '') {
+                findForSelect.value = 'gearRatio'
+                actOnFindForSelection()
+                gearRatioFld.value = gearRatio
+                const plusOrMinus = getCookie('plusOrMinus2')
+                if (plusOrMinus !== '') {
+                    plusOrMinus2Fld.value = plusOrMinus
                 }
                 applyMinMaxCookies()
                 handleSubmit()

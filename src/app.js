@@ -150,12 +150,13 @@ app.get('/cassetteDetails', (req, res) => {
 
 app.get('/findGear', (req, res) => {
 
-    const {error, findFor, gearInches, plusOrMinus, rollOut, maxDiff, speed, cadence, lapTime, lapLength, 
+    const {error, findFor, gearInches, gearRatio, plusOrMinus, rollOut, maxDiff, speed, cadence, lapTime, lapLength, 
         fixed, tyreWidth, rimType, showMinMax, 
         minChainRing, maxChainRing, minCog, maxCog, minTeeth, maxTeeth} = 
         hpcUtils.validateQueryString(req.query, [
-            { name: 'findFor', type: 'string', options: ['gearInches', 'rollOut', 'speedCadence', 'lapTimeCadence'], returnEmpty: true },
+            { name: 'findFor', type: 'string', options: ['gearInches', 'gearRatio', 'rollOut', 'speedCadence', 'lapTimeCadence'], returnEmpty: true },
             { name: 'gearInches', type: 'decimal', sign: 'positive', returnEmpty: true },
+            { name: 'gearRatio', type: 'decimal', sign: 'positive', returnEmpty: true },
             { name: 'plusOrMinus', type: 'decimal', sign: 'positive', returnEmpty: true },
             { name: 'rollOut', type: 'decimal', sign: 'positive', returnEmpty: true },
             { name: 'maxDiff', type: 'decimal', sign: 'positive', returnEmpty: true },
@@ -182,6 +183,8 @@ app.get('/findGear', (req, res) => {
             findFor: '',
             gearInches: '', 
             plusOrMinus: '', 
+            gearRatio: '', 
+            plusOrMinus2: '', 
             rollOut: '', 
             maxDiff: '', 
             speed: '', 
@@ -206,6 +209,8 @@ app.get('/findGear', (req, res) => {
             findFor,
             gearInches, 
             plusOrMinus, 
+            gearRatio, 
+            plusOrMinus2: plusOrMinus, 
             rollOut, 
             maxDiff, 
             speed, 
@@ -432,6 +437,33 @@ app.get('/gearInchesOptions', (req, res) => {
     res.send(gearInchesOptions)
 })
 
+app.get('/gearRatioOptions', (req, res) => {
+
+    const {error, gearRatio, plusOrMinus, sortByDiff, minChainRing, maxChainRing, 
+        minCog, maxCog, minTeeth, maxTeeth} = 
+        hpcUtils.validateQueryString(req.query, [
+            { name: 'gearRatio', mandatory: true, type: 'decimal', sign: 'positive' },
+            { name: 'plusOrMinus', default: 1, type: 'decimal', sign: 'positive' },
+            { name: 'sortByDiff', default: true, type: 'boolean'},
+            { name: 'minChainRing', type: 'integer', sign: 'positive' },
+            { name: 'maxChainRing', type: 'integer', sign: 'positive' },
+            { name: 'minCog', type: 'integer', sign: 'positive' },
+            { name: 'maxCog', type: 'integer', sign: 'positive' },
+            { name: 'minTeeth', type: 'integer', sign: 'positive' },
+            { name: 'maxTeeth', type: 'integer', sign: 'positive' }
+    ])
+
+    if (error) {
+        return res.send({ error })
+    }
+
+    // Get the gear inches options
+    const gearRatioOptions = gears.getChainRingAndCogOptionsForGearRatio(gearRatio, plusOrMinus, 
+        sortByDiff, minChainRing, maxChainRing, minCog, maxCog, minTeeth, maxTeeth)
+
+    res.send(gearRatioOptions)
+})
+
 app.get('/rollOutOptions', (req, res) => {
 
     const {error, rollOut, maxDiff, sortDesc, calcInches, tyreWidth, rimType, minChainRing, maxChainRing, 
@@ -455,7 +487,7 @@ app.get('/rollOutOptions', (req, res) => {
         return res.send({ error })
     }
 
-    // Get the gear inches options
+    // Get the options
     const rollOutOptions = gears.getChainRingAndCogOptionsForRollOut(rollOut, maxDiff, sortDesc, 
         calcInches, tyreWidth, rimType, minChainRing, maxChainRing, minCog, maxCog, minTeeth, maxTeeth)
 
@@ -485,7 +517,7 @@ app.get('/speedCadenceOptions', (req, res) => {
         return res.send({ error })
     }
 
-    // Get the gear inches options
+    // Get the speed cadence options
     const speedCadenceOptions = gears.getChainRingAndCogOptionsForSpeedAndCadence(speed, cadence, fixed, 
         plusOrMinus, tyreWidth, rimType, minChainRing, maxChainRing, minCog, maxCog, minTeeth, maxTeeth)
 
@@ -514,7 +546,7 @@ app.get('/lapTimeCadenceOptions', (req, res) => {
         return res.send({ error })
     }
 
-    // Get the gear inches options
+    // Get the options
     const lapTimeCadenceOptions = gears.getChainRingAndCogOptionsForLapTimeAndCadence(lapTime, lapLength, 
         cadence, tyreWidth, rimType, minChainRing, maxChainRing, minCog, maxCog, minTeeth, maxTeeth)
 
@@ -575,7 +607,7 @@ app.get('/calculateSchedule', (req, res) => {
     // Calculate the schedule
     const schedule = schedules.calcSchedule(scheduleParams)
     //console.log(schedule)
-    
+
     res.send(schedule)
 })
 
