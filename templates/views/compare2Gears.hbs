@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+
+<html>
+
+<head>
+    <title>Compare 2 Gears</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1.0">
+    <link rel="icon" href="/img/weather.png">
+    <link rel="stylesheet" href="/css/styles.css">
+</head>
+
+<body onpageshow="handleOnLoad()">
+    <div class="main-content">
+        {{>header}}
+
+        <p>Enter information for the 2 gears.</p>
+
+        <form>
+            <label class="min-max-main-label">Chain Ring:</label>
+            <label class="sub-label" for="chainRing1">1:</label>
+            <input class="sub-input" type="number" id="chainRing1" name="chainRing1" value={{chainRing1}}>
+            <label class="sub-label" for="chainRing2">2:</label>
+            <input class="sub-input" type="number" id="chainRing2" name="chainRing2" value={{chainRing2}}><br>
+            <label class="min-max-main-label">Cog:</label>
+            <label class="sub-label" for="cog1">1:</label>
+            <input class="sub-input" type="number" id="cog1" name="cog1" value={{cog1}}>
+            <label class="sub-label" for="cog2">2:</label>
+            <input class="sub-input" type="number" id="cog2" name="cog2" value={{cog2}}><br>
+            <label for="tyreWidth">Tyre Width:</label>
+            <input type="number" id="tyreWidth" name="tyreWidth" placeholder="23" value={{tyreWidth}}><br>
+            <label for="rimType">Rim Type:</label>
+            <select id="rimType" name="rimType">
+                <option value="700c">700c</option>
+                <option value="650c">650c</option>
+            </select><br>
+            <input type="hidden" id="rimTypeHidden" name="rimTypeHidden" value={{rimType}}>
+            <label for="extras">Extras:</label>
+            <select id="extras" name="extras">
+                <option value="none">None</option>
+                <option value="cadence">Cadence for given Speed</option>
+                <option value="speed">Speed for given Cadence</option>
+                <option value="cadenceLapTime">Cadence for given Lap Time</option>
+            </select><br>
+            <input type="hidden" id="extrasHidden" name="extrasHidden" value={{extras}}>
+            <div id="speedSection">
+                <label for="speed">Speed:</label>
+                <input type="number" id="speed" name="speed" step="0.001" placeholder="(km/h)" value={{speed}}><br>
+            </div>
+            <div id="cadenceSection">
+                <label for="cadence">Cadence:</label>
+                <input type="number" id="cadence" name="cadence" step="0.001" placeholder="(rpm)" value={{cadence}}><br>
+            </div>
+            <div id="lapTimeSection">
+                <label for="lapTime">Lap Time:</label>
+                <input type="number" id="lapTime" name="lapTime" step="0.001" placeholder="(seconds)" value={{lapTime}}><br>
+            </div>
+            <div id="lapLengthSection">
+                <label for="lapLength">Lap Length:</label>
+                <input type="number" id="lapLength" name="lapLength" step="0.001" placeholder="(optional, metres)" value={{lapLength}}><br>
+            </div>
+            <button class="fields-button">Calculate</button>
+        </form>
+
+        <p class="bold-text" id="message-1">Your gear details...</p>
+
+        <div class="output-table" id="outputTable">
+            <p>Placeholder</p>
+        </div>
+
+    </div>
+
+    {{>footer}}
+
+    <script src="/js/compare2Gears.js"></script>
+</body>
+
+</html>
