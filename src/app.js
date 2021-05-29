@@ -443,7 +443,7 @@ app.get('/gearRatioOptions', (req, res) => {
         minCog, maxCog, minTeeth, maxTeeth} = 
         hpcUtils.validateQueryString(req.query, [
             { name: 'gearRatio', mandatory: true, type: 'decimal', sign: 'positive' },
-            { name: 'plusOrMinus', default: 1, type: 'decimal', sign: 'positive' },
+            { name: 'plusOrMinus', default: 0.1, type: 'decimal', sign: 'positive' },
             { name: 'sortByDiff', default: true, type: 'boolean'},
             { name: 'minChainRing', type: 'integer', sign: 'positive' },
             { name: 'maxChainRing', type: 'integer', sign: 'positive' },
