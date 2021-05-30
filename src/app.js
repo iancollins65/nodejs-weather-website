@@ -67,10 +67,13 @@ app.get('/gearDetails', (req, res) => {
             { name: 'lapLength', type: 'decimal', sign: 'positive', returnEmpty: true }
     ])
 
+    const rimTypeOptionsList = gears.getRimOptionsTypeStringList()
+
     if (error) {
         res.render('gearDetails', {
             title: 'Gear Details',
             name: 'Hot Pursuit Cycling',
+            rimTypeOptionsList,
             chainRing: '',
             cog: '',
             tyreWidth: '',
@@ -85,6 +88,7 @@ app.get('/gearDetails', (req, res) => {
         res.render('gearDetails', {
             title: 'Gear Details',
             name: 'Hot Pursuit Cycling',
+            rimTypeOptionsList,
             chainRing,
             cog,
             tyreWidth,
@@ -401,7 +405,8 @@ app.get('/gearInfo', (req, res) => {
             { name: 'chainRing', mandatory: true, type: 'integer', sign: 'positive' },
             { name: 'cog', mandatory: true, type: 'integer', sign: 'positive' },
             { name: 'tyreWidth', default: 23, type: 'integer', sign: 'positive' },
-            { name: 'rimType', default: '700c', type: 'string', options: ['700c', '650c'] },
+            //{ name: 'rimType', default: '700c', type: 'string', options: ['700c', '650c'] },
+            { name: 'rimType', default: '700c', type: 'string', options: gears.getRimOptionsTypeArray() },
             { name: 'speed', type: 'decimal', sign: 'positive' },
             { name: 'cadence', type: 'decimal', sign: 'positive' },
             { name: 'lapLength', type: 'decimal', sign: 'positive' },

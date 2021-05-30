@@ -14,7 +14,9 @@ const schedules = require('./utils/schedules.js')
 
 // const test = gears.getChainRingAndCogOptionsForGearInches(94,0.5,49,56,15,16,50,70)
 
-const test = gears.getChainRingAndCogOptionsForGearRatio(3.1)
+// const test = gears.getChainRingAndCogOptionsForGearRatio(3.1)
+
+const test = gears.getRimOptionsTypeStringList()
 
 // const test = gears.getCogGivenChainRingAndWheelForRollOut(50, 2099, 7000)
 

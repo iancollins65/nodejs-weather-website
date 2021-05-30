@@ -16,6 +16,7 @@ const cadenceFld = document.querySelector('#cadence')
 const lapTimeFld = document.querySelector('#lapTime')
 const lapLengthFld = document.querySelector('#lapLength')
 const outputTable = document.querySelector('#outputTable')
+const rimTypeOptionsListHiddenFld = document.querySelector('#rimTypeOptionsListHidden')
 
 speedSection.style.display = 'none'
 cadenceSection.style.display = 'none'
@@ -128,6 +129,23 @@ const actOnExtrasSelect = () => {
         cadenceSection.style.display = 'none'
         lapTimeSection.style.display = 'block'
         lapLengthSection.style.display = 'block'
+    }
+}
+
+const buildRimTypeSelect = () => {
+    while (rimTypeFld.options.length > 1) {
+        rimTypeFld.remove(1);
+    }
+    const rimTypeOptionsList = rimTypeOptionsListHiddenFld.value
+    const rimTypeOptions = rimTypeOptionsList.split(',')
+    for (rimType of rimTypeOptions) {
+        if (rimType !== '700c') {
+            const option = document.createElement('option')
+            const text = document.createTextNode(rimType)
+            option.appendChild(text)
+            option.setAttribute('value', rimType)
+            rimTypeFld.appendChild(option)
+        }
     }
 }
 
@@ -245,6 +263,9 @@ const buildOutputTable = (gearRatio, gearInches, rollOut, speed, cadence, lapTim
 // On load
 
 const handleOnLoad = () => {
+
+    buildRimTypeSelect()
+
     if (rimTypeHiddenFld.value !== '') {
         rimTypeFld.value = rimTypeHiddenFld.value
     }
