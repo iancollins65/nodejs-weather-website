@@ -18,97 +18,97 @@ const rimOptions = [
     {
         type: '700c',
         size: 622,
-        description: '700c (622mm)'
+        description: '700c_(622mm)'
     },
     {
         type: '650c',
         size: 571,
-        description: '650c (571mm)'
+        description: '650c_(571mm)'
     },
     {
         type: '650b',
         size: 584,
-        description: '650b (584mm)'
+        description: '650b_(584mm)'
     },
     {
         type: '29er',
         size: 622,
-        description: '29er (622mm)'
+        description: '29er_(622mm)'
     },
     {
         type: '27.5',
         size: 584,
-        description: '27.5 (584mm)'
+        description: '27.5_(584mm)'
     },
     {
         type: '28inch',
         size: 635,
-        description: '28 inch (635mm)'
+        description: '28inch_(635mm)'
     },
     {
         type: '27inch',
         size: 630,
-        description: '27 inch (630mm)'
+        description: '27inch_(630mm)'
     },
     {
         type: '26inch_mtb',
         size: 559,
-        description: '26 inch mtb (559mm)'
+        description: '26inch_mtb_(559mm)'
     },
     {
         type: '24inch_S5',
         size: 547,
-        description: '24 inch S5 (547mm)'
+        description: '24inch_S5_(547mm)'
     },
     {
         type: '24inch_E6',
         size: 540,
-        description: '24 inch E6 (540mm)'
+        description: '24inch_E6_(540mm)'
     },
     {
         type: '24inch_Terry',
         size: 520,
-        description: '24 inch Terry (520mm)'
+        description: '24inch_Terry_(520mm)'
     },
     {
         type: '24inch_mtb',
         size: 507,
-        description: '24 inch mtb (507mm)'
+        description: '24inch_mtb_(507mm)'
     },
     {
         type: '24inch_bmx',
         size: 507,
-        description: '24 inch bmx (507mm)'
+        description: '24inch_bmx_(507mm)'
     },
     {
         type: '20inch_recumb',
         size: 451,
-        description: '20 inch recumb (451mm)'
+        description: '20inch_recumb_(451mm)'
     },
     {
         type: '20inch_Schwinn',
         size: 419,
-        description: '20 inch Schwinn (419mm)'
+        description: '20inch_Schwinn_(419mm)'
     },
     {
         type: '20inch_bmx',
         size: 406,
-        description: '20 inch bmx (406mm)'
+        description: '20inch_bmx_(406mm)'
     },
     {
         type: '20inch_recumb',
         size: 406,
-        description: '20 inch recumb (406mm)'
+        description: '20inch_recumb_(406mm)'
     },
     {
         type: '17inch',
         size: 369,
-        description: '17 inch (369mm)'
+        description: '17inch_(369mm)'
     },
     {
         type: '16inch_Brompton',
         size: 349,
-        description: '16 inch Brompton (349mm)'
+        description: '16inch_Brompton_(349mm)'
     }
 ]
 
@@ -131,6 +131,18 @@ const getRimOptionsTypeArray = () => {
 
 const getRimOptionsTypeStringList = () => {
     return getArrayString(getRimOptionsTypeArray())
+}
+
+const getRimOptionsDescArray = () => {
+    let rimOptionsDescArray = []
+    for (rim of rimOptions) {
+        rimOptionsDescArray.push(rim.description)
+    }
+    return rimOptionsDescArray
+}
+
+const getRimOptionsDescStringList = () => {
+    return getArrayString(getRimOptionsDescArray())
 }
 
 const getKmhSpeedAtCadence = (rollOut, cadence) => {
@@ -442,5 +454,7 @@ module.exports = {
     getChainRingAndCogOptionsForLapTimeAndCadence: getChainRingAndCogOptionsForLapTimeAndCadence,
     getGearInfoForCassette: getGearInfoForCassette,
     getRimOptionsTypeArray: getRimOptionsTypeArray,
-    getRimOptionsTypeStringList: getRimOptionsTypeStringList
+    getRimOptionsTypeStringList: getRimOptionsTypeStringList,
+    getRimOptionsDescArray: getRimOptionsDescArray,
+    getRimOptionsDescStringList: getRimOptionsDescStringList
 }

@@ -17,6 +17,7 @@ const lapTimeFld = document.querySelector('#lapTime')
 const lapLengthFld = document.querySelector('#lapLength')
 const outputTable = document.querySelector('#outputTable')
 const rimTypeOptionsListHiddenFld = document.querySelector('#rimTypeOptionsListHidden')
+const rimTypeDescriptionsListHiddenFld = document.querySelector('#rimTypeDescriptionsListHidden')
 
 speedSection.style.display = 'none'
 cadenceSection.style.display = 'none'
@@ -138,14 +139,14 @@ const buildRimTypeSelect = () => {
     }
     const rimTypeOptionsList = rimTypeOptionsListHiddenFld.value
     const rimTypeOptions = rimTypeOptionsList.split(',')
-    for (rimType of rimTypeOptions) {
-        if (rimType !== '700c') {
-            const option = document.createElement('option')
-            const text = document.createTextNode(rimType)
-            option.appendChild(text)
-            option.setAttribute('value', rimType)
-            rimTypeFld.appendChild(option)
-        }
+    const rimTypeDescriptionsList = rimTypeDescriptionsListHiddenFld.value
+    const rimTypeDescriptions = rimTypeDescriptionsList.split(',')
+    for (let i = 1; i < rimTypeOptions.length; i++) {
+        const option = document.createElement('option')
+        const text = document.createTextNode(rimTypeDescriptions[i])
+        option.appendChild(text)
+        option.setAttribute('value', rimTypeOptions[i])
+        rimTypeFld.appendChild(option)
     }
 }
 

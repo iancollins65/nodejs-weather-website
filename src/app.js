@@ -59,7 +59,7 @@ app.get('/gearDetails', (req, res) => {
             { name: 'chainRing', type: 'integer', sign: 'positive', returnEmpty: true },
             { name: 'cog', type: 'integer', sign: 'positive', returnEmpty: true },
             { name: 'tyreWidth', type: 'integer', sign: 'positive', returnEmpty: true },
-            { name: 'rimType', type: 'string', options: ['700c', '650c'], returnEmpty: true },
+            { name: 'rimType', type: 'string', options: gears.getRimOptionsTypeArray(), returnEmpty: true },
             { name: 'extras', type: 'string', options: ['none', 'cadenceAtSpeed', 'speedAtCadence', 'cadenceAtLapTime'], returnEmpty: true },
             { name: 'speed', type: 'decimal', sign: 'positive', returnEmpty: true },
             { name: 'cadence', type: 'decimal', sign: 'positive', returnEmpty: true },
@@ -68,12 +68,14 @@ app.get('/gearDetails', (req, res) => {
     ])
 
     const rimTypeOptionsList = gears.getRimOptionsTypeStringList()
+    const rimTypeDescriptionsList = gears.getRimOptionsDescStringList()
 
     if (error) {
         res.render('gearDetails', {
             title: 'Gear Details',
             name: 'Hot Pursuit Cycling',
             rimTypeOptionsList,
+            rimTypeDescriptionsList,
             chainRing: '',
             cog: '',
             tyreWidth: '',
@@ -89,6 +91,7 @@ app.get('/gearDetails', (req, res) => {
             title: 'Gear Details',
             name: 'Hot Pursuit Cycling',
             rimTypeOptionsList,
+            rimTypeDescriptionsList,
             chainRing,
             cog,
             tyreWidth,
@@ -405,7 +408,6 @@ app.get('/gearInfo', (req, res) => {
             { name: 'chainRing', mandatory: true, type: 'integer', sign: 'positive' },
             { name: 'cog', mandatory: true, type: 'integer', sign: 'positive' },
             { name: 'tyreWidth', default: 23, type: 'integer', sign: 'positive' },
-            //{ name: 'rimType', default: '700c', type: 'string', options: ['700c', '650c'] },
             { name: 'rimType', default: '700c', type: 'string', options: gears.getRimOptionsTypeArray() },
             { name: 'speed', type: 'decimal', sign: 'positive' },
             { name: 'cadence', type: 'decimal', sign: 'positive' },
