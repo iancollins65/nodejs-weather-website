@@ -89,10 +89,12 @@
                 <input type="number" id="tyreWidth" name="tyreWidth" placeholder="23" value={{tyreWidth}}><br>
                 <label for="rimType">Rim Type:</label>
                 <select id="rimType" name="rimType">
-                    <option value="700c">700c</option>
-                    <option value="650c">650c</option>
+                    <option value="700c">700c_(622mm)</option>
+                    <option value="650c">650c_(571mm)</option>
                 </select><br>
                 <input type="hidden" id="rimTypeHidden" name="rimTypeHidden" value={{rimType}}>
+                <input type="hidden" id="rimTypeOptionsListHidden" name="rimTypeOptionsListHidden" value={{rimTypeOptionsList}}>
+                <input type="hidden" id="rimTypeDescriptionsListHidden" name="rimTypeDescriptionsListHidden" value={{rimTypeDescriptionsList}}>
             </div>
             <button class="fields-button">Calculate</button>
         </form>

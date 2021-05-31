@@ -45,6 +45,8 @@ const handleSubmit = () => {
     const cadence = cadenceFld.value
     const lapTime = lapTimeFld.value
     const lapLength = lapLengthFld.value
+    setCookie('tyreWidth', tyreWidth, 1)
+    setCookie('rimType', rimType, 1)
     var url = '/gearInfo?chainRing=' + chainRing + '&cog=' + cog + '&rimType=' + rimType
     if (tyreWidth !== '') {
         url = url + '&tyreWidth=' + tyreWidth
@@ -155,6 +157,29 @@ const buildRimTypeSelect = () => {
 const round = (value, places) => {
     const rounder = Math.pow(10, places)
     return Math.round(value * rounder) / rounder
+}
+
+// Cookie functions copied from https://www.w3schools.com/js/js_cookies.asp
+const setCookie = (cname, cvalue, exdays) => {
+    var d = new Date();
+    d.setTime(d.getTime() + (exdays * 24 * 60 * 60 * 1000));
+    var expires = "expires="+d.toUTCString();
+    document.cookie = cname + "=" + cvalue + ";" + expires // + ";path=/";
+}
+  
+const getCookie = (cname) => {
+    var name = cname + "=";
+    var ca = document.cookie.split(';');
+    for(var i = 0; i < ca.length; i++) {
+      var c = ca[i];
+      while (c.charAt(0) == ' ') {
+        c = c.substring(1);
+      }
+      if (c.indexOf(name) == 0) {
+        return c.substring(name.length, c.length);
+      }
+    }
+    return "";
 }
 
 const insertHeadingValueRow = (table, heading, value, link = false, rawValue = 0, otherValue1 = 0) => {
@@ -269,6 +294,18 @@ const handleOnLoad = () => {
 
     if (rimTypeHiddenFld.value !== '') {
         rimTypeFld.value = rimTypeHiddenFld.value
+    } else {
+        const rimTypeCookie = getCookie('rimType')
+        if (rimTypeCookie !== '') {
+            rimTypeFld.value = rimTypeCookie
+        }
+    }
+
+    if (tyreWidthFld.value === '') {
+        const tyreWidthCookie = getCookie('tyreWidth')
+        if (tyreWidthCookie !== '') {
+            tyreWidthFld.value = tyreWidthCookie
+        }
     }
     
     if (extrasHiddenFld.value === '' && extrasHiddenFld.value === 'none') {

@@ -18,6 +18,8 @@ const cadenceFld = document.querySelector('#cadence')
 const lapTimeFld = document.querySelector('#lapTime')
 const lapLengthFld = document.querySelector('#lapLength')
 const outputTable = document.querySelector('#outputTable')
+const rimTypeOptionsListHiddenFld = document.querySelector('#rimTypeOptionsListHidden')
+const rimTypeDescriptionsListHiddenFld = document.querySelector('#rimTypeDescriptionsListHidden')
 
 speedSection.style.display = 'none'
 cadenceSection.style.display = 'none'
@@ -47,6 +49,8 @@ const handleSubmit = () => {
     const cadence = cadenceFld.value
     const lapTime = lapTimeFld.value
     const lapLength = lapLengthFld.value
+    setCookie('tyreWidth', tyreWidth, 1)
+    setCookie('rimType', rimType, 1)
     var url = '/comp2Gears?chainRing1=' + chainRing1 + '&cog1=' + cog1 
         + '&chainRing2=' + chainRing2 + '&cog2=' + cog2 + '&rimType=' + rimType
     if (tyreWidth !== '') {
@@ -138,11 +142,51 @@ const actOnExtrasSelect = () => {
     }
 }
 
+const buildRimTypeSelect = () => {
+    while (rimTypeFld.options.length > 1) {
+        rimTypeFld.remove(1);
+    }
+    const rimTypeOptionsList = rimTypeOptionsListHiddenFld.value
+    const rimTypeOptions = rimTypeOptionsList.split(',')
+    const rimTypeDescriptionsList = rimTypeDescriptionsListHiddenFld.value
+    const rimTypeDescriptions = rimTypeDescriptionsList.split(',')
+    for (let i = 1; i < rimTypeOptions.length; i++) {
+        const option = document.createElement('option')
+        const text = document.createTextNode(rimTypeDescriptions[i])
+        option.appendChild(text)
+        option.setAttribute('value', rimTypeOptions[i])
+        rimTypeFld.appendChild(option)
+    }
+}
+
 // Utilities
 
 const round = (value, places) => {
     const rounder = Math.pow(10, places)
     return Math.round(value * rounder) / rounder
+}
+
+// Cookie functions copied from https://www.w3schools.com/js/js_cookies.asp
+const setCookie = (cname, cvalue, exdays) => {
+    var d = new Date();
+    d.setTime(d.getTime() + (exdays * 24 * 60 * 60 * 1000));
+    var expires = "expires="+d.toUTCString();
+    document.cookie = cname + "=" + cvalue + ";" + expires // + ";path=/";
+}
+  
+const getCookie = (cname) => {
+    var name = cname + "=";
+    var ca = document.cookie.split(';');
+    for(var i = 0; i < ca.length; i++) {
+      var c = ca[i];
+      while (c.charAt(0) == ' ') {
+        c = c.substring(1);
+      }
+      if (c.indexOf(name) == 0) {
+        return c.substring(name.length, c.length);
+      }
+    }
+    return "";
 }
 
 const insert3HeadingsRow = (table, heading1, heading2, heading3) => {
@@ -303,8 +347,23 @@ const buildOutputTable = (gear1, gear2) => {
 // On load
 
 const handleOnLoad = () => {
+
+    buildRimTypeSelect()
+
     if (rimTypeHiddenFld.value !== '') {
         rimTypeFld.value = rimTypeHiddenFld.value
+    } else {
+        const rimTypeCookie = getCookie('rimType')
+        if (rimTypeCookie !== '') {
+            rimTypeFld.value = rimTypeCookie
+        }
+    }
+    
+    if (tyreWidthFld.value === '') {
+        const tyreWidthCookie = getCookie('tyreWidth')
+        if (tyreWidthCookie !== '') {
+            tyreWidthFld.value = tyreWidthCookie
+        }
     }
     
     if (extrasHiddenFld.value === '' && extrasHiddenFld.value === 'none') {

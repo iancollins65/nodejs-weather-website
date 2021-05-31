@@ -21,6 +21,8 @@ const lapLengthFld = document.querySelector('#lapLength')
 const showSection = document.querySelector('#showSection')
 const showSelect = document.querySelector('#showData')
 const outputTable = document.querySelector('#outputTable')
+const rimTypeOptionsListHiddenFld = document.querySelector('#rimTypeOptionsListHidden')
+const rimTypeDescriptionsListHiddenFld = document.querySelector('#rimTypeDescriptionsListHidden')
 var chainRingsGlobal = []
 var cogsGlobal = []
 var responseGlobal = []
@@ -55,6 +57,8 @@ const handleSubmit = () => {
     const cadence = cadenceFld.value
     const lapTime = lapTimeFld.value
     const lapLength = lapLengthFld.value
+    setCookie('tyreWidth', tyreWidth, 1)
+    setCookie('rimType', rimType, 1)
     var url = '/cassetteInfo?chainRings=' + chainRings + '&cogs=' + cogs 
         + '&rimType=' + rimType + '&extras=' + extras
     if (tyreWidth !== '') {
@@ -496,6 +500,23 @@ const linkToGearDetails = (extras, chainRing, cog) => {
     return url
 }
 
+const buildRimTypeSelect = () => {
+    while (rimTypeFld.options.length > 1) {
+        rimTypeFld.remove(1);
+    }
+    const rimTypeOptionsList = rimTypeOptionsListHiddenFld.value
+    const rimTypeOptions = rimTypeOptionsList.split(',')
+    const rimTypeDescriptionsList = rimTypeDescriptionsListHiddenFld.value
+    const rimTypeDescriptions = rimTypeDescriptionsList.split(',')
+    for (let i = 1; i < rimTypeOptions.length; i++) {
+        const option = document.createElement('option')
+        const text = document.createTextNode(rimTypeDescriptions[i])
+        option.appendChild(text)
+        option.setAttribute('value', rimTypeOptions[i])
+        rimTypeFld.appendChild(option)
+    }
+}
+
 // Utilities
 
 const round = (value, places) => {
@@ -551,8 +572,22 @@ const handleOnLoad = () => {
         }
     }
 
+    buildRimTypeSelect()
+
     if (rimTypeHiddenFld.value !== '') {
         rimTypeFld.value = rimTypeHiddenFld.value
+    } else {
+        const rimTypeCookie = getCookie('rimType')
+        if (rimTypeCookie !== '') {
+            rimTypeFld.value = rimTypeCookie
+        }
+    }
+    
+    if (tyreWidthFld.value === '') {
+        const tyreWidthCookie = getCookie('tyreWidth')
+        if (tyreWidthCookie !== '') {
+            tyreWidthFld.value = tyreWidthCookie
+        }
     }
     
     if (extrasHiddenFld.value === '' && extrasHiddenFld.value === 'none') {

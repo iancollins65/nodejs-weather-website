@@ -114,7 +114,7 @@ app.get('/compare2Gears', (req, res) => {
             { name: 'chainRing2', type: 'integer', sign: 'positive', returnEmpty: true },
             { name: 'cog2', type: 'integer', sign: 'positive', returnEmpty: true },
             { name: 'tyreWidth', type: 'integer', sign: 'positive', returnEmpty: true },
-            { name: 'rimType', type: 'string', options: ['700c', '650c'], returnEmpty: true },
+            { name: 'rimType', type: 'string', options: gears.getRimOptionsTypeArray(), returnEmpty: true },
             { name: 'extras', type: 'string', options: ['none', 'cadenceAtSpeed', 'speedAtCadence', 'cadenceAtLapTime'], returnEmpty: true },
             { name: 'speed', type: 'decimal', sign: 'positive', returnEmpty: true },
             { name: 'cadence', type: 'decimal', sign: 'positive', returnEmpty: true },
@@ -122,10 +122,15 @@ app.get('/compare2Gears', (req, res) => {
             { name: 'lapLength', type: 'decimal', sign: 'positive', returnEmpty: true }
     ])
 
+    const rimTypeOptionsList = gears.getRimOptionsTypeStringList()
+    const rimTypeDescriptionsList = gears.getRimOptionsDescStringList()
+
     if (error) {
         res.render('compare2Gears', {
             title: 'Compare 2 Gears',
             name: 'Hot Pursuit Cycling',
+            rimTypeOptionsList,
+            rimTypeDescriptionsList,
             chainRing1: '',
             cog1: '',
             chainRing2: '',
@@ -142,6 +147,8 @@ app.get('/compare2Gears', (req, res) => {
         res.render('compare2Gears', {
             title: 'Compare 2 Gears',
             name: 'Hot Pursuit Cycling',
+            rimTypeOptionsList,
+            rimTypeDescriptionsList,
             chainRing1,
             cog1,
             chainRing2,
@@ -164,7 +171,7 @@ app.get('/cassetteDetails', (req, res) => {
             { name: 'chainRings', type: 'list', subType: 'integer', sign: 'positive', returnEmpty: true },
             { name: 'cogs', type: 'list', subType: 'integer', sign: 'positive', returnEmpty: true },
             { name: 'tyreWidth', type: 'integer', sign: 'positive', returnEmpty: true },
-            { name: 'rimType', type: 'string', options: ['700c', '650c'], returnEmpty: true },
+            { name: 'rimType', type: 'string', options: gears.getRimOptionsTypeArray(), returnEmpty: true },
             { name: 'extras', type: 'string', options: ['none', 'cadenceAtSpeed', 'speedAtCadence', 'cadenceAtLapTime'], returnEmpty: true },
             { name: 'speed', type: 'decimal', sign: 'positive', returnEmpty: true },
             { name: 'cadence', type: 'decimal', sign: 'positive', returnEmpty: true },
@@ -173,12 +180,16 @@ app.get('/cassetteDetails', (req, res) => {
     ])
 
     const cassetteSpeedOptionsString = cassettes.getCassetteSpeedOptionsString()
+    const rimTypeOptionsList = gears.getRimOptionsTypeStringList()
+    const rimTypeDescriptionsList = gears.getRimOptionsDescStringList()
 
     if (error) {
         res.render('cassetteDetails', {
             title: 'Cassette Details',
             name: 'Hot Pursuit Cycling',
             speedOptions: cassetteSpeedOptionsString,
+            rimTypeOptionsList,
+            rimTypeDescriptionsList,
             chainRings: '',
             cogs: '',
             tyreWidth: '',
@@ -194,6 +205,8 @@ app.get('/cassetteDetails', (req, res) => {
             title: 'Cassette Details',
             name: 'Hot Pursuit Cycling',
             speedOptions: cassetteSpeedOptionsString,
+            rimTypeOptionsList,
+            rimTypeDescriptionsList,
             chainRings,
             cogs,
             tyreWidth,
@@ -225,7 +238,7 @@ app.get('/findGear', (req, res) => {
             { name: 'lapTime', type: 'decimal', sign: 'positive', returnEmpty: true },
             { name: 'lapLength', type: 'decimal', sign: 'positive', returnEmpty: true },
             { name: 'tyreWidth', type: 'integer', sign: 'positive', returnEmpty: true },
-            { name: 'rimType', type: 'string', options: ['700c', '650c'], returnEmpty: true },
+            { name: 'rimType', type: 'string', options: gears.getRimOptionsTypeArray(), returnEmpty: true },
             { name: 'showMinMax', type: 'string', options: ['yes', 'no'], returnEmpty: true },
             { name: 'minChainRing', type: 'integer', sign: 'positive', returnEmpty: true },
             { name: 'maxChainRing', type: 'integer', sign: 'positive', returnEmpty: true },
@@ -235,10 +248,15 @@ app.get('/findGear', (req, res) => {
             { name: 'maxTeeth', type: 'integer', sign: 'positive', returnEmpty: true }
     ])
 
+    const rimTypeOptionsList = gears.getRimOptionsTypeStringList()
+    const rimTypeDescriptionsList = gears.getRimOptionsDescStringList()
+
     if (error) {
         res.render('findGear', {
             title: 'Find Gear',
             name: 'Hot Pursuit Cycling', 
+            rimTypeOptionsList,
+            rimTypeDescriptionsList,
             findFor: '',
             gearInches: '', 
             plusOrMinus: '', 
@@ -265,6 +283,8 @@ app.get('/findGear', (req, res) => {
         res.render('findGear', {
             title: 'Find Gear',
             name: 'Hot Pursuit Cycling', 
+            rimTypeOptionsList,
+            rimTypeDescriptionsList,
             findFor,
             gearInches, 
             plusOrMinus, 
@@ -311,13 +331,18 @@ app.get('/calcSchedule', (req, res) => {
             { name: 'chainRing', type: 'integer', sign: 'positive', returnEmpty: true },
             { name: 'cog', type: 'integer', sign: 'positive', returnEmpty: true },
             { name: 'tyreWidth', type: 'integer', sign: 'positive', returnEmpty: true },
-            { name: 'rimType', type: 'string', options: ['700c', '650c'], returnEmpty: true }
+            { name: 'rimType', type: 'string', options: gears.getRimOptionsTypeArray(), returnEmpty: true }
     ])
+
+    const rimTypeOptionsList = gears.getRimOptionsTypeStringList()
+    const rimTypeDescriptionsList = gears.getRimOptionsDescStringList()
 
     if (error) {
         res.render('calcSchedule', {
             title: 'Calculate Schedule',
             name: 'Hot Pursuit Cycling',
+            rimTypeOptionsList,
+            rimTypeDescriptionsList,
             label: '',
             lapLength: '250',
             scheduleType: '',
@@ -341,6 +366,8 @@ app.get('/calcSchedule', (req, res) => {
         res.render('calcSchedule', {
             title: 'Calculate Schedule',
             name: 'Hot Pursuit Cycling',
+            rimTypeOptionsList,
+            rimTypeDescriptionsList,
             label,
             lapLength: lapDistance,
             scheduleType,
@@ -435,7 +462,7 @@ app.get('/comp2Gears', (req, res) => {
             { name: 'chainRing2', mandatory: true, type: 'integer', sign: 'positive' },
             { name: 'cog2', mandatory: true, type: 'integer', sign: 'positive' },
             { name: 'tyreWidth', default: 23, type: 'integer', sign: 'positive' },
-            { name: 'rimType', default: '700c', type: 'string', options: ['700c', '650c'] },
+            { name: 'rimType', default: '700c', type: 'string', options: gears.getRimOptionsTypeArray() },
             { name: 'speed', type: 'decimal', sign: 'positive' },
             { name: 'cadence', type: 'decimal', sign: 'positive' },
             { name: 'lapLength', type: 'decimal', sign: 'positive' },
@@ -485,7 +512,7 @@ app.get('/cassetteInfo', (req, res) => {
             { name: 'chainRings', mandatory: true, type: 'list', subType: 'integer', sign: 'positive' },
             { name: 'cogs', mandatory: true, type: 'list', subType: 'integer', sign: 'positive' },
             { name: 'tyreWidth', default: 23, type: 'integer', sign: 'positive' },
-            { name: 'rimType', default: '700c', type: 'string', options: ['700c', '650c'] },
+            { name: 'rimType', default: '700c', type: 'string', options: gears.getRimOptionsTypeArray() },
             { name: 'speed', mandatory: Boolean(extras === 'cadence'), type: 'decimal', sign: 'positive' },
             { name: 'cadence', mandatory: Boolean(extras === 'speed'), type: 'decimal', sign: 'positive' },
             { name: 'lapTime', mandatory: Boolean(extras === 'cadenceLapTime'), type: 'decimal', sign: 'positive' },
@@ -567,7 +594,7 @@ app.get('/rollOutOptions', (req, res) => {
             { name: 'sortDesc', default: true, type: 'boolean'},
             { name: 'calcInches', default: true, type: 'boolean'},
             { name: 'tyreWidth', default: 23, type: 'integer', sign: 'positive' },
-            { name: 'rimType', default: '700c', type: 'string', options: ['700c', '650c'] },
+            { name: 'rimType', default: '700c', type: 'string', options: gears.getRimOptionsTypeArray() },
             { name: 'minChainRing', type: 'integer', sign: 'positive' },
             { name: 'maxChainRing', type: 'integer', sign: 'positive' },
             { name: 'minCog', type: 'integer', sign: 'positive' },
@@ -597,7 +624,7 @@ app.get('/speedCadenceOptions', (req, res) => {
             { name: 'fixed', default: 'cadence', type: 'string', options: ['cadence', 'speed'] },
             { name: 'plusOrMinus', default: 4, type: 'decimal', sign: 'positive' },
             { name: 'tyreWidth', default: 23, type: 'integer', sign: 'positive' },
-            { name: 'rimType', default: '700c', type: 'string', options: ['700c', '650c'] },
+            { name: 'rimType', default: '700c', type: 'string', options: gears.getRimOptionsTypeArray() },
             { name: 'minChainRing', type: 'integer', sign: 'positive' },
             { name: 'maxChainRing', type: 'integer', sign: 'positive' },
             { name: 'minCog', type: 'integer', sign: 'positive' },
@@ -626,7 +653,7 @@ app.get('/lapTimeCadenceOptions', (req, res) => {
             { name: 'lapLength', mandatory: true, type: 'decimal', sign: 'positive' },
             { name: 'cadence', mandatory: true, type: 'decimal', sign: 'positive' },
             { name: 'tyreWidth', default: 23, type: 'integer', sign: 'positive' },
-            { name: 'rimType', default: '700c', type: 'string', options: ['700c', '650c'] },
+            { name: 'rimType', default: '700c', type: 'string', options: gears.getRimOptionsTypeArray() },
             { name: 'minChainRing', type: 'integer', sign: 'positive' },
             { name: 'maxChainRing', type: 'integer', sign: 'positive' },
             { name: 'minCog', type: 'integer', sign: 'positive' },
@@ -667,7 +694,7 @@ app.get('/calculateSchedule', (req, res) => {
             { name: 'chainRing', type: 'integer', sign: 'positive' },
             { name: 'cog', type: 'integer', sign: 'positive' },
             { name: 'tyreWidth', default: 23, type: 'integer', sign: 'positive' },
-            { name: 'rimType', default: '700c', type: 'string', options: ['700c', '650c'] },
+            { name: 'rimType', default: '700c', type: 'string', options: gears.getRimOptionsTypeArray() },
             { name: 'rollOut', type: 'decimal', sign: 'positive' }
     ])
 

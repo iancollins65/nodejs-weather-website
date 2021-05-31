@@ -37,6 +37,8 @@ const outputText = document.querySelector('#outputText')
 const outputTable = document.querySelector('#outputTable')
 const sortSelectSection = document.querySelector('#sortSelect')
 const sortByFld = document.querySelector('#sortBy')
+const rimTypeOptionsListHiddenFld = document.querySelector('#rimTypeOptionsListHidden')
+const rimTypeDescriptionsListHiddenFld = document.querySelector('#rimTypeDescriptionsListHidden')
 var gearOptionsGlobal = []
 
 gearRatioSection.style.display = 'none'
@@ -559,6 +561,23 @@ const buildSortSelect = (findFor) => {
     }
 }
 
+const buildRimTypeSelect = () => {
+    while (rimTypeFld.options.length > 1) {
+        rimTypeFld.remove(1);
+    }
+    const rimTypeOptionsList = rimTypeOptionsListHiddenFld.value
+    const rimTypeOptions = rimTypeOptionsList.split(',')
+    const rimTypeDescriptionsList = rimTypeDescriptionsListHiddenFld.value
+    const rimTypeDescriptions = rimTypeDescriptionsList.split(',')
+    for (let i = 1; i < rimTypeOptions.length; i++) {
+        const option = document.createElement('option')
+        const text = document.createTextNode(rimTypeDescriptions[i])
+        option.appendChild(text)
+        option.setAttribute('value', rimTypeOptions[i])
+        rimTypeFld.appendChild(option)
+    }
+}
+
 // Dynamic output table
 
 const buildOutputTable = (findFor, gearOptions) => {
@@ -813,7 +832,8 @@ const getCookie = (cname) => {
 // On load
 
 const handleOnLoad = () => {
-    // console.log(document.cookie)
+
+    buildRimTypeSelect()
 
     if (rimTypeHiddenFld.value !== '') {
         rimTypeFld.value = rimTypeHiddenFld.value
