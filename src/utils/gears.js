@@ -43,72 +43,72 @@ const rimOptions = [
     {
         type: '28inch',
         size: 635,
-        description: '28inch_(635mm)'
+        description: '28_inch_(635mm)'
     },
     {
         type: '27inch',
         size: 630,
-        description: '27inch_(630mm)'
+        description: '27_inch_(630mm)'
     },
     {
         type: '26inch_mtb',
         size: 559,
-        description: '26inch_mtb_(559mm)'
+        description: '26_inch_mtb_(559mm)'
     },
     {
         type: '24inch_S5',
         size: 547,
-        description: '24inch_S5_(547mm)'
+        description: '24_inch_S5_(547mm)'
     },
     {
         type: '24inch_E6',
         size: 540,
-        description: '24inch_E6_(540mm)'
+        description: '24_inch_E6_(540mm)'
     },
     {
         type: '24inch_Terry',
         size: 520,
-        description: '24inch_Terry_(520mm)'
+        description: '24_inch_Terry_(520mm)'
     },
     {
         type: '24inch_mtb',
         size: 507,
-        description: '24inch_mtb_(507mm)'
+        description: '24_inch_mtb_(507mm)'
     },
     {
         type: '24inch_bmx',
         size: 507,
-        description: '24inch_bmx_(507mm)'
+        description: '24_inch_bmx_(507mm)'
     },
     {
         type: '20inch_recumb',
         size: 451,
-        description: '20inch_recumb_(451mm)'
+        description: '20_inch_recumb_(451mm)'
     },
     {
         type: '20inch_Schwinn',
         size: 419,
-        description: '20inch_Schwinn_(419mm)'
+        description: '20_inch_Schwinn_(419mm)'
     },
     {
         type: '20inch_bmx',
         size: 406,
-        description: '20inch_bmx_(406mm)'
+        description: '20_inch_bmx_(406mm)'
     },
     {
         type: '20inch_recumb',
         size: 406,
-        description: '20inch_recumb_(406mm)'
+        description: '20_inch_recumb_(406mm)'
     },
     {
         type: '17inch',
         size: 369,
-        description: '17inch_(369mm)'
+        description: '17_inch_(369mm)'
     },
     {
         type: '16inch_Brompton',
         size: 349,
-        description: '16inch_Brompton_(349mm)'
+        description: '16_inch_Brompton_(349mm)'
     }
 ]
 

@@ -571,7 +571,8 @@ const buildRimTypeSelect = () => {
     const rimTypeDescriptions = rimTypeDescriptionsList.split(',')
     for (let i = 1; i < rimTypeOptions.length; i++) {
         const option = document.createElement('option')
-        const text = document.createTextNode(rimTypeDescriptions[i])
+        const desc = rimTypeDescriptions[i].replace(/_/g, ' ')
+        const text = document.createTextNode(desc)
         option.appendChild(text)
         option.setAttribute('value', rimTypeOptions[i])
         rimTypeFld.appendChild(option)
