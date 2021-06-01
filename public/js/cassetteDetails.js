@@ -57,24 +57,29 @@ const handleSubmit = () => {
     const cadence = cadenceFld.value
     const lapTime = lapTimeFld.value
     const lapLength = lapLengthFld.value
-    setCookie('tyreWidth', tyreWidth, 1)
+    setCookie('chainRings', chainRings, 1)
     setCookie('rimType', rimType, 1)
     var url = '/cassetteInfo?chainRings=' + chainRings + '&cogs=' + cogs 
         + '&rimType=' + rimType + '&extras=' + extras
     if (tyreWidth !== '') {
         url = url + '&tyreWidth=' + tyreWidth
+        setCookie('tyreWidth', tyreWidth, 1)
     }
     if (speed !== '') {
         url = url + '&speed=' + speed
+        setCookie('speed', speed, 1)
     }
     if (cadence !== '') {
         url = url + '&cadence=' + cadence
+        setCookie('cadence', cadence, 1)
     }
     if (lapTime !== '') {
         url = url + '&lapTime=' + lapTime
+        setCookie('lapTime', lapTime, 1)
     }
     if (lapLength !== '') {
         url = url + '&lapLength=' + lapLength
+        setCookie('lapLength', lapLength, 1)
     }
 
     fetch(url).then((res) => {
@@ -557,6 +562,15 @@ const getCookie = (cname) => {
     return "";
 }
 
+const setFieldFromCookieIfBlank = (field, cookieName) => {
+    if (field.value === '') {
+        const cookieValue = getCookie(cookieName)
+        if (cookieValue !== '') {
+            field.value = cookieValue
+        }
+    }
+}
+
 // On load
 
 const handleOnLoad = () => {
@@ -583,21 +597,23 @@ const handleOnLoad = () => {
         }
     }
     
-    if (tyreWidthFld.value === '') {
-        const tyreWidthCookie = getCookie('tyreWidth')
-        if (tyreWidthCookie !== '') {
-            tyreWidthFld.value = tyreWidthCookie
-        }
-    }
-    
+    setFieldFromCookieIfBlank(chainRingsFld, 'chainRings')
+    setFieldFromCookieIfBlank(tyreWidthFld, 'tyreWidth')
+
     if (extrasHiddenFld.value === '' && extrasHiddenFld.value === 'none') {
         extrasSelect.value = 'none'
     } else if (extrasHiddenFld.value === 'cadenceAtSpeed') {
         extrasSelect.value = 'cadence'
+        setFieldFromCookieIfBlank(speedFld, 'speed')
+        setFieldFromCookieIfBlank(lapLengthFld, 'lapLength')
     } else if (extrasHiddenFld.value === 'speedAtCadence') {
         extrasSelect.value = 'speed'
+        setFieldFromCookieIfBlank(cadenceFld, 'cadence')
+        setFieldFromCookieIfBlank(lapLengthFld, 'lapLength')
     } else if (extrasHiddenFld.value === 'cadenceAtLapTime') {
         extrasSelect.value = 'cadenceLapTime'
+        setFieldFromCookieIfBlank(lapTimeFld, 'lapTime')
+        setFieldFromCookieIfBlank(lapLengthFld, 'lapLength')
     }
     actOnExtrasSelect()
     

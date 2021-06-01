@@ -49,24 +49,32 @@ const handleSubmit = () => {
     const cadence = cadenceFld.value
     const lapTime = lapTimeFld.value
     const lapLength = lapLengthFld.value
-    setCookie('tyreWidth', tyreWidth, 1)
+    setCookie('chainRing1', chainRing1, 1)
+    setCookie('cog1', cog1, 1)
+    setCookie('chainRing2', chainRing2, 1)
+    setCookie('cog2', cog2, 1)
     setCookie('rimType', rimType, 1)
     var url = '/comp2Gears?chainRing1=' + chainRing1 + '&cog1=' + cog1 
         + '&chainRing2=' + chainRing2 + '&cog2=' + cog2 + '&rimType=' + rimType
     if (tyreWidth !== '') {
         url = url + '&tyreWidth=' + tyreWidth
+        setCookie('tyreWidth', tyreWidth, 1)
     }
     if (speed !== '') {
         url = url + '&speed=' + speed
+        setCookie('speed', speed, 1)
     }
     if (cadence !== '') {
         url = url + '&cadence=' + cadence
+        setCookie('cadence', cadence, 1)
     }
     if (lapTime !== '') {
         url = url + '&lapTime=' + lapTime
+        setCookie('lapTime', lapTime, 1)
     }
     if (lapLength !== '') {
         url = url + '&lapLength=' + lapLength
+        setCookie('lapLength', lapLength, 1)
     }
 
     fetch(url).then((response) => {
@@ -187,6 +195,15 @@ const getCookie = (cname) => {
       }
     }
     return "";
+}
+
+const setFieldFromCookieIfBlank = (field, cookieName) => {
+    if (field.value === '') {
+        const cookieValue = getCookie(cookieName)
+        if (cookieValue !== '') {
+            field.value = cookieValue
+        }
+    }
 }
 
 const insert3HeadingsRow = (table, heading1, heading2, heading3) => {
@@ -359,21 +376,28 @@ const handleOnLoad = () => {
         }
     }
     
-    if (tyreWidthFld.value === '') {
-        const tyreWidthCookie = getCookie('tyreWidth')
-        if (tyreWidthCookie !== '') {
-            tyreWidthFld.value = tyreWidthCookie
-        }
-    }
+    setFieldFromCookieIfBlank(chainRing1Fld, 'chainRing1')
+    setFieldFromCookieIfBlank(cog1Fld, 'cog1')
+    setFieldFromCookieIfBlank(chainRing1Fld, 'chainRing')
+    setFieldFromCookieIfBlank(cog1Fld, 'cog')
+    setFieldFromCookieIfBlank(tyreWidthFld, 'tyreWidth')
+    setFieldFromCookieIfBlank(chainRing2Fld, 'chainRing2')
+    setFieldFromCookieIfBlank(cog2Fld, 'cog2')
     
     if (extrasHiddenFld.value === '' && extrasHiddenFld.value === 'none') {
         extrasSelect.value = 'none'
     } else if (extrasHiddenFld.value === 'cadenceAtSpeed') {
         extrasSelect.value = 'cadence'
+        setFieldFromCookieIfBlank(speedFld, 'speed')
+        setFieldFromCookieIfBlank(lapLengthFld, 'lapLength')
     } else if (extrasHiddenFld.value === 'speedAtCadence') {
         extrasSelect.value = 'speed'
+        setFieldFromCookieIfBlank(cadenceFld, 'cadence')
+        setFieldFromCookieIfBlank(lapLengthFld, 'lapLength')
     } else if (extrasHiddenFld.value === 'cadenceAtLapTime') {
         extrasSelect.value = 'cadenceLapTime'
+        setFieldFromCookieIfBlank(lapTimeFld, 'lapTime')
+        setFieldFromCookieIfBlank(lapLengthFld, 'lapLength')
     }
     actOnExtrasSelect()
     
