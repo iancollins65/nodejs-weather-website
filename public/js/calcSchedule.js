@@ -98,38 +98,51 @@ const handleSubmit = () => {
     const cog = cogFld.value
     const tyreWidth = tyreWidthFld.value
     const rimType = rimTypeFld.value
-    setCookie('tyreWidth', tyreWidth, 1)
-    setCookie('rimType', rimType, 1)
+    setCookie('lapLength', lapLength, 1)
+    setCookie('scheduleType', scheduleType, 1)
+    setCookie('scheduleBy', scheduleBy, 1)
+    setCookie('startType', startType, 1)
+    setCookie('timingsAt', timingsAt, 1)
 
     var url = '/calculateSchedule?lapDistance=' + lapLength + '&scheduleType=' + scheduleType 
         + '&scheduleBy=' + scheduleBy + '&startType=' + startType + '&timingsAt=' + timingsAt
 
     if (scheduleType === 'rideDistance') {
         url = url + '&distanceLaps=' + distanceLaps
+        setCookie('distanceLaps', distanceLaps, 1)
     } else if (scheduleType === 'rideTime') {
         url = url + '&timeSeconds=' + rideTime
+        setCookie('rideTime', rideTime, 1)
     }
 
     if (scheduleBy === 'tempo') {
         url = url + '&tempoTarget=' + tempo
+        setCookie('tempo', tempo, 1)
     } else if (scheduleBy === 'time') {
         url = url + '&timeSeconds=' + time
+        setCookie('time', time, 1)
     } else if (scheduleBy === 'distance') {
         url = url + '&distanceLaps=' + distance
+        setCookie('distance', distance, 1)
     } else if (scheduleBy === 'speed') {
         url = url + '&speedTempo=' + speed
+        setCookie('speed', speed, 1)
     } else if (scheduleBy === 'cadence') {
         url = url + '&cadenceTempo=' + cadence
+        setCookie('cadence', cadence, 1)
     }
 
     if (startType === 'standing') {
         url = url + '&upToSpeedTime=' + upToSpeed
+        setCookie('upToSpeed', upToSpeed, 1)
     }
 
     if (provideGearCheckBox.checked === true) {
         url = url + '&chainRing=' + chainRing + '&cog=' + cog + '&rimType=' + rimType
+        setCookie('rimType', rimType, 1)
         if (tyreWidth !== '') {
             url = url + '&tyreWidth=' + tyreWidth
+            setCookie('tyreWidth', tyreWidth, 1)
         }    
     }
 
@@ -587,6 +600,15 @@ const getCookie = (cname) => {
     return "";
 }
 
+const setFieldFromCookieIfBlank = (field, cookieName) => {
+    if (field.value === '') {
+        const cookieValue = getCookie(cookieName)
+        if (cookieValue !== '') {
+            field.value = cookieValue
+        }
+    }
+}
+
 // On load
 
 const handleOnLoad = () => {
@@ -601,13 +623,6 @@ const handleOnLoad = () => {
             rimTypeFld.value = rimTypeCookie
         }
     }
-
-    if (tyreWidthFld.value === '') {
-        const tyreWidthCookie = getCookie('tyreWidth')
-        if (tyreWidthCookie !== '') {
-            tyreWidthFld.value = tyreWidthCookie
-        }
-    }
     
     provideGearCheckBox.checked = Boolean(chainRingFld.value !== '' || cogFld.value !== '')
 
@@ -615,25 +630,58 @@ const handleOnLoad = () => {
 
     if (timingsAtHiddenFld.value !== '') {
         timingsAtSelect.value = timingsAtHiddenFld.value
+    } else {
+        const timingsAtCookie = getCookie('timingsAt')
+        if (timingsAtCookie !== '') {
+            timingsAtSelect.value = timingsAtCookie
+        }
     }
 
     if (startTypeHiddenFld.value !== '') {
         startTypeSelect.value = startTypeHiddenFld.value
+    } else {
+        const startTypeCookie = getCookie('startType')
+        if (startTypeCookie !== '') {
+            startTypeSelect.value = startTypeCookie
+        }
     }
 
     actOnStartTypeSelection()
 
     if (scheduleByHiddenFld.value !== '') {
         scheduleBySelect.value = scheduleByHiddenFld.value
+    } else {
+        const scheduleByCookie = getCookie('scheduleBy')
+        if (scheduleByCookie !== '') {
+            scheduleBySelect.value = scheduleByCookie
+        }
     }
 
     actOnScheduleBySelection()
 
     if (scheduleTypeHiddenFld.value !== '') {
         scheduleTypeSelect.value = scheduleTypeHiddenFld.value
+    } else {
+        const scheduleTypeCookie = getCookie('scheduleType')
+        if (scheduleTypeCookie !== '') {
+            scheduleTypeSelect.value = scheduleTypeCookie
+        }
     }
 
     actOnScheduleTypeSelection()
+
+    setFieldFromCookieIfBlank(lapLengthFld, 'lapLength')
+    setFieldFromCookieIfBlank(distanceLapsFld, 'distanceLaps')
+    setFieldFromCookieIfBlank(rideTimeFld, 'rideTime')
+    setFieldFromCookieIfBlank(tempoFld, 'tempo')
+    setFieldFromCookieIfBlank(timeFld, 'time')
+    setFieldFromCookieIfBlank(distanceFld, 'distance')
+    setFieldFromCookieIfBlank(speedFld, 'speed')
+    setFieldFromCookieIfBlank(cadenceFld, 'cadence')
+    setFieldFromCookieIfBlank(upToSpeedFld, 'upToSpeed')
+    setFieldFromCookieIfBlank(chainRingFld, 'chainRing')
+    setFieldFromCookieIfBlank(cogFld, 'cog')
+    setFieldFromCookieIfBlank(tyreWidthFld, 'tyreWidth')
 
     if (canAutoCalculate() === true) {
         handleSubmit()
