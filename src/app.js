@@ -54,7 +54,7 @@ app.get('/gears', (req, res) => {
 
 app.get('/gearDetails', (req, res) => {
 
-    const {error, chainRing, cog, tyreWidth, rimType, extras, speed, cadence, lapLength, lapTime} = 
+    const {error, chainRing, cog, tyreWidth, rimType, extras, speed, cadence, lapLength, lapTime, measure} = 
         hpcUtils.validateQueryString(req.query, [
             { name: 'chainRing', type: 'integer', sign: 'positive', returnEmpty: true },
             { name: 'cog', type: 'integer', sign: 'positive', returnEmpty: true },
@@ -64,7 +64,8 @@ app.get('/gearDetails', (req, res) => {
             { name: 'speed', type: 'decimal', sign: 'positive', returnEmpty: true },
             { name: 'cadence', type: 'decimal', sign: 'positive', returnEmpty: true },
             { name: 'lapTime', type: 'decimal', sign: 'positive', returnEmpty: true },
-            { name: 'lapLength', type: 'decimal', sign: 'positive', returnEmpty: true }
+            { name: 'lapLength', type: 'decimal', sign: 'positive', returnEmpty: true },
+            { name: 'measure', type: 'string', options: ['metric', 'imperial'], returnEmpty: true }
     ])
 
     const rimTypeOptionsList = gears.getRimOptionsTypeStringList()
@@ -84,7 +85,8 @@ app.get('/gearDetails', (req, res) => {
             speed: '',
             cadence: '',
             lapTime: '',
-            lapLength: ''
+            lapLength: '',
+            measure: ''
         })
     } else {
         res.render('gearDetails', {
@@ -100,7 +102,8 @@ app.get('/gearDetails', (req, res) => {
             speed,
             cadence,
             lapTime,
-            lapLength
+            lapLength,
+            measure
         })
     }
 })

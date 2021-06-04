@@ -4,6 +4,8 @@ const cogFld = document.querySelector('#cog')
 const tyreWidthFld = document.querySelector('#tyreWidth')
 const rimTypeFld = document.querySelector('#rimType')
 const rimTypeHiddenFld = document.querySelector('#rimTypeHidden')
+const measureSelect = document.querySelector('#measure')
+const measureHiddenFld = document.querySelector('#measureHidden')
 const messageOne = document.querySelector('#message-1')
 const extrasSelect = document.querySelector('#extras')
 const extrasHiddenFld = document.querySelector('#extrasHidden')
@@ -37,6 +39,7 @@ const handleSubmit = () => {
     messageOne.textContent = 'Loading...'
     outputTable.style.display = 'none'
 
+    const measure = measureSelect.value
     const chainRing = chainRingFld.value
     const cog = cogFld.value
     const tyreWidth = tyreWidthFld.value
@@ -45,10 +48,11 @@ const handleSubmit = () => {
     const cadence = cadenceFld.value
     const lapTime = lapTimeFld.value
     const lapLength = lapLengthFld.value
+    setCookie('measure', measure, 1)
     setCookie('chainRing', chainRing, 1)
     setCookie('cog', cog, 1)
     setCookie('rimType', rimType, 1)
-    var url = '/gearInfo?chainRing=' + chainRing + '&cog=' + cog + '&rimType=' + rimType
+    var url = '/gearInfo?chainRing=' + chainRing + '&cog=' + cog + '&rimType=' + rimType + '&measure=' + measure
     if (tyreWidth !== '') {
         url = url + '&tyreWidth=' + tyreWidth
         setCookie('tyreWidth', tyreWidth, 1)
@@ -71,7 +75,7 @@ const handleSubmit = () => {
     }
 
     fetch(url).then((response) => {
-        response.json().then(({ error, gearRatio, gearInches, rollOut, speed, cadence, lapTime, lapPedalCount }) => {
+        response.json().then(({ error, gearRatio, gearInches, rollOut, speed, cadence, lapTime, lapPedalCount, measure }) => {
             if (error) {
                 var errorStr = error + '.'
                 errorStr = errorStr.replace('chainRing', 'Chain Ring')
@@ -82,6 +86,7 @@ const handleSubmit = () => {
                 errorStr = errorStr.replace('cadence', 'Cadence')
                 errorStr = errorStr.replace('lapTime', 'Lap Time')
                 errorStr = errorStr.replace('lapLength', 'Lap Length')
+                errorStr = errorStr.replace('measure', 'Measure')
                 messageOne.style.color = 'red'
                 messageOne.textContent = errorStr
                 outputTable.style.display = 'none'
@@ -89,7 +94,7 @@ const handleSubmit = () => {
                 messageOne.textContent = 'Your gear details...'
                 outputTable.style.display = 'block'
                 outputTable.innerHTML = ""
-                outputTable.appendChild(buildOutputTable(gearRatio, gearInches, rollOut, speed, cadence, lapTime, lapPedalCount))
+                outputTable.appendChild(buildOutputTable(gearRatio, gearInches, rollOut, speed, cadence, lapTime, lapPedalCount, measure))
             }
         })
     })
@@ -99,6 +104,28 @@ gearDetailsForm.addEventListener('input', (e) => {
     messageOne.style.display = 'none'
     outputTable.style.display = 'none'
 })
+
+measureSelect.addEventListener('change', (e) => {
+    actOnMeasureSelect()
+})
+
+const actOnMeasureSelect = () => {
+    if (measureSelect.value === 'imperial') {
+        if (extrasSelect.value === 'cadenceLapTime') {
+            lapLengthFld.placeholder = '(yd)'
+        } else {
+            lapLengthFld.placeholder = '(yd, optional)'
+        }
+        speedFld.placeholder = '(mph)'
+    } else { // 'metric'
+        if (extrasSelect.value === 'cadenceLapTime') {
+            lapLengthFld.placeholder = '(m)'
+        } else {
+            lapLengthFld.placeholder = '(m, optional)'
+        }
+        speedFld.placeholder = '(km/h)'
+    }
+}
 
 extrasSelect.addEventListener('change', (e) => {
     actOnExtrasSelect()
@@ -117,7 +144,6 @@ const actOnExtrasSelect = () => {
     } else if (extrasSelect.value === 'speed') {
         speedFld.value = ''
         lapTimeFld.value = ''
-        lapLengthFld.placeholder = '(optional, metres)'
         speedSection.style.display = 'none'
         cadenceSection.style.display = 'block'
         lapTimeSection.style.display = 'none'
@@ -125,7 +151,6 @@ const actOnExtrasSelect = () => {
     } else if (extrasSelect.value === 'cadence') {
         cadenceFld.value = ''
         lapTimeFld.value = ''
-        lapLengthFld.placeholder = '(optional, metres)'
         speedSection.style.display = 'block'
         cadenceSection.style.display = 'none'
         lapTimeSection.style.display = 'none'
@@ -133,12 +158,12 @@ const actOnExtrasSelect = () => {
     } else if (extrasSelect.value === 'cadenceLapTime') {
         speedFld.value = ''
         cadenceFld.value = ''
-        lapLengthFld.placeholder = '(metres)'
         speedSection.style.display = 'none'
         cadenceSection.style.display = 'none'
         lapTimeSection.style.display = 'block'
         lapLengthSection.style.display = 'block'
     }
+    actOnMeasureSelect()
 }
 
 const buildRimTypeSelect = () => {
@@ -278,16 +303,35 @@ const insertHeadingValueRow = (table, heading, value, link = false, rawValue = 0
 
 // Output table
 
-const buildOutputTable = (gearRatio, gearInches, rollOut, speed, cadence, lapTime, lapPedalCount) => {
+const buildOutputTable = (gearRatio, gearInches, rollOut, speed, cadence, lapTime, lapPedalCount, measure) => {
     // Build the table
     var table = document.createElement('table')
+
+    var mOrYd = undefined
+    var kmOrMi = undefined
+    if (measure === 'imperial') {
+        mOrInches = ' inches'
+        kmOrMi = ' mph'
+    } else { // 'metric'
+        mOrInches = ' m'
+        kmOrMi = ' km/h'
+    }
 
     // Table contents
     insertHeadingValueRow(table, 'Gear Ratio', round(gearRatio, 3), true)
     insertHeadingValueRow(table, 'Gear Inches', round(gearInches, 3), true)
-    insertHeadingValueRow(table, 'Roll Out (approx)', round(rollOut / 1000, 3) + ' m', true, rollOut / 1000)
+    var rollOutDisplay = undefined
+    var rollOutRaw = undefined
+    if (measure === 'imperial') {
+        rollOutDisplay = round(rollOut, 3)
+        rollOutRaw = rollOut
+    } else { // 'metric'
+        rollOutDisplay = round(rollOut / 1000, 3)
+        rollOutRaw = rollOut / 1000
+    }
+    insertHeadingValueRow(table, 'Roll Out (approx)', rollOutDisplay + mOrInches, true, rollOutRaw)
     if (speed) {
-        insertHeadingValueRow(table, 'Speed', round(speed, 3) + ' km/h', true, speed, cadence)
+        insertHeadingValueRow(table, 'Speed', round(speed, 3) + kmOrMi, true, speed, cadence)
     }
     if (cadence) {
         insertHeadingValueRow(table, 'Cadence', round(cadence, 3) + ' rpm', true, cadence, speed)
@@ -307,6 +351,15 @@ const buildOutputTable = (gearRatio, gearInches, rollOut, speed, cadence, lapTim
 const handleOnLoad = () => {
 
     buildRimTypeSelect()
+
+    if (measureHiddenFld.value !== '') {
+        measureSelect.value = measureHiddenFld.value
+    } else {
+        const measureCookie = getCookie('measure')
+        if (measureCookie !== '') {
+            measureSelect.value = measureCookie
+        }
+    }
 
     if (rimTypeHiddenFld.value !== '') {
         rimTypeFld.value = rimTypeHiddenFld.value

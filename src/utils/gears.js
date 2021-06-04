@@ -245,7 +245,8 @@ const getGearInfo = (chainRing, cog, tyreWidth = 23, rimType = '700c', speed, ca
         cadence: returnCadence,
         lapLength,
         lapTime: returnLapTime,
-        lapPedalCount: returnLapPedalCount
+        lapPedalCount: returnLapPedalCount,
+        measure
     }
 }
 
