@@ -6,7 +6,7 @@ const cassettes = require('./utils/cassettes.js')
 
 const schedules = require('./utils/schedules.js')
 
-// const test = gears.getGearInfo(54, 11, 25, '700c', 60, undefined, 250)
+const test = gears.getGearInfo(54, 11, 25, '700c', 60, undefined, 250, undefined, "imperial")
 
 // const test = gears.getCogGivenChainRingAndGearInches(50, 119)
 
@@ -16,7 +16,7 @@ const schedules = require('./utils/schedules.js')
 
 // const test = gears.getChainRingAndCogOptionsForGearRatio(3.1)
 
-const test = gears.getRimOptionsTypeStringList()
+// const test = gears.getRimOptionsTypeStringList()
 
 // const test = gears.getCogGivenChainRingAndWheelForRollOut(50, 2099, 7000)
 

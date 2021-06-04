@@ -41,6 +41,7 @@ const validateQueryString = (query, fields) => {
     let chainRing2 = undefined
     let cog1 = undefined
     let cog2 = undefined
+    let measure = undefined
 
     for (field of fields) {
         let fieldValue = field.default
@@ -151,6 +152,7 @@ const validateQueryString = (query, fields) => {
             case 'chainRing2': chainRing2 = fieldValue; break;
             case 'cog1': cog1 = fieldValue; break;
             case 'cog2': cog2 = fieldValue; break;
+            case 'measure': measure = fieldValue; break;
         }
     }
 
@@ -187,7 +189,8 @@ const validateQueryString = (query, fields) => {
         chainRing1,
         chainRing2,
         cog1,
-        cog2
+        cog2,
+        measure
     }
 }
 

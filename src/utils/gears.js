@@ -1,3 +1,10 @@
+const milesToKm = 1.60934
+const kmToMiles = 0.621371
+const ydsToM = 0.9144
+const mToYds = 1.09361
+const inchesToMm = 25.4
+const mmToInches = 0.0393701
+
 const getGearRatio = (chainRing, cog) => {
     return chainRing / cog
 }
@@ -166,12 +173,24 @@ const getSpeedFromLapTimeAndLength = (lapTime, lapLength) => {
 }
 
 const getGearInfo = (chainRing, cog, tyreWidth = 23, rimType = '700c', speed, cadence, 
-    lapLength, lapTime) => {
+    lapLength, lapTime, measure = 'metric') => {
+    if (measure === 'imperial') {
+        var origSpeed = undefined
+        var origLapLength = undefined
+        if (speed) {
+            origSpeed = speed
+            speed = speed * milesToKm
+        }
+        if (lapLength) {
+            origLapLength = lapLength
+            lapLength = lapLength * ydsToM
+        }
+    }
     const gearRatio = getGearRatio(chainRing, cog)
     const gearInches = getGearInches(gearRatio)
-    const rimDiameter = getRimSizeByType(rimType)
-    const wheelCircumfrance = getWheelCircumfrance(rimDiameter, tyreWidth)
-    const rollOut = getRollOut(gearRatio, wheelCircumfrance)
+    var rimDiameter = getRimSizeByType(rimType)
+    var wheelCircumfrance = getWheelCircumfrance(rimDiameter, tyreWidth)
+    var rollOut = getRollOut(gearRatio, wheelCircumfrance)
     var returnSpeed = speed
     var returnCadence = cadence
     var returnLapTime = lapTime
@@ -190,6 +209,26 @@ const getGearInfo = (chainRing, cog, tyreWidth = 23, rimType = '700c', speed, ca
     if (lapLength && (speed || cadence)) {
         returnLapTime = getLapTime(lapLength, returnSpeed)
         returnLapPedalCount = getLapPedalCount(lapLength, rollOut)
+    }
+
+    if (measure === 'imperial') {
+        rimDiameter = rimDiameter * mmToInches
+        wheelCircumfrance = wheelCircumfrance * mmToInches
+        rollOut = rollOut * mmToInches
+        if (returnSpeed) {
+            if (origSpeed) {
+                returnSpeed = origSpeed
+            } else {
+                returnSpeed = returnSpeed * kmToMiles
+            }
+        }
+        if (lapLength) {
+            if (origLapLength) {
+                lapLength = origLapLength
+            } else {
+                lapLength = lapLength * mToYds
+            }
+        }
     }
 
     return {
