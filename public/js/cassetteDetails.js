@@ -191,9 +191,10 @@ const actOnExtrasSelect = () => {
 
 showSelect.addEventListener('change', (e) => {
     const show = showSelect.value
+    const measure = measureSelect.value
     setCookie('show', show, 1)
     outputTable.innerHTML = ""
-    outputTable.appendChild(buildOutputTable(chainRingsGlobal, cogsGlobal, responseGlobal, show))
+    outputTable.appendChild(buildOutputTable(chainRingsGlobal, cogsGlobal, responseGlobal, show, measure))
 })
 
 const buildShowSelect = () => {
