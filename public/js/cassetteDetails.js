@@ -7,6 +7,8 @@ const cogsFld = document.querySelector('#cogs')
 const tyreWidthFld = document.querySelector('#tyreWidth')
 const rimTypeFld = document.querySelector('#rimType')
 const rimTypeHiddenFld = document.querySelector('#rimTypeHidden')
+const measureSelect = document.querySelector('#measure')
+const measureHiddenFld = document.querySelector('#measureHidden')
 const messageOne = document.querySelector('#message-1')
 const extrasSelect = document.querySelector('#extras')
 const extrasHiddenFld = document.querySelector('#extrasHidden')
@@ -48,6 +50,7 @@ const handleSubmit = () => {
     outputTable.style.display = 'none'    
     showSection.style.display = 'none'
 
+    const measure = measureSelect.value
     const chainRings = chainRingsFld.value
     const cogs = cogsFld.value
     const tyreWidth = tyreWidthFld.value
@@ -57,10 +60,11 @@ const handleSubmit = () => {
     const cadence = cadenceFld.value
     const lapTime = lapTimeFld.value
     const lapLength = lapLengthFld.value
+    setCookie('measure', measure, 1)
     setCookie('chainRings', chainRings, 1)
     setCookie('rimType', rimType, 1)
     var url = '/cassetteInfo?chainRings=' + chainRings + '&cogs=' + cogs 
-        + '&rimType=' + rimType + '&extras=' + extras
+        + '&rimType=' + rimType + '&extras=' + extras + '&measure=' + measure
     if (tyreWidth !== '') {
         url = url + '&tyreWidth=' + tyreWidth
         setCookie('tyreWidth', tyreWidth, 1)
@@ -94,6 +98,7 @@ const handleSubmit = () => {
                 errorStr = errorStr.replace('cadence', 'Cadence')
                 errorStr = errorStr.replace('lapTime', 'Lap Time')
                 errorStr = errorStr.replace('lapLength', 'Lap Length')
+                errorStr = errorStr.replace('measure', 'Measure')
                 messageOne.style.color = 'red'
                 messageOne.textContent = errorStr
             } else {
@@ -102,7 +107,7 @@ const handleSubmit = () => {
                 showSection.style.display = 'block'
                 outputTable.style.display = 'block'
                 outputTable.innerHTML = ""
-                outputTable.appendChild(buildOutputTable(request.chainRings, request.cogs, response, showSelect.value))
+                outputTable.appendChild(buildOutputTable(request.chainRings, request.cogs, response, showSelect.value, measure))
                 chainRingsGlobal = request.chainRings
                 cogsGlobal = request.cogs
                 responseGlobal = response
@@ -116,6 +121,28 @@ cassetteDetailsForm.addEventListener('input', (e) => {
     showSection.style.display = 'none'
     outputTable.style.display = 'none'
 })
+
+measureSelect.addEventListener('change', (e) => {
+    actOnMeasureSelect()
+})
+
+const actOnMeasureSelect = () => {
+    if (measureSelect.value === 'imperial') {
+        if (extrasSelect.value === 'cadenceLapTime') {
+            lapLengthFld.placeholder = '(yd)'
+        } else {
+            lapLengthFld.placeholder = '(yd, optional)'
+        }
+        speedFld.placeholder = '(mph)'
+    } else { // 'metric'
+        if (extrasSelect.value === 'cadenceLapTime') {
+            lapLengthFld.placeholder = '(m)'
+        } else {
+            lapLengthFld.placeholder = '(m, optional)'
+        }
+        speedFld.placeholder = '(km/h)'
+    }
+}
 
 extrasSelect.addEventListener('change', (e) => {
     actOnExtrasSelect()
@@ -140,7 +167,6 @@ const actOnExtrasSelect = () => {
     } else if (extrasSelect.value === 'speed') {
         speedFld.value = ''
         lapTimeFld.value = ''
-        lapLengthFld.placeholder = '(optional, metres)'
         speedSection.style.display = 'none'
         cadenceSection.style.display = 'block'
         lapTimeSection.style.display = 'none'
@@ -148,7 +174,6 @@ const actOnExtrasSelect = () => {
     } else if (extrasSelect.value === 'cadence') {
         cadenceFld.value = ''
         lapTimeFld.value = ''
-        lapLengthFld.placeholder = '(optional, metres)'
         speedSection.style.display = 'block'
         cadenceSection.style.display = 'none'
         lapTimeSection.style.display = 'none'
@@ -156,12 +181,12 @@ const actOnExtrasSelect = () => {
     } else if (extrasSelect.value === 'cadenceLapTime') {
         speedFld.value = ''
         cadenceFld.value = ''
-        lapLengthFld.placeholder = '(metres)'
         speedSection.style.display = 'none'
         cadenceSection.style.display = 'none'
         lapTimeSection.style.display = 'block'
         lapLengthSection.style.display = 'block'
     }
+    actOnMeasureSelect()
 }
 
 showSelect.addEventListener('change', (e) => {
@@ -319,10 +344,20 @@ const actOnCassetteSelect = () => {
 
 // Dynamic output table
 
-const buildOutputTable = (chainRings, cogs, cassetteInfo, show) => {
+const buildOutputTable = (chainRings, cogs, cassetteInfo, show, measure) => {
 
     // Build the table
     var table = document.createElement('table')
+
+    var mOrInches = undefined
+    var kmOrMi = undefined
+    if (measure === 'imperial') {
+        mOrInches = ' in'
+        kmOrMi = ' mph'
+    } else { // 'metric'
+        mOrInches = ' m'
+        kmOrMi = ' km/h'
+    }
 
     if (show !== 'everything') {
         // Top-top row
@@ -359,11 +394,17 @@ const buildOutputTable = (chainRings, cogs, cassetteInfo, show) => {
                     } else if (show === 'gearInches') {
                         cellText = round(gearInfo.gearInches, 3)
                     } else if (show === 'rollOut') {
-                        cellText = round(gearInfo.rollOut / 1000, 3) + ' m'
+                        let rollOutDisplay = undefined
+                        if (measure === 'imperial') {
+                            rollOutDisplay = round(gearInfo.rollOut, 3)
+                        } else { // 'metric'
+                            rollOutDisplay = round(gearInfo.rollOut / 1000, 3)
+                        }
+                        cellText = rollOutDisplay + mOrInches
                     } else if (show === 'cadence') {
                         cellText = round(gearInfo.cadence, 3) + ' rpm'
                     } else if (show === 'speed') {
-                        cellText = round(gearInfo.speed, 3) + ' km/h'
+                        cellText = round(gearInfo.speed, 3) + kmOrMi
                     } else if (show === 'lapTime') {
                         cellText = round(gearInfo.lapTime, 3) + ' sec'
                     } else if (show === 'lapPedalCount') {
@@ -372,7 +413,7 @@ const buildOutputTable = (chainRings, cogs, cassetteInfo, show) => {
                     let a = document.createElement('A')
                     a.text = cellText
                     a.title = cellText
-                    a.href = linkToGearDetails(extrasSelect.value, chainRing, cog)
+                    a.href = linkToGearDetails(extrasSelect.value, chainRing, cog, measure)
                     a.className = 'link-cell'
                     cell.appendChild(a)
                 }
@@ -431,7 +472,7 @@ const buildOutputTable = (chainRings, cogs, cassetteInfo, show) => {
             let a = document.createElement('A')
             a.text = gearInfo.chainRing + ' x ' + gearInfo.cog
             a.title = 'Chain Ring ' + gearInfo.chainRing + ' Cog ' + gearInfo.cog
-            a.href = linkToGearDetails(extras, gearInfo.chainRing, gearInfo.cog)
+            a.href = linkToGearDetails(extras, gearInfo.chainRing, gearInfo.cog, measure)
             gearCell.appendChild(a)
             // Ratio cell
             let ratioCell = tr.insertCell(-1)
@@ -443,8 +484,13 @@ const buildOutputTable = (chainRings, cogs, cassetteInfo, show) => {
             inchesCell.innerHTML = round(rawValue, 3)
             // Roll Out cell
             let rollOutCell = tr.insertCell(-1)
-            rawValue = gearInfo.rollOut
-            rollOutCell.innerHTML = round(rawValue / 1000, 3) + ' m'
+            let rollOutDisplay = undefined
+            if (measure === 'imperial') {
+                rollOutDisplay = round(gearInfo.rollOut, 3)
+            } else { // 'metric'
+                rollOutDisplay = round(gearInfo.rollOut / 1000, 3)
+            }
+            rollOutCell.innerHTML = rollOutDisplay + mOrInches
             // Extras
             if (extras === 'cadence') {
                 // Cadence cell
@@ -455,7 +501,7 @@ const buildOutputTable = (chainRings, cogs, cassetteInfo, show) => {
                 // Speed cell
                 let speedCell = tr.insertCell(-1)
                 rawValue = gearInfo.speed
-                speedCell.innerHTML = round(rawValue, 3) + ' km/h'
+                speedCell.innerHTML = round(rawValue, 3) + kmOrMi
             } else if (extras === 'cadenceLapTime') {
                 // Cadence cell
                 let cadenceCell = tr.insertCell(-1)
@@ -464,7 +510,7 @@ const buildOutputTable = (chainRings, cogs, cassetteInfo, show) => {
                 // Speed cell
                 let speedCell = tr.insertCell(-1)
                 rawValue = gearInfo.speed
-                speedCell.innerHTML = round(rawValue, 3) + ' km/h'
+                speedCell.innerHTML = round(rawValue, 3) + kmOrMi
                 // Lap Pedals cell
                 let lapPedalsCell = tr.insertCell(-1)
                 rawValue = gearInfo.lapPedalCount
@@ -486,8 +532,8 @@ const buildOutputTable = (chainRings, cogs, cassetteInfo, show) => {
     return table
 }
 
-const linkToGearDetails = (extras, chainRing, cog) => {
-    let url = '/gearDetails?chainRing=' + chainRing + '&cog=' + cog
+const linkToGearDetails = (extras, chainRing, cog, measure = 'metric') => {
+    let url = '/gearDetails?chainRing=' + chainRing + '&cog=' + cog + '&measure=' + measure
     if (tyreWidthFld.value !== '') {
         url = url + '&tyreWidth=' + tyreWidthFld.value
     }
@@ -588,6 +634,15 @@ const handleOnLoad = () => {
     }
 
     buildRimTypeSelect()
+
+    if (measureHiddenFld.value !== '') {
+        measureSelect.value = measureHiddenFld.value
+    } else {
+        const measureCookie = getCookie('measure')
+        if (measureCookie !== '') {
+            measureSelect.value = measureCookie
+        }
+    }
 
     if (rimTypeHiddenFld.value !== '') {
         rimTypeFld.value = rimTypeHiddenFld.value
