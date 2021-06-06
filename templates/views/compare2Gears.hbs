@@ -16,6 +16,12 @@
         <p>Enter information for the 2 gears.</p>
 
         <form>
+            <label for="measure">Measure:</label>
+            <select id="measure" name="measure">
+                <option value="metric">Metric</option>
+                <option value="imperial">Imperial</option>
+            </select><br>
+            <input type="hidden" id="measureHidden" name="measureHidden" value={{measure}}>
             <label class="min-max-main-label">Chain Ring:</label>
             <label class="sub-label" for="chainRing1">1:</label>
             <input class="sub-input" type="number" id="chainRing1" name="chainRing1" value={{chainRing1}}>
