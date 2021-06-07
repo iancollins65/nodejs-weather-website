@@ -377,7 +377,13 @@ const getCogGivenChainRingAndWheelForRollOut = (chainRing, wheelCircumfrance, ro
 
 const getChainRingAndCogOptionsForRollOut = (rollOut, maxDiff = 500, sortDesc = true, calcInches = true, 
     tyreWidth = 23, rimType = '700c', minChainRing = 34, maxChainRing = 60, minCog = 10, maxCog = 36, 
-    minTeeth = 44, maxTeeth = 96) => {
+    minTeeth = 44, maxTeeth = 96, measure = 'metric') => {
+    if (measure === 'imperial') {
+        rollOut = rollOut * inchesToMm
+        if (maxDiff !== 500) {
+            maxDiff = maxDiff * inchesToMm
+        }
+    }
     const rimDiameter = getRimSizeByType(rimType)
     const wheelCircumfrance = getWheelCircumfrance(rimDiameter, tyreWidth)
     let options = []
@@ -387,19 +393,23 @@ const getChainRingAndCogOptionsForRollOut = (rollOut, maxDiff = 500, sortDesc = 
         const teeth = chainRing + cog
         if ((cog >= minCog) && (cog <= maxCog) && (teeth >= minTeeth) && (teeth <= maxTeeth)) {
             const gearRatio = getGearRatio(chainRing, cog)
-            const candidateRollOut = getRollOut(gearRatio, wheelCircumfrance)
+            let candidateRollOut = getRollOut(gearRatio, wheelCircumfrance)
             const diffRollOut = Math.abs(rollOut - candidateRollOut)
             if (diffRollOut <= maxDiff) {
                 var gearInches = undefined
                 if (calcInches === true) {
                     gearInches = getGearInches(gearRatio)
                 }
+                if (measure === 'imperial') {
+                    candidateRollOut = candidateRollOut * mmToInches
+                }
                 options.push({
                     chainRing,
                     cog,
                     rollOut: candidateRollOut,
                     gearInches,
-                    gearRatio
+                    gearRatio,
+                    measure
                 })
             }
         }
@@ -417,7 +427,11 @@ const getCogGivenChainRingAndWheelForSpeedAndCadence = (chainRing, wheelCircumfr
 
 const getChainRingAndCogOptionsForSpeedAndCadence = (speed, cadence, fixed = 'cadence', plusOrMinus = 4,  
     tyreWidth = 23, rimType = '700c', minChainRing = 34, maxChainRing = 60, minCog = 10, maxCog = 36, 
-    minTeeth = 44, maxTeeth = 96) => {
+    minTeeth = 44, maxTeeth = 96, measure = 'metric') => {
+    let origSpeed = speed
+    if (measure === 'imperial') {
+        speed = speed * milesToKm
+    }
     const rimDiameter = getRimSizeByType(rimType)
     const wheelCircumfrance = getWheelCircumfrance(rimDiameter, tyreWidth)
     let options = []
@@ -427,7 +441,7 @@ const getChainRingAndCogOptionsForSpeedAndCadence = (speed, cadence, fixed = 'ca
         const teeth = chainRing + cog
         if ((cog >= minCog) && (cog <= maxCog) && (teeth >= minTeeth) && (teeth <= maxTeeth)) {
             const gearRatio = getGearRatio(chainRing, cog)
-            const rollOut = getRollOut(gearRatio, wheelCircumfrance)
+            let rollOut = getRollOut(gearRatio, wheelCircumfrance)
             var candidateSpeed = speed
             var candidateCadence = cadence
             var includeOption = false
@@ -440,6 +454,14 @@ const getChainRingAndCogOptionsForSpeedAndCadence = (speed, cadence, fixed = 'ca
             }
             if (includeOption === true) {
                 const gearInches = getGearInches(gearRatio)
+                if (measure === 'imperial') {
+                    if (fixed === 'speed') {
+                        candidateSpeed = origSpeed
+                    } else {
+                        candidateSpeed = candidateSpeed * kmToMiles
+                    }
+                    rollOut = rollOut * mmToInches
+                }
                 options.push({
                     chainRing,
                     cog,
@@ -447,7 +469,8 @@ const getChainRingAndCogOptionsForSpeedAndCadence = (speed, cadence, fixed = 'ca
                     cadence: candidateCadence,
                     rollOut,
                     gearInches,
-                    gearRatio
+                    gearRatio,
+                    measure
                 })
             }
         }
@@ -457,10 +480,13 @@ const getChainRingAndCogOptionsForSpeedAndCadence = (speed, cadence, fixed = 'ca
 
 const getChainRingAndCogOptionsForLapTimeAndCadence = (lapTime, lapLength, cadence, 
     tyreWidth = 23, rimType = '700c', minChainRing = 34, maxChainRing = 60, minCog = 10, maxCog = 36, 
-    minTeeth = 44, maxTeeth = 96) => {
-    const speed = getSpeedFromLapTimeAndLength(lapTime, lapLength)
+    minTeeth = 44, maxTeeth = 96, measure = 'metric') => {
+    let speed = getSpeedFromLapTimeAndLength(lapTime, lapLength)
+    if (measure === 'imperial') {
+        speed = speed * kmToMiles
+    }
     var options = getChainRingAndCogOptionsForSpeedAndCadence(speed, cadence, 'speed', 4, tyreWidth, rimType, 
-        minChainRing, maxChainRing, minCog, maxCog, minTeeth, maxTeeth)
+        minChainRing, maxChainRing, minCog, maxCog, minTeeth, maxTeeth, measure)
     for (option of options) {
         option.lapTime = lapTime
     }
@@ -485,12 +511,9 @@ module.exports = {
     getRollOut: getRollOut,
     getRimSizeByType: getRimSizeByType,
     getGearInfo: getGearInfo,
-    getCogGivenChainRingAndGearInches: getCogGivenChainRingAndGearInches,
     getChainRingAndCogOptionsForGearInches: getChainRingAndCogOptionsForGearInches,
     getChainRingAndCogOptionsForGearRatio: getChainRingAndCogOptionsForGearRatio,
-    getCogGivenChainRingAndWheelForRollOut: getCogGivenChainRingAndWheelForRollOut,
     getChainRingAndCogOptionsForRollOut: getChainRingAndCogOptionsForRollOut,
-    getCogGivenChainRingAndWheelForSpeedAndCadence: getCogGivenChainRingAndWheelForSpeedAndCadence,
     getChainRingAndCogOptionsForSpeedAndCadence: getChainRingAndCogOptionsForSpeedAndCadence,
     getChainRingAndCogOptionsForLapTimeAndCadence: getChainRingAndCogOptionsForLapTimeAndCadence,
     getGearInfoForCassette: getGearInfoForCassette,

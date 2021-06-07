@@ -1,4 +1,6 @@
 const findGearForm = document.querySelector('form')
+const measureSelect = document.querySelector('#measure')
+const measureHiddenFld = document.querySelector('#measureHidden')
 const findForSelect = document.querySelector('#findFor')
 const findForHiddenFld = document.querySelector('#findForHidden')
 const gearInchesSection = document.querySelector('#gearInchesSection')
@@ -70,7 +72,8 @@ const handleSubmit = () => {
 
     const findFor = findForSelect.value
     setCookie('findFor', findFor, 1)
-    // findForHiddenFld.value = findFor
+    const measure = measureSelect.value
+    setCookie('measure', measure, 1)
 
     if (findFor === 'gearInches') {
         const gearInches = gearInchesFld.value
@@ -114,7 +117,7 @@ const handleSubmit = () => {
                     sortSelectSection.style.display = 'block'
                     outputTable.style.display = 'block'
                     outputTable.innerHTML = ""
-                    outputTable.appendChild(buildOutputTable(findFor, gearOptions))
+                    outputTable.appendChild(buildOutputTable(findFor, gearOptions, measure))
                     // outputText.style.display = 'block'
                     // outputText.textContent = JSON.stringify(gearOptions)
                 }
@@ -162,7 +165,7 @@ const handleSubmit = () => {
                     sortSelectSection.style.display = 'block'
                     outputTable.style.display = 'block'
                     outputTable.innerHTML = ""
-                    outputTable.appendChild(buildOutputTable(findFor, gearOptions))
+                    outputTable.appendChild(buildOutputTable(findFor, gearOptions, measure))
                 }
             })
         })            
@@ -172,22 +175,29 @@ const handleSubmit = () => {
             messageOne.textContent = 'Roll Out is not provided'
             return
         }
-        const rollOutMetres = Number(rollOutFld.value)
-        if (isNaN(rollOutMetres)) {
+        const rollOutRaw = Number(rollOutFld.value)
+        if (isNaN(rollOutRaw)) {
             messageOne.style.color = 'red'
             messageOne.textContent = 'Roll Out is not numeric'
             return
         }
-        const rollOut = rollOutMetres * 1000
-        var maxDiff = 500
+        let rollOut = rollOutRaw * 1000
+        let  maxDiff = 500 // mm
+        if (measure === 'imperial') {
+            rollOut = rollOutRaw
+            maxDiff = 20 // inches
+        }
         if (maxDiffFld.value !== '') {
-            const maxDiffMetres = Number(maxDiffFld.value)
-            if (isNaN(maxDiffMetres)) {
+            const maxDiffRaw = Number(maxDiffFld.value)
+            if (isNaN(maxDiffRaw)) {
                 messageOne.style.color = 'red'
-                messageOne.textContent = 'Within is not numeric'
+                messageOne.textContent = 'to - is not numeric'
                 return
             } else {
-                maxDiff = maxDiffMetres * 1000
+                maxDiff = maxDiffRaw * 1000
+                if (measure === 'imperial') {
+                    maxDiff = maxDiffRaw
+                }
             }
         }
         const tyreWidth = tyreWidthFld.value
@@ -197,15 +207,21 @@ const handleSubmit = () => {
         const minCog = minCogFld.value
         const maxCog = maxCogFld.value
 
-        var url = '/rollOutOptions?rollOut=' + rollOut + '&maxDiff=' + maxDiff + '&rimType=' + rimType
+        var url = '/rollOutOptions?rollOut=' + rollOut + '&maxDiff=' + maxDiff + '&rimType=' + rimType +
+            '&measure=' + measure
         if (tyreWidth !== '') { url = url + '&tyreWidth=' + tyreWidth }
         if (minChainRing !== '') { url = url + "&minChainRing=" + minChainRing }
         if (maxChainRing !== '') { url = url + "&maxChainRing=" + maxChainRing }
         if (minCog !== '') { url = url + "&minCog=" + minCog }
         if (maxCog !== '') { url = url + "&maxCog=" + maxCog }
 
-        setCookie('rollOut', rollOut / 1000, 1)
-        setCookie('maxDiff', maxDiff / 1000, 1)
+        if (measure === 'imperial') {
+            setCookie('rollOut', rollOut, 1)
+            setCookie('maxDiff', maxDiff, 1)
+        } else { // 'metric'
+            setCookie('rollOut', rollOut / 1000, 1)
+            setCookie('maxDiff', maxDiff / 1000, 1)
+        }
         setCookie('tyreWidth', tyreWidth, 1)
         setCookie('rimType', rimType, 1)
         setCookie('minChainRing', minChainRing, 1)
@@ -226,6 +242,7 @@ const handleSubmit = () => {
                     errorStr = errorStr.replace('min', 'Min ')
                     errorStr = errorStr.replace('max', 'Max ')
                     errorStr = errorStr.replace('ChainRing', 'Chain Ring')
+                    errorStr = errorStr.replace('measure', 'Measure')
                     messageOne.style.color = 'red'
                     messageOne.textContent = errorStr
                 } else if (gearOptions.length === 0) {
@@ -237,7 +254,7 @@ const handleSubmit = () => {
                     sortSelectSection.style.display = 'block'
                     outputTable.style.display = 'block'
                     outputTable.innerHTML = ""
-                    outputTable.appendChild(buildOutputTable(findFor, gearOptions))
+                    outputTable.appendChild(buildOutputTable(findFor, gearOptions, measure))
                     // outputText.style.display = 'block'
                     // outputText.textContent = JSON.stringify(gearOptions)
                 }
@@ -255,7 +272,7 @@ const handleSubmit = () => {
         const maxCog = maxCogFld.value
 
         var url = '/speedCadenceOptions?speed=' + speed + '&cadence=' + cadence + '&fixed=' + fixed + 
-            '&rimType=' + rimType
+            '&rimType=' + rimType + '&measure=' + measure
         if (tyreWidth !== '') { url = url + '&tyreWidth=' + tyreWidth }
         if (minChainRing !== '') { url = url + "&minChainRing=" + minChainRing }
         if (maxChainRing !== '') { url = url + "&maxChainRing=" + maxChainRing }
@@ -287,6 +304,7 @@ const handleSubmit = () => {
                     errorStr = errorStr.replace('min', 'Min ')
                     errorStr = errorStr.replace('max', 'Max ')
                     errorStr = errorStr.replace('ChainRing', 'Chain Ring')
+                    errorStr = errorStr.replace('measure', 'Measure')
                     messageOne.style.color = 'red'
                     messageOne.textContent = errorStr
                 } else if (gearOptions.length === 0) {
@@ -298,7 +316,7 @@ const handleSubmit = () => {
                     sortSelectSection.style.display = 'block'
                     outputTable.style.display = 'block'
                     outputTable.innerHTML = ""
-                    outputTable.appendChild(buildOutputTable(findFor, gearOptions))
+                    outputTable.appendChild(buildOutputTable(findFor, gearOptions, measure))
                     // outputText.style.display = 'block'
                     // outputText.textContent = JSON.stringify(gearOptions)
                 }
@@ -316,7 +334,7 @@ const handleSubmit = () => {
         const maxCog = maxCogFld.value
 
         var url = '/lapTimeCadenceOptions?lapTime=' + lapTime + '&lapLength=' + lapLength + 
-            '&cadence=' + cadence + '&rimType=' + rimType
+            '&cadence=' + cadence + '&rimType=' + rimType + '&measure=' + measure
         if (tyreWidth !== '') { url = url + '&tyreWidth=' + tyreWidth }
         if (minChainRing !== '') { url = url + "&minChainRing=" + minChainRing }
         if (maxChainRing !== '') { url = url + "&maxChainRing=" + maxChainRing }
@@ -348,6 +366,7 @@ const handleSubmit = () => {
                     errorStr = errorStr.replace('min', 'Min ')
                     errorStr = errorStr.replace('max', 'Max ')
                     errorStr = errorStr.replace('ChainRing', 'Chain Ring')
+                    errorStr = errorStr.replace('measure', 'Measure')
                     messageOne.style.color = 'red'
                     messageOne.textContent = errorStr
                 } else if (gearOptions.length === 0) {
@@ -359,7 +378,7 @@ const handleSubmit = () => {
                     sortSelectSection.style.display = 'block'
                     outputTable.style.display = 'block'
                     outputTable.innerHTML = ""
-                    outputTable.appendChild(buildOutputTable(findFor, gearOptions))
+                    outputTable.appendChild(buildOutputTable(findFor, gearOptions, measure))
                     // outputText.style.display = 'block'
                     // outputText.textContent = JSON.stringify(gearOptions)
                 }
@@ -376,6 +395,24 @@ findGearForm.addEventListener('input', (e) => {
         outputTable.style.display = 'none'
     }
 })
+
+measureSelect.addEventListener('change', (e) => {
+    actOnMeasureSelect()
+})
+
+const actOnMeasureSelect = () => {
+    if (measureSelect.value === 'imperial') {
+        rollOutFld.placeholder = '(inches)'
+        maxDiffFld.placeholder = '20'
+        lapLengthFld.placeholder = '(yards)'
+        speedFld.placeholder = '(mph)'
+    } else { // 'metric'
+        rollOutFld.placeholder = '(metres)'
+        maxDiffFld.placeholder = '0.5'
+        lapLengthFld.placeholder = '(metres)'
+        speedFld.placeholder = '(km/h)'
+    }
+}
 
 minMaxCheckBox.addEventListener('input', (e) => {
     actOnShowMinMaxSet()
@@ -458,8 +495,9 @@ const actOnFindForSelection = () => {
 
 sortByFld.addEventListener('change', (e) => {
     const findFor = findForSelect.value
+    const measure = measureSelect.value
     outputTable.innerHTML = ""
-    outputTable.appendChild(buildOutputTable(findFor, gearOptionsGlobal))
+    outputTable.appendChild(buildOutputTable(findFor, gearOptionsGlobal, measure))
 })
 
 const buildSortSelect = (findFor) => {
@@ -581,7 +619,7 @@ const buildRimTypeSelect = () => {
 
 // Dynamic output table
 
-const buildOutputTable = (findFor, gearOptions) => {
+const buildOutputTable = (findFor, gearOptions, measure = 'metric') => {
     // Sort gearOptions
     if (sortByFld.value === 'gearInches' && findFor === 'gearInches') {
         gearOptions.sort((a, b) => (a.gearInches >= b.gearInches) ? 1 : -1)
@@ -617,6 +655,16 @@ const buildOutputTable = (findFor, gearOptions) => {
     // Build the table
     var table = document.createElement('table')
 
+    var mOrInches = undefined
+    var kmOrMi = undefined
+    if (measure === 'imperial') {
+        mOrInches = ' in'
+        kmOrMi = ' mph'
+    } else { // 'metric'
+        mOrInches = ' m'
+        kmOrMi = ' km/h'
+    }
+
     if (findFor === 'gearInches') {
         // Create header row
         let tr = table.insertRow(-1)
@@ -635,7 +683,7 @@ const buildOutputTable = (findFor, gearOptions) => {
             let a = document.createElement('A')
             a.text = gearOption.chainRing + ' x ' + gearOption.cog
             a.title = 'Chain Ring ' + gearOption.chainRing + ' Cog ' + gearOption.cog
-            a.href = linkToGearDetails(findFor, gearOption.chainRing, gearOption.cog)
+            a.href = linkToGearDetails(findFor, gearOption.chainRing, gearOption.cog, measure)
             // a.onclick = 'gearLink()' Doesn't seem to work
             gearCell.appendChild(a)
             // Gear Inches cell
@@ -661,7 +709,7 @@ const buildOutputTable = (findFor, gearOptions) => {
             let a = document.createElement('A')
             a.text = gearOption.chainRing + ' x ' + gearOption.cog
             a.title = 'Chain Ring ' + gearOption.chainRing + ' Cog ' + gearOption.cog
-            a.href = linkToGearDetails(findFor, gearOption.chainRing, gearOption.cog)
+            a.href = linkToGearDetails(findFor, gearOption.chainRing, gearOption.cog, measure)
             // a.onclick = 'gearLink()' Doesn't seem to work
             gearCell.appendChild(a)
             // Gear Ratio cell
@@ -690,13 +738,18 @@ const buildOutputTable = (findFor, gearOptions) => {
             let a = document.createElement('A')
             a.text = gearOption.chainRing + ' x ' + gearOption.cog
             a.title = 'Chain Ring ' + gearOption.chainRing + ' Cog ' + gearOption.cog
-            a.href = linkToGearDetails(findFor, gearOption.chainRing, gearOption.cog)
+            a.href = linkToGearDetails(findFor, gearOption.chainRing, gearOption.cog, measure)
             // a.onclick = 'gearLink()' Doesn't seem to work
             gearCell.appendChild(a)
             // Roll Out cell
             let rollOutCell = tr.insertCell(-1)
-            let rawValue = (gearOption.rollOut / 1000)
-            rollOutCell.innerHTML = round(rawValue, 3) + ' m'
+            let rollOutDisplay = undefined
+            if (measure === 'imperial') {
+                rollOutDisplay = round(gearOption.rollOut, 3)
+            } else { // 'metric'
+                rollOutDisplay = round(gearOption.rollOut / 1000, 3)
+            }
+            rollOutCell.innerHTML = rollOutDisplay + mOrInches
             // Gear Inches cell
             let gearInchesCell = tr.insertCell(-1)
             rawValue = gearOption.gearInches
@@ -723,13 +776,13 @@ const buildOutputTable = (findFor, gearOptions) => {
             let a = document.createElement('A')
             a.text = gearOption.chainRing + ' x ' + gearOption.cog
             a.title = 'Chain Ring ' + gearOption.chainRing + ' Cog ' + gearOption.cog
-            a.href = linkToGearDetails(findFor, gearOption.chainRing, gearOption.cog)
+            a.href = linkToGearDetails(findFor, gearOption.chainRing, gearOption.cog, measure)
             // a.onclick = 'gearLink()' Doesn't seem to work
             gearCell.appendChild(a)
             // Speed cell
             let speedCell = tr.insertCell(-1)
             let rawValue = gearOption.speed
-            speedCell.innerHTML = round(rawValue, 3) + ' km/h'
+            speedCell.innerHTML = round(rawValue, 3) + kmOrMi
             // Cadence cell
             let cadenceCell = tr.insertCell(-1)
             rawValue = gearOption.cadence
@@ -740,8 +793,8 @@ const buildOutputTable = (findFor, gearOptions) => {
     return table
 }
 
-const linkToGearDetails = (findFor, chainRing, cog) => {
-    let url = '/gearDetails?chainRing=' + chainRing + '&cog=' + cog
+const linkToGearDetails = (findFor, chainRing, cog, measure = 'metric') => {
+    let url = '/gearDetails?chainRing=' + chainRing + '&cog=' + cog + '&measure=' + measure
     if ((findFor === 'rollOut') || (findFor === 'speedCadence') || (findFor === 'lapTimeCadence')) {
         if (tyreWidthFld.value !== '') {
             url = url + '&tyreWidth=' + tyreWidthFld.value
@@ -840,6 +893,17 @@ const handleOnLoad = () => {
         rimTypeFld.value = rimTypeHiddenFld.value
     }
     
+    if (measureHiddenFld.value !== '') {
+        measureSelect.value = measureHiddenFld.value
+    } else {
+        const measureCookie = getCookie('measure')
+        if (measureCookie !== '') {
+            measureSelect.value = measureCookie
+        }
+    }
+
+    actOnMeasureSelect()
+
     if (showMinMaxHiddenFld.value !== '') {
         minMaxCheckBox.checked = Boolean(showMinMaxHiddenFld.value === 'yes')
         actOnShowMinMaxSet()

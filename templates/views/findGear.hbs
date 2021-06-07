@@ -16,6 +16,12 @@
         <p>Enter information about the gear.</p>
 
         <form>
+            <label for="measure">Units:</label>
+            <select id="measure" name="measure">
+                <option value="metric">Metric</option>
+                <option value="imperial">Imperial</option>
+            </select><br>
+            <input type="hidden" id="measureHidden" name="measureHidden" value={{measure}}>
             <label for="findFor">Find For:</label>
             <select id="findFor" name="findFor">
                 <option value="gearInches">Gear Inches</option>
