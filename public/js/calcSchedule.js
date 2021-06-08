@@ -1,4 +1,6 @@
 const calcScheduleForm = document.querySelector('form')
+const measureSelect = document.querySelector('#measure')
+const measureHiddenFld = document.querySelector('#measureHidden')
 const lapLengthFld = document.querySelector('#lapLength')
 const scheduleTypeSelect = document.querySelector('#scheduleType')
 const scheduleTypeHiddenFld = document.querySelector('#scheduleTypeHidden')
@@ -81,6 +83,7 @@ const handleSubmit = () => {
     outputTable.style.display = 'none'
     gearInfoSection.style.display = 'none'
 
+    const measure = measureSelect.value
     const lapLength = lapLengthFld.value
     const scheduleType = scheduleTypeSelect.value
     const distanceLaps = distanceLapsFld.value
@@ -98,6 +101,7 @@ const handleSubmit = () => {
     const cog = cogFld.value
     const tyreWidth = tyreWidthFld.value
     const rimType = rimTypeFld.value
+    setCookie('measure', measure, 1)
     setCookie('lapLength', lapLength, 1)
     setCookie('scheduleType', scheduleType, 1)
     setCookie('scheduleBy', scheduleBy, 1)
@@ -106,6 +110,7 @@ const handleSubmit = () => {
 
     var url = '/calculateSchedule?lapDistance=' + lapLength + '&scheduleType=' + scheduleType 
         + '&scheduleBy=' + scheduleBy + '&startType=' + startType + '&timingsAt=' + timingsAt
+        + '&measure=' + measure
 
     if (scheduleType === 'rideDistance') {
         url = url + '&distanceLaps=' + distanceLaps
@@ -169,6 +174,7 @@ const handleSubmit = () => {
                 errorStr = errorStr.replace('tyreWidth', 'Tyre Width')
                 errorStr = errorStr.replace('rimType', 'Rim Type')
                 errorStr = errorStr.replace('or Rollout value is', 'are')
+                errorStr = errorStr.replace('measure', 'Measure')
                 messageOne.style.color = 'red'
                 messageOne.textContent = errorStr
             } else {
@@ -178,16 +184,16 @@ const handleSubmit = () => {
                 messageOne.textContent = 'Schedule outcome'
                 outcomeTable.style.display = 'block'
                 outcomeTable.innerHTML = ""
-                outcomeTable.appendChild(buildScheduleOutcomeTable(response.points[response.points.length - 1]))
+                outcomeTable.appendChild(buildScheduleOutcomeTable(response.points[response.points.length - 1], measure))
                 messageTwo.style.display = 'block'
                 showSection.style.display = 'block'
                 outputTable.style.display = 'block'
                 outputTable.innerHTML = ""
-                outputTable.appendChild(buildScheduleDetailsTable(response.points, showSelect.value))
+                outputTable.appendChild(buildScheduleDetailsTable(response.points, showSelect.value, measure))
                 if (response.gear) {
                     gearInfoSection.style.display = 'block'
                     gearInfoTable.innerHTML = ""
-                    gearInfoTable.appendChild(buildGearInfoTable(response.gear))
+                    gearInfoTable.appendChild(buildGearInfoTable(response.gear, measure))
                 }
                 //outputText.style.display = 'block'
                 //outputText.textContent = JSON.stringify(response.points)
@@ -252,6 +258,22 @@ calcScheduleForm.addEventListener('input', (e) => {
     gearInfoSection.style.display = 'none'
 })
 
+// Handle Units/Measure setting
+
+measureSelect.addEventListener('change', (e) => {
+    actOnMeasureSelect()
+})
+
+const actOnMeasureSelect = () => {
+    if (measureSelect.value === 'imperial') {
+        lapLengthFld.placeholder = '(yards)'
+        speedFld.placeholder = '(mph)'
+    } else { // 'metric'
+        lapLengthFld.placeholder = '(metres)'
+        speedFld.placeholder = '(km/h)'
+    }
+}
+
 // Handle Provide Gear checkbox setting
 
 provideGearCheckBox.addEventListener('input', (e) => {
@@ -270,8 +292,9 @@ const actOnProvideGearSet = () => {
 
 showSelect.addEventListener('change', (e) => {
     const show = showSelect.value
+    const measure = measureSelect.value
     outputTable.innerHTML = ""
-    outputTable.appendChild(buildScheduleDetailsTable(pointsGlobal, show))
+    outputTable.appendChild(buildScheduleDetailsTable(pointsGlobal, show, measure))
 })
 
 // Drop down box selection
@@ -412,17 +435,28 @@ const buildRimTypeSelect = () => {
 
 // Dynamic output tables
 
-const buildScheduleOutcomeTable = (endPoint) => {
+const buildScheduleOutcomeTable = (endPoint, measure) => {
 
     // Build the table
     var table = document.createElement('table')
 
+    var kmphOrMph = undefined
+    if (measure === 'imperial') {
+        kmphOrMph = ' mph'
+    } else { // 'metric'
+        kmphOrMph = ' km/h'
+    }
+
     // Table contents
     insertHeadingValueRow(table, 'Laps', round(endPoint.lapNumber, 1))
-    insertHeadingValueRow(table, 'Distance', round(convertMtoKM(endPoint.distance), 3) + ' km')
+    if (measure === 'imperial') {
+        insertHeadingValueRow(table, 'Distance', round(convertYdToMi(endPoint.distance), 3) + ' mi')
+    } else {
+        insertHeadingValueRow(table, 'Distance', round(convertMtoKM(endPoint.distance), 3) + ' km')
+    }
     insertHeadingValueRow(table, 'Time', convertSecondsToHMMSS(round(endPoint.time, 3)))
     insertHeadingValueRow(table, 'Tempo', round(endPoint.tempo, 3) + ' sec')
-    insertHeadingValueRow(table, 'Ave. Speed', round(endPoint.aveSpeed, 3) + ' km/h')
+    insertHeadingValueRow(table, 'Ave. Speed', round(endPoint.aveSpeed, 3) + kmphOrMph)
     if (endPoint.aveCadence !== 0) {
         insertHeadingValueRow(table, 'Ave. Cadence', round(endPoint.aveCadence, 3) + ' rpm')
     }
@@ -430,7 +464,7 @@ const buildScheduleOutcomeTable = (endPoint) => {
     return table
 }
 
-const buildScheduleDetailsTable = (points, show) => {
+const buildScheduleDetailsTable = (points, show, measure) => {
 
     var showCadence = false
     if (points.length > 0) {
@@ -442,6 +476,19 @@ const buildScheduleDetailsTable = (points, show) => {
 
     // Build the table
     var table = document.createElement('table')
+
+    var mOrYd = undefined
+    var kmphOrMph = undefined
+    var kmOrMi = undefined
+    if (measure === 'imperial') {
+        mOrYd = ' yd'
+        kmphOrMph = ' mph'
+        kmOrMi = ' mi'
+    } else { // 'metric'
+        mOrYd = ' m'
+        kmphOrMph = ' km/h'
+        kmOrMi = ' km'
+    }
 
     // Create header row
     let tr = table.insertRow(-1)
@@ -480,8 +527,13 @@ const buildScheduleDetailsTable = (points, show) => {
         lapCell.innerHTML = round(rawValue, 1)
         // Distance cell
         let distanceCell = tr.insertCell(-1)
-        rawValue = convertMtoKM(point.distance)
-        distanceCell.innerHTML = round(rawValue, 3) + ' km'
+        if (measure === 'imperial') {
+            rawValue = convertYdToMi(point.distance)
+            distanceCell.innerHTML = round(rawValue, 3) + kmOrMi
+        } else { // 'metric'
+            rawValue = convertMtoKM(point.distance)
+            distanceCell.innerHTML = round(rawValue, 3) + kmOrMi
+        }
         // Time cell
         let timeCell = tr.insertCell(-1)
         rawValue = round(point.time, 3)
@@ -491,7 +543,7 @@ const buildScheduleDetailsTable = (points, show) => {
             // Segment Distance cell
             let segDistanceCell = tr.insertCell(-1)
             rawValue = point.segmentDistance
-            segDistanceCell.innerHTML = round(rawValue, 1) + ' m'
+            segDistanceCell.innerHTML = round(rawValue, 1) + mOrYd
             // Segment Time cell
             let segTimeCell = tr.insertCell(-1)
             rawValue = round(point.segmentTime, 3)
@@ -500,7 +552,7 @@ const buildScheduleDetailsTable = (points, show) => {
             // Segment Speed cell
             let segSpeedCell = tr.insertCell(-1)
             rawValue = point.speed
-            segSpeedCell.innerHTML = round(rawValue, 3) + ' km/h'
+            segSpeedCell.innerHTML = round(rawValue, 3) + kmphOrMph
             // Segment Cadence cell
             if (showCadence === true) {
                 let segCadenceCell = tr.insertCell(-1)
@@ -513,11 +565,17 @@ const buildScheduleDetailsTable = (points, show) => {
     return table
 }
 
-const buildGearInfoTable = (gearInfo) => {
+const buildGearInfoTable = (gearInfo, measure) => {
 
     // Build the table
     var table = document.createElement('table')
 
+    var mOrInches = undefined
+    if (measure === 'imperial') {
+        mOrInches = ' in'
+    } else { // 'metric'
+        mOrInches = ' m'
+    }
     // Table contents
     insertHeadingValueRow(table, 'Chain Ring', gearInfo.chainRing)
     insertHeadingValueRow(table, 'Cog', gearInfo.cog)
@@ -525,7 +583,11 @@ const buildGearInfoTable = (gearInfo) => {
     insertHeadingValueRow(table, 'Rim Type', gearInfo.rimType)
     insertHeadingValueRow(table, 'Gear Ratio', round(gearInfo.gearRatio, 3))
     insertHeadingValueRow(table, 'Gear Inches', round(gearInfo.gearInches, 3))
-    insertHeadingValueRow(table, 'Roll Out', round(gearInfo.rollOut / 1000, 3) + ' m')
+    if (measure === 'imperial') {
+        insertHeadingValueRow(table, 'Roll Out', round(gearInfo.rollOut, 3) + mOrInches)
+    } else {
+        insertHeadingValueRow(table, 'Roll Out', round(gearInfo.rollOut / 1000, 3) + mOrInches)
+    }
 
     return table
 }
@@ -552,6 +614,10 @@ const div = (x, y) => {
 
 const convertMtoKM = (metres) => {
     return metres / 1000
+}
+
+const convertYdToMi = (yards) => {
+    return yards / 1760
 }
 
 const convertSecondsToHMMSS = (seconds) => {
@@ -616,6 +682,17 @@ const handleOnLoad = () => {
 
     buildRimTypeSelect()
     
+    if (measureHiddenFld.value !== '') {
+        measureSelect.value = measureHiddenFld.value
+    } else {
+        const measureCookie = getCookie('measure')
+        if (measureCookie !== '') {
+            measureSelect.value = measureCookie
+        }
+    }
+
+    actOnMeasureSelect()
+
     if (rimTypeHiddenFld.value !== '') {
         rimTypeFld.value = rimTypeHiddenFld.value
     } else {

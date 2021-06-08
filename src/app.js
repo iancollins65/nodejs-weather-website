@@ -326,7 +326,7 @@ app.get('/calcSchedule', (req, res) => {
 
     const {error, label, scheduleType, scheduleBy, lapDistance, distanceLaps, timeSeconds, 
         tempoTarget, startType, upToSpeedTime, timingsAt, speedTempo, cadenceTempo, 
-        chainRing, cog, tyreWidth, rimType} = 
+        chainRing, cog, tyreWidth, rimType, measure} = 
         schedules.validateQueryString(req.query, [
             { name: 'label', type: 'string', returnEmpty: true },
             { name: 'scheduleType', type: 'string', options: ['rideDistance', 'rideTime'], returnEmpty: true },
@@ -343,7 +343,8 @@ app.get('/calcSchedule', (req, res) => {
             { name: 'chainRing', type: 'integer', sign: 'positive', returnEmpty: true },
             { name: 'cog', type: 'integer', sign: 'positive', returnEmpty: true },
             { name: 'tyreWidth', type: 'integer', sign: 'positive', returnEmpty: true },
-            { name: 'rimType', type: 'string', options: gears.getRimOptionsTypeArray(), returnEmpty: true }
+            { name: 'rimType', type: 'string', options: gears.getRimOptionsTypeArray(), returnEmpty: true },
+            { name: 'measure', type: 'string', options: ['metric', 'imperial'], returnEmpty: true }
     ])
 
     const rimTypeOptionsList = gears.getRimOptionsTypeStringList()
@@ -372,7 +373,8 @@ app.get('/calcSchedule', (req, res) => {
             chainRing: '',
             cog: '',
             tyreWidth: '',
-            rimType: ''
+            rimType: '',
+            measure: ''
         })
     } else {
         res.render('calcSchedule', {
@@ -397,7 +399,8 @@ app.get('/calcSchedule', (req, res) => {
             chainRing,
             cog,
             tyreWidth,
-            rimType
+            rimType,
+            measure
         })
     }
 })
@@ -695,7 +698,7 @@ app.get('/calculateSchedule', (req, res) => {
 
     const {error, label, scheduleType, scheduleBy, lapDistance, distanceLaps, timeSeconds, 
         tempoTarget, startType, upToSpeedTime, timingsAt, speedTempo, cadenceTempo, rollOut,
-        chainRing, cog, tyreWidth, rimType} = 
+        chainRing, cog, tyreWidth, rimType, measure} = 
         schedules.validateQueryString(req.query, [
             { name: 'label', type: 'string' },
             { name: 'scheduleType', default: 'rideDistance', type: 'string', options: ['rideDistance', 'rideTime'] },
@@ -713,7 +716,8 @@ app.get('/calculateSchedule', (req, res) => {
             { name: 'cog', type: 'integer', sign: 'positive' },
             { name: 'tyreWidth', default: 23, type: 'integer', sign: 'positive' },
             { name: 'rimType', default: '700c', type: 'string', options: gears.getRimOptionsTypeArray() },
-            { name: 'rollOut', type: 'decimal', sign: 'positive' }
+            { name: 'rollOut', type: 'decimal', sign: 'positive' },
+            { name: 'measure', default: 'metric', type: 'string', options: ['metric', 'imperial'] }
     ])
 
     if (error) {
@@ -739,7 +743,8 @@ app.get('/calculateSchedule', (req, res) => {
             tyreWidth: tyreWidth,
             rimType: rimType,
             rollOut: rollOut
-        }
+        },
+        measure
     }
 
     // Calculate the schedule

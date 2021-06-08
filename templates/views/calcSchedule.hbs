@@ -16,6 +16,12 @@
         <p>Enter the schedule details.</p>
 
         <form>
+            <label for="measure">Units:</label>
+            <select id="measure" name="measure">
+                <option value="metric">Metric</option>
+                <option value="imperial">Imperial</option>
+            </select><br>
+            <input type="hidden" id="measureHidden" name="measureHidden" value={{measure}}>
             <label for="lapLength">Lap Length:</label>
             <input type="number" id="lapLength" name="lapLength" step="0.001" placeholder="(metres)" value={{lapLength}}><br>
             <label for="scheduleType">Sched. Type:</label>
