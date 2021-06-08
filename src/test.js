@@ -6,7 +6,7 @@ const cassettes = require('./utils/cassettes.js')
 
 const schedules = require('./utils/schedules.js')
 
-const test = gears.getGearInfo(54, 11, 25, '700c', 60, undefined, 250, undefined, "imperial")
+// const test = gears.getGearInfo(54, 11, 25, '700c', 60, undefined, 250, undefined, "imperial")
 
 // const test = gears.getCogGivenChainRingAndGearInches(50, 119)
 
@@ -230,31 +230,38 @@ const test = gears.getGearInfo(54, 11, 25, '700c', 60, undefined, 250, undefined
 //     }
 // }
 
-// const scheduleParams1 = {
-//     label: "",
-//     scheduleType: schedules.scheduleType.distance.code,
-//     scheduleBy: schedules.scheduleBy.tempo.code,
-//     lapDistance: 250.0,
-//     distanceLaps: 4.0,
-//     timeSeconds: 60.0,
-//     tempoTarget: 15.0,
-//     startType: schedules.startType.standing.code,
-//     upToSpeedTime: 4.0,
-//     timingsAt: schedules.timingsAt.fullLap.code,
-//     speedTempo: 50.0,
-//     cadenceTempo: 100.0,
-//     gear: {
-//         chainRing: 54,
-//         cog: 14,
-//         tyreWidth: 20,
-//         rimType: '700c'
-//     }
-// }
+const scheduleParams1 = {
+    label: "",
+    scheduleType: schedules.scheduleType.distance.code,
+    scheduleBy: schedules.scheduleBy.speed.code,
+    lapDistance: 250.0,
+    distanceLaps: 4.0,
+    timeSeconds: 60.0,
+    tempoTarget: 15.0,
+    startType: schedules.startType.standing.code,
+    upToSpeedTime: 4.0,
+    timingsAt: schedules.timingsAt.fullLap.code,
+    speedTempo: 50.0,
+    cadenceTempo: 100.0,
+    gear: {
+        chainRing: 54,
+        cog: 14,
+        tyreWidth: 20,
+        rimType: '700c'
+    },
+    measure: 'imperial'
+}
 
 // // const test = schedules.canCalculate(scheduleParams)
 
-// const test = schedules.calcSchedule(scheduleParams1)
+const test = schedules.calcSchedule(scheduleParams1)
 
 // // const test = schedules.convertHMMSStimeToSeconds('60:59:59')
+
+// const test = schedules.cloneObject(scheduleParams1)
+
+// test.lapDistance = 285
+
+// console.log(scheduleParams1)
 
 console.log(test)

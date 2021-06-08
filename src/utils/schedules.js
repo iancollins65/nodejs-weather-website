@@ -1,5 +1,12 @@
 const gears = require('./gears')
 
+const milesToKm = 1.60934
+const kmToMiles = 0.621371
+const ydsToM = 0.9144
+const mToYds = 1.09361
+const inchesToMm = 25.4
+const mmToInches = 0.0393701
+
 const scheduleType = {
     distance: { code: 'rideDistance', name: "Ride Distance", id: 0 },
     time: { code: 'rideTime', name: "Ride Time", id: 1 }
@@ -37,7 +44,8 @@ const defaultScheduleParams = {
     upToSpeedTime: 4.0,
     timingsAt: timingsAt.fullLap.code,
     speedTempo: 0.0,
-    cadenceTempo: 0.0
+    cadenceTempo: 0.0,
+    measure: 'metric'
 }
 
 const calcSchedule = (scheduleParams) => {
@@ -53,17 +61,18 @@ const calcSchedule = (scheduleParams) => {
         }
     } else {
         var points = []
+        const origParams = cloneObject(scheduleParams)
         if (scheduleParams.scheduleType === scheduleType.distance.code) {
             points = calcDistanceSchedule(scheduleParams)
         } else if (scheduleParams.scheduleType === scheduleType.time.code) {
             points = calcTimeSchedule(scheduleParams)
         }
-        const label = getScheduleLabel(scheduleParams)
-        const description = getScheduleDescription(scheduleParams)
-        let gear = getGearInfo(scheduleParams)
+        const label = getScheduleLabel(origParams)
+        const description = getScheduleDescription(origParams)
+        let gear = getGearInfo(origParams)
         return {
             error: undefined,
-            scheduleParams,
+            scheduleParams: origParams,
             label,
             description,
             points,
@@ -76,6 +85,20 @@ const calcDistanceSchedule = (scheduleParams) => {
     // console.log(scheduleParams)
     const s = scheduleParams
     let points = []
+
+    if (s.measure === 'imperial') {
+        if (s.lapDistance) {
+            s.lapDistance = s.lapDistance * ydsToM
+        }
+        if (s.speedTempo) {
+            s.speedTempo = s.speedTempo * milesToKm
+        }
+        if (s.gear) {
+            if (s.gear.rollOut) {
+                s.gear.rollOut = s.gear.rollOut * inchesToMm
+            }
+        }
+    }
 
     var upToSpeedTime = 0.0
     if (s.startType === startType.standing.code) {
@@ -146,19 +169,21 @@ const calcDistanceSchedule = (scheduleParams) => {
                 aveCadence = lapPedals * currentLapCount / time * 60.0
             }
         }
+
         const newPoint = {
             timingAt: currentTimingsAt.code,
             lapNumber: currentLapCount,
-            distance: distance, 
+            distance: (s.measure === 'imperial') ? (distance * mToYds) : distance, 
             time: time, 
             tempo: tempo, 
             segmentTime: segmentTime,
-            segmentDistance: segmentDistance, 
-            speed: speed, 
-            aveSpeed: aveSpeed, 
+            segmentDistance: (s.measure === 'imperial') ? (segmentDistance * mToYds) : segmentDistance, 
+            speed: (s.measure === 'imperial') ? (speed * kmToMiles) : speed, 
+            aveSpeed: (s.measure === 'imperial') ? (aveSpeed * kmToMiles) : aveSpeed, 
             cadence: cadence,
             aveCadence: aveCadence
         }
+
         points.push(newPoint)
         currentLapCount = getNextLapCountForDistanceSchedule(currentLapCount, scheduleParams)
     }
@@ -192,6 +217,20 @@ const getNextLapCountForDistanceSchedule = (currentLapCount, scheduleParams) => 
 const calcTimeSchedule = (scheduleParams) => {
     const s = scheduleParams
     let points = []
+
+    if (s.measure === 'imperial') {
+        if (s.lapDistance) {
+            s.lapDistance = s.lapDistance * ydsToM
+        }
+        if (s.speedTempo) {
+            s.speedTempo = s.speedTempo * milesToKm
+        }
+        if (s.gear) {
+            if (s.gear.rollOut) {
+                s.gear.rollOut = s.gear.rollOut * inchesToMm
+            }
+        }
+    }
 
     var upToSpeedTime = 0.0
     if (s.startType === startType.standing.code) {
@@ -270,19 +309,21 @@ const calcTimeSchedule = (scheduleParams) => {
                 aveCadence = lapPedals * currentLapCount / time * 60.0
             }
         }
+
         const newPoint = {
             timingAt: currentTimingsAt.code,
             lapNumber: currentLapCount,
-            distance: distance, 
+            distance: (s.measure === 'imperial') ? (distance * mToYds) : distance, 
             time: time, 
             tempo: tempo, 
             segmentTime: segmentTime,
-            segmentDistance: segmentDistance, 
-            speed: speed, 
-            aveSpeed: aveSpeed, 
+            segmentDistance: (s.measure === 'imperial') ? (segmentDistance * mToYds) : segmentDistance, 
+            speed: (s.measure === 'imperial') ? (speed * kmToMiles) : speed, 
+            aveSpeed: (s.measure === 'imperial') ? (aveSpeed * kmToMiles) : aveSpeed, 
             cadence: cadence,
             aveCadence: aveCadence
         }
+
         points.push(newPoint)
         timeLeft = s.timeSeconds - time
     }
@@ -356,7 +397,8 @@ const getGearInfo = (scheduleParams) => {
     var gearInfo = undefined
     if (s.gear) {
         if (!s.gear.rollOut && s.gear.chainRing && s.gear.cog) {
-            gearInfo = gears.getGearInfo(s.gear.chainRing, s.gear.cog, s.gear.tyreWidth, s.gear.rimType)
+            gearInfo = gears.getGearInfo(s.gear.chainRing, s.gear.cog, s.gear.tyreWidth, s.gear.rimType,
+                undefined, undefined, undefined, undefined, s.measure)
         }
     }
     return gearInfo
@@ -385,6 +427,7 @@ const validateQueryString = (query, fields) => {
     let tyreWidth = undefined
     let rimType = undefined
     let rollOut = undefined
+    let measure = undefined
 
     for (field of fields) {
         let fieldValue = field.default
@@ -503,6 +546,7 @@ const validateQueryString = (query, fields) => {
             case 'tyreWidth': tyreWidth = fieldValue; break;
             case 'rimType': rimType = fieldValue; break;
             case 'rollOut': rollOut = fieldValue; break;
+            case 'measure': measure = fieldValue; break;
         }
     }
 
@@ -524,7 +568,8 @@ const validateQueryString = (query, fields) => {
         cog,
         tyreWidth,
         rimType,
-        rollOut
+        rollOut,
+        measure
     }
 }
 
@@ -570,26 +615,37 @@ const getShortDefaultScheduleLabel = (scheduleParams) => {
 
 const getScheduleDescription = (scheduleParams) => {
     const s = scheduleParams
+
+    var mOrYd = undefined
+    var kmOrMi = undefined
+    if (s.measure === 'imperial') {
+        mOrYd = 'yd'
+        kmOrMi = 'mph'
+    } else { // 'metric'
+        mOrYd = 'm'
+        kmOrMi = 'km/h'
+    }
+
     var description = ""
     if (s.scheduleType === scheduleType.distance.code) {
-        description = "Distance " + s.distanceLaps + " x " + s.lapDistance + "m laps"
+        description = "Distance " + s.distanceLaps + " x " + s.lapDistance + mOrYd + " laps"
         if (s.scheduleBy === scheduleBy.time.code) {
             description = description + " in time " + s.timeSeconds + " seconds"
         } else if (s.scheduleBy === scheduleBy.tempo.code) {
             description = description + " at tempo " + s.tempoTarget + " seconds"
         } else if (s.scheduleBy === scheduleBy.speed.code) {
-            description = description + " at speed " + s.speedTempo + " km/h"
+            description = description + " at speed " + s.speedTempo + " " + kmOrMi
         } else if (s.scheduleBy === scheduleBy.cadence.code) {
             description = description + " at cadence " + s.cadenceTempo + " rpm"
         }
     } else if (s.scheduleType === scheduleType.time.code) {
-        description = "Time " + s.timeSeconds + " seconds on " + s.lapDistance + "m lap"
+        description = "Time " + s.timeSeconds + " seconds on " + s.lapDistance + mOrYd + " lap"
         if (s.scheduleBy === scheduleBy.distance.code) {
             description = description + " for distance " + s.distanceLaps + " laps"
         } else if (s.scheduleBy === scheduleBy.tempo.code) {
             description = description + " at tempo " + s.tempoTarget + " seconds"
         } else if (s.scheduleBy === scheduleBy.speed.code) {
-            description = description + " at speed " + s.speedTempo + " km/h"
+            description = description + " at speed " + s.speedTempo + " " + kmOrMi
         } else if (s.scheduleBy === scheduleBy.cadence.code) {
             description = description + " at cadence " + s.cadenceTempo + " rpm"
         }
@@ -676,6 +732,10 @@ const round = (value, places) => {
 
 const div = (x, y) => {
     return Math.floor(x / y)
+}
+
+const cloneObject = (obj) => {
+    return JSON.parse(JSON.stringify(obj))
 }
 
 module.exports = {
