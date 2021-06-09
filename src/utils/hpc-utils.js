@@ -3,6 +3,17 @@ const round = (value, places) => {
     return Math.round(value * rounder) / rounder
 }
 
+const floor = (value, places) => {
+    const rounder = Math.pow(10, places)
+    return Math.floor(value * rounder) / rounder
+}
+
+const roundUp = (value, places) => {
+    const floorValue = floor(value, places)
+    const increment = Math.pow(10, -1 * places)
+    return round(floorValue + increment, places)
+}
+
 const validateQueryString = (query, fields) => {
     if (!query) { 
         return { error: 'No query string found' }
@@ -211,6 +222,7 @@ const convertListToArray = (list, separator) => {
 
 module.exports = {
     round: round,
+    roundUp: roundUp,
     validateQueryString: validateQueryString,
     convertListToArray: convertListToArray
 }

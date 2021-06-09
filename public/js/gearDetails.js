@@ -191,6 +191,17 @@ const round = (value, places) => {
     return Math.round(value * rounder) / rounder
 }
 
+const floor = (value, places) => {
+    const rounder = Math.pow(10, places)
+    return Math.floor(value * rounder) / rounder
+}
+
+const roundUp = (value, places) => {
+    const floorValue = floor(value, places)
+    const increment = Math.pow(10, -1 * places)
+    return round(floorValue + increment, places)
+}
+
 // Cookie functions copied from https://www.w3schools.com/js/js_cookies.asp
 const setCookie = (cname, cvalue, exdays) => {
     var d = new Date();
@@ -325,10 +336,10 @@ const buildOutputTable = (gearRatio, gearInches, rollOut, speed, cadence, lapTim
     var rollOutRaw = undefined
     if (measure === 'imperial') {
         rollOutDisplay = round(rollOut, 3)
-        rollOutRaw = rollOut
+        rollOutRaw = roundUp(rollOut, 3)
     } else { // 'metric'
         rollOutDisplay = round(rollOut / 1000, 3)
-        rollOutRaw = rollOut / 1000
+        rollOutRaw = roundUp(rollOut / 1000, 3)
     }
     insertHeadingValueRow(table, 'Roll Out (approx)', rollOutDisplay + mOrInches, true, rollOutRaw)
     if (speed) {

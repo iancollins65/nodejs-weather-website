@@ -230,31 +230,31 @@ const schedules = require('./utils/schedules.js')
 //     }
 // }
 
-const scheduleParams1 = {
-    label: "",
-    scheduleType: schedules.scheduleType.distance.code,
-    scheduleBy: schedules.scheduleBy.speed.code,
-    lapDistance: 250.0,
-    distanceLaps: 4.0,
-    timeSeconds: 60.0,
-    tempoTarget: 15.0,
-    startType: schedules.startType.standing.code,
-    upToSpeedTime: 4.0,
-    timingsAt: schedules.timingsAt.fullLap.code,
-    speedTempo: 50.0,
-    cadenceTempo: 100.0,
-    gear: {
-        chainRing: 54,
-        cog: 14,
-        tyreWidth: 20,
-        rimType: '700c'
-    },
-    measure: 'imperial'
-}
+// const scheduleParams1 = {
+//     label: "",
+//     scheduleType: schedules.scheduleType.distance.code,
+//     scheduleBy: schedules.scheduleBy.speed.code,
+//     lapDistance: 250.0,
+//     distanceLaps: 4.0,
+//     timeSeconds: 60.0,
+//     tempoTarget: 15.0,
+//     startType: schedules.startType.standing.code,
+//     upToSpeedTime: 4.0,
+//     timingsAt: schedules.timingsAt.fullLap.code,
+//     speedTempo: 50.0,
+//     cadenceTempo: 100.0,
+//     gear: {
+//         chainRing: 54,
+//         cog: 14,
+//         tyreWidth: 20,
+//         rimType: '700c'
+//     },
+//     measure: 'imperial'
+// }
 
 // // const test = schedules.canCalculate(scheduleParams)
 
-const test = schedules.calcSchedule(scheduleParams1)
+// const test = schedules.calcSchedule(scheduleParams1)
 
 // // const test = schedules.convertHMMSStimeToSeconds('60:59:59')
 
@@ -263,5 +263,7 @@ const test = schedules.calcSchedule(scheduleParams1)
 // test.lapDistance = 285
 
 // console.log(scheduleParams1)
+
+const test = hpcUtils.roundUp(8.1236789, 3)
 
 console.log(test)
