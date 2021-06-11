@@ -6,7 +6,7 @@ const cassettes = require('./utils/cassettes.js')
 
 const schedules = require('./utils/schedules.js')
 
-// const test = gears.getGearInfo(54, 11, 25, '700c', 60, undefined, 250, undefined, "imperial")
+const test = gears.getGearInfo(54, 11, 25, '700c', 60, undefined, 250, undefined, "metric", 162.5)
 
 // const test = gears.getCogGivenChainRingAndGearInches(50, 119)
 
@@ -264,6 +264,6 @@ const schedules = require('./utils/schedules.js')
 
 // console.log(scheduleParams1)
 
-const test = hpcUtils.roundUp(8.1236789, 3)
+// const test = hpcUtils.roundUp(8.1236789, 3)
 
 console.log(test)

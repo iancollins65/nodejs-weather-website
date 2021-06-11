@@ -54,12 +54,13 @@ app.get('/gears', (req, res) => {
 
 app.get('/gearDetails', (req, res) => {
 
-    const {error, chainRing, cog, tyreWidth, rimType, extras, speed, cadence, lapLength, lapTime, measure} = 
+    const {error, chainRing, cog, tyreWidth, rimType, crankLength, extras, speed, cadence, lapLength, lapTime, measure} = 
         hpcUtils.validateQueryString(req.query, [
             { name: 'chainRing', type: 'integer', sign: 'positive', returnEmpty: true },
             { name: 'cog', type: 'integer', sign: 'positive', returnEmpty: true },
             { name: 'tyreWidth', type: 'integer', sign: 'positive', returnEmpty: true },
             { name: 'rimType', type: 'string', options: gears.getRimOptionsTypeArray(), returnEmpty: true },
+            { name: 'crankLength', type: 'decimal', sign: 'positive', returnEmpty: true },
             { name: 'extras', type: 'string', options: ['none', 'cadenceAtSpeed', 'speedAtCadence', 'cadenceAtLapTime'], returnEmpty: true },
             { name: 'speed', type: 'decimal', sign: 'positive', returnEmpty: true },
             { name: 'cadence', type: 'decimal', sign: 'positive', returnEmpty: true },
@@ -81,6 +82,7 @@ app.get('/gearDetails', (req, res) => {
             cog: '',
             tyreWidth: '',
             rimType: '',
+            crankLength: '',
             extras: '',
             speed: '',
             cadence: '',
@@ -98,6 +100,7 @@ app.get('/gearDetails', (req, res) => {
             cog,
             tyreWidth,
             rimType,
+            crankLength,
             extras,
             speed,
             cadence,
@@ -445,12 +448,13 @@ app.get('/weather', (req, res) => {
 
 app.get('/gearInfo', (req, res) => {
 
-    const {error, chainRing, cog, tyreWidth, rimType, speed, cadence, lapLength, lapTime, measure} = 
+    const {error, chainRing, cog, tyreWidth, rimType, crankLength, speed, cadence, lapLength, lapTime, measure} = 
         hpcUtils.validateQueryString(req.query, [
             { name: 'chainRing', mandatory: true, type: 'integer', sign: 'positive' },
             { name: 'cog', mandatory: true, type: 'integer', sign: 'positive' },
             { name: 'tyreWidth', default: 23, type: 'integer', sign: 'positive' },
             { name: 'rimType', default: '700c', type: 'string', options: gears.getRimOptionsTypeArray() },
+            { name: 'crankLength', default: 172.5, type: 'decimal', sign: 'positive' },
             { name: 'speed', type: 'decimal', sign: 'positive' },
             { name: 'cadence', type: 'decimal', sign: 'positive' },
             { name: 'lapLength', type: 'decimal', sign: 'positive' },
@@ -464,7 +468,7 @@ app.get('/gearInfo', (req, res) => {
 
     // Get the gear info
     const gearInfo = gears.getGearInfo(chainRing, cog, tyreWidth, rimType, speed, cadence, 
-        lapLength, lapTime, measure)
+        lapLength, lapTime, measure, crankLength)
 
     res.send(gearInfo)
 })

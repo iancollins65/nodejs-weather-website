@@ -53,6 +53,7 @@ const validateQueryString = (query, fields) => {
     let cog1 = undefined
     let cog2 = undefined
     let measure = undefined
+    let crankLength = undefined
 
     for (field of fields) {
         let fieldValue = field.default
@@ -164,6 +165,7 @@ const validateQueryString = (query, fields) => {
             case 'cog1': cog1 = fieldValue; break;
             case 'cog2': cog2 = fieldValue; break;
             case 'measure': measure = fieldValue; break;
+            case 'crankLength': crankLength = fieldValue; break;
         }
     }
 
@@ -173,6 +175,7 @@ const validateQueryString = (query, fields) => {
         cog,
         tyreWidth,
         rimType,
+        crankLength,
         speed,
         cadence,
         lapLength,
