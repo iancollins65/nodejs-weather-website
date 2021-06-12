@@ -108,6 +108,12 @@ label {
     text-align: right;
 }
 
+.column-label {
+    width: 87px;
+    font-weight: bold;
+    margin: 4px 0px;
+}
+
 .min-max-main-label {
     width: 86px;
 }

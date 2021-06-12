@@ -22,15 +22,16 @@
                 <option value="imperial">Imperial</option>
             </select><br>
             <input type="hidden" id="measureHidden" name="measureHidden" value={{measure}}>
-            <label>Gears:</label>
-            <label class="column-label">Gear 1</label>
-            <label class="column-label">Gear 2</label><br>
-            <label>Chain Ring:</label>
-            <input type="number" id="chainRing1" name="chainRing1" value={{chainRing1}}>
-            <input type="number" id="chainRing2" name="chainRing2" value={{chainRing2}}><br>
-            <label >Cog:</label>
-            <input type="number" id="cog1" name="cog1" value={{cog1}}>
-            <input type="number" id="cog2" name="cog2" value={{cog2}}><br>
+            <label class="min-max-main-label">Chain Ring:</label>
+            <label class="sub-label" for="chainRing1">1:</label>
+            <input class="sub-input" type="number" id="chainRing1" name="chainRing1" value={{chainRing1}}>
+            <label class="sub-label" for="chainRing2">2:</label>
+            <input class="sub-input" type="number" id="chainRing2" name="chainRing2" value={{chainRing2}}><br>
+            <label class="min-max-main-label">Cog:</label>
+            <label class="sub-label" for="cog1">1:</label>
+            <input class="sub-input" type="number" id="cog1" name="cog1" value={{cog1}}>
+            <label class="sub-label" for="cog2">2:</label>
+            <input class="sub-input" type="number" id="cog2" name="cog2" value={{cog2}}><br>
             <label for="tyreWidth">Tyre Width:</label>
             <input type="number" id="tyreWidth" name="tyreWidth" placeholder="23" value={{tyreWidth}}><br>
             <label for="rimType">Rim Type:</label>
