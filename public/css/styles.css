@@ -123,6 +123,10 @@ select {
     margin: 4px 0px;
 }
 
+.column-select {
+    width: 88px;
+}
+
 button {
     cursor: pointer;
     border: 1px solid #888888;

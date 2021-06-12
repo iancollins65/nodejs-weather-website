@@ -46,97 +46,116 @@ const rimOptions = [
     {
         type: '700c',
         size: 622,
-        description: '700c_(622mm)'
+        description: '700c_(622mm)',
+        short: '700c'
     },
     {
         type: '650c',
         size: 571,
-        description: '650c_(571mm)'
+        description: '650c_(571mm)',
+        short: '650c'
     },
     {
         type: '650b',
         size: 584,
-        description: '650b_(584mm)'
+        description: '650b_(584mm)',
+        short: '650b'
     },
     {
         type: '29er',
         size: 622,
-        description: '29er_(622mm)'
+        description: '29er_(622mm)',
+        short: '29er'
     },
     {
         type: '27.5',
         size: 584,
-        description: '27.5_(584mm)'
+        description: '27.5_(584mm)',
+        short: '27.5'
     },
     {
         type: '28inch',
         size: 635,
-        description: '28_inch_(635mm)'
+        description: '28_inch_(635mm)',
+        short: '28'
     },
     {
         type: '27inch',
         size: 630,
-        description: '27_inch_(630mm)'
+        description: '27_inch_(630mm)',
+        short: '27'
     },
     {
         type: '26inch_mtb',
         size: 559,
-        description: '26_inch_mtb_(559mm)'
+        description: '26_inch_mtb_(559mm)',
+        short: '26_mtb'
     },
     {
         type: '24inch_S5',
         size: 547,
-        description: '24_inch_S5_(547mm)'
+        description: '24_inch_S5_(547mm)',
+        short: '24_S5'
     },
     {
         type: '24inch_E6',
         size: 540,
-        description: '24_inch_E6_(540mm)'
+        description: '24_inch_E6_(540mm)',
+        short: '24_E6'
     },
     {
         type: '24inch_Terry',
         size: 520,
-        description: '24_inch_Terry_(520mm)'
+        description: '24_inch_Terry_(520mm)',
+        short: '24_Terry'
     },
     {
         type: '24inch_mtb',
         size: 507,
-        description: '24_inch_mtb_(507mm)'
+        description: '24_inch_mtb_(507mm)',
+        short: '24_mtb'
     },
     {
         type: '24inch_bmx',
         size: 507,
-        description: '24_inch_bmx_(507mm)'
+        description: '24_inch_bmx_(507mm)',
+        short: '24_bmx'
     },
     {
         type: '20inch_recumb',
         size: 451,
-        description: '20_inch_recumb_(451mm)'
+        description: '20_inch_recumb_(451mm)',
+        short: '20_recumb'
     },
     {
         type: '20inch_Schwinn',
         size: 419,
-        description: '20_inch_Schwinn_(419mm)'
+        description: '20_inch_Schwinn_(419mm)',
+        short: '20_Schwinn'
     },
     {
         type: '20inch_bmx',
         size: 406,
-        description: '20_inch_bmx_(406mm)'
+        description: '20_inch_bmx_(406mm)',
+        short: '20_bmx'
     },
     {
         type: '20inch_recumb',
         size: 406,
-        description: '20_inch_recumb_(406mm)'
+        description: '20_inch_recumb_(406mm)',
+        short: '20_recumb'
     },
     {
         type: '17inch',
         size: 369,
-        description: '17_inch_(369mm)'
+        description: '17_inch_(369mm)',
+        short: '17'
     },
     {
         type: '16inch_Brompton',
         size: 349,
-        description: '16_inch_Brompton_(349mm)'
+        description: '16_inch_Brompton_(349mm)',
+        short: '16_Brom'
     }
 ]
 
@@ -171,6 +190,18 @@ const getRimOptionsDescArray = () => {
 
 const getRimOptionsDescStringList = () => {
     return getArrayString(getRimOptionsDescArray())
+}
+
+const getRimOptionsShortDescArray = () => {
+    let rimOptionsShortDescArray = []
+    for (rim of rimOptions) {
+        rimOptionsShortDescArray.push(rim.short)
+    }
+    return rimOptionsShortDescArray
+}
+
+const getRimOptionsShortDescStringList = () => {
+    return getArrayString(getRimOptionsShortDescArray())
 }
 
 const getKmhSpeedAtCadence = (rollOut, cadence) => {
@@ -551,5 +582,6 @@ module.exports = {
     getRimOptionsTypeArray: getRimOptionsTypeArray,
     getRimOptionsTypeStringList: getRimOptionsTypeStringList,
     getRimOptionsDescArray: getRimOptionsDescArray,
-    getRimOptionsDescStringList: getRimOptionsDescStringList
+    getRimOptionsDescStringList: getRimOptionsDescStringList,
+    getRimOptionsShortDescStringList: getRimOptionsShortDescStringList
 }

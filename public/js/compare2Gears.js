@@ -3,9 +3,14 @@ const chainRing1Fld = document.querySelector('#chainRing1')
 const cog1Fld = document.querySelector('#cog1')
 const chainRing2Fld = document.querySelector('#chainRing2')
 const cog2Fld = document.querySelector('#cog2')
-const tyreWidthFld = document.querySelector('#tyreWidth')
-const rimTypeFld = document.querySelector('#rimType')
-const rimTypeHiddenFld = document.querySelector('#rimTypeHidden')
+const tyreWidth1Fld = document.querySelector('#tyreWidth1')
+const tyreWidth2Fld = document.querySelector('#tyreWidth2')
+const rimType1Fld = document.querySelector('#rimType1')
+const rimType2Fld = document.querySelector('#rimType2')
+const rimType1HiddenFld = document.querySelector('#rimType1Hidden')
+const rimType2HiddenFld = document.querySelector('#rimType2Hidden')
+const crankLength1Fld = document.querySelector('#crankLength1')
+const crankLength2Fld = document.querySelector('#crankLength2')
 const measureSelect = document.querySelector('#measure')
 const measureHiddenFld = document.querySelector('#measureHidden')
 const messageOne = document.querySelector('#message-1')
@@ -46,8 +51,12 @@ const handleSubmit = () => {
     const cog1 = cog1Fld.value
     const chainRing2 = chainRing2Fld.value
     const cog2 = cog2Fld.value
-    const tyreWidth = tyreWidthFld.value
-    const rimType = rimTypeFld.value
+    const tyreWidth1 = tyreWidth1Fld.value
+    const tyreWidth2 = tyreWidth2Fld.value
+    const rimType1 = rimType1Fld.value
+    const rimType2 = rimType2Fld.value
+    const crankLength1 = crankLength1Fld.value
+    const crankLength2 = crankLength2Fld.value
     const speed = speedFld.value
     const cadence = cadenceFld.value
     const lapTime = lapTimeFld.value
@@ -57,12 +66,26 @@ const handleSubmit = () => {
     setCookie('cog1', cog1, 1)
     setCookie('chainRing2', chainRing2, 1)
     setCookie('cog2', cog2, 1)
-    setCookie('rimType', rimType, 1)
-    var url = '/comp2Gears?chainRing1=' + chainRing1 + '&cog1=' + cog1 
-        + '&chainRing2=' + chainRing2 + '&cog2=' + cog2 + '&rimType=' + rimType + '&measure=' + measure
-    if (tyreWidth !== '') {
-        url = url + '&tyreWidth=' + tyreWidth
-        setCookie('tyreWidth', tyreWidth, 1)
+    setCookie('rimType1', rimType1, 1)
+    setCookie('rimType2', rimType2, 1)
+    var url = '/comp2GearsFull?chainRing1=' + chainRing1 + '&cog1=' + cog1 
+        + '&chainRing2=' + chainRing2 + '&cog2=' + cog2 + '&rimType1=' + rimType1 + '&rimType2=' + rimType2 
+        + '&measure=' + measure
+    if (tyreWidth1 !== '') {
+        url = url + '&tyreWidth1=' + tyreWidth1
+        setCookie('tyreWidth1', tyreWidth1, 1)
+    }
+    if (tyreWidth2 !== '') {
+        url = url + '&tyreWidth2=' + tyreWidth2
+        setCookie('tyreWidth2', tyreWidth2, 1)
+    }
+    if (crankLength1 !== '') {
+        url = url + '&crankLength1=' + crankLength1
+        setCookie('crankLength1', crankLength1, 1)
+    }
+    if (crankLength2 !== '') {
+        url = url + '&crankLength2=' + crankLength2
+        setCookie('crankLength2', crankLength2, 1)
     }
     if (speed !== '') {
         url = url + '&speed=' + speed
@@ -89,8 +112,12 @@ const handleSubmit = () => {
                 errorStr = errorStr.replace('chainRing2', 'Chain Ring 2')
                 errorStr = errorStr.replace('cog1', 'Cog 1')
                 errorStr = errorStr.replace('cog2', 'Cog 2')
-                errorStr = errorStr.replace('tyreWidth', 'Tyre Width')
-                errorStr = errorStr.replace('rimType', 'Rim Type')
+                errorStr = errorStr.replace('tyreWidth1', 'Tyre Width 1')
+                errorStr = errorStr.replace('tyreWidth2', 'Tyre Width 2')
+                errorStr = errorStr.replace('rimType1', 'Rim Type 1')
+                errorStr = errorStr.replace('rimType2', 'Rim Type 2')
+                errorStr = errorStr.replace('crankLength1', 'Cranks 1')
+                errorStr = errorStr.replace('crankLength2', 'Cranks 2')
                 errorStr = errorStr.replace('speed', 'Speed')
                 errorStr = errorStr.replace('cadence', 'Cadence')
                 errorStr = errorStr.replace('lapTime', 'Lap Time')
@@ -176,20 +203,28 @@ const actOnExtrasSelect = () => {
 }
 
 const buildRimTypeSelect = () => {
-    while (rimTypeFld.options.length > 1) {
-        rimTypeFld.remove(1);
+    while (rimType1Fld.options.length > 1) {
+        rimType1Fld.remove(1);
+    }
+    while (rimType2Fld.options.length > 1) {
+        rimType2Fld.remove(1);
     }
     const rimTypeOptionsList = rimTypeOptionsListHiddenFld.value
     const rimTypeOptions = rimTypeOptionsList.split(',')
     const rimTypeDescriptionsList = rimTypeDescriptionsListHiddenFld.value
     const rimTypeDescriptions = rimTypeDescriptionsList.split(',')
     for (let i = 1; i < rimTypeOptions.length; i++) {
-        const option = document.createElement('option')
+        const option1 = document.createElement('option')
+        const option2 = document.createElement('option')
         const desc = rimTypeDescriptions[i].replace(/_/g, ' ')
-        const text = document.createTextNode(desc)
-        option.appendChild(text)
-        option.setAttribute('value', rimTypeOptions[i])
-        rimTypeFld.appendChild(option)
+        const text1 = document.createTextNode(desc)
+        const text2 = document.createTextNode(desc)
+        option1.appendChild(text1)
+        option2.appendChild(text2)
+        option1.setAttribute('value', rimTypeOptions[i])
+        option2.setAttribute('value', rimTypeOptions[i])
+        rimType1Fld.appendChild(option1)
+        rimType2Fld.appendChild(option2)
     }
 }
 
@@ -278,7 +313,7 @@ const insertHeadingValueRow = (table, heading, value, value2, link = false, rawV
             a2.text = value2
             a2.title = 'Find other gears for Gear Ratio close to ' + value2
             a2.href = urlPrefix + 'gearRatio&gearRatio=' + value2 + '&measure=' + measure
-        } else if (heading === 'Gear Inches') {
+        } else if (heading === 'Gear Inches (27)') {
             a.text = value
             a.title = 'Find other gears for Gear Inches close to ' + value
             a.href = urlPrefix + 'gearInches&gearInches=' + value + '&measure=' + measure
@@ -286,13 +321,17 @@ const insertHeadingValueRow = (table, heading, value, value2, link = false, rawV
             a2.title = 'Find other gears for Gear Inches close to ' + value2
             a2.href = urlPrefix + 'gearInches&gearInches=' + value2 + '&measure=' + measure
         } else if (heading === 'Roll Out (approx)') {
-            const tyreWidth = tyreWidthFld.value
-            const rimType = rimTypeFld.value
-            let url = urlPrefix + 'rollOut&rollOut=' + rawValue + '&rimType=' + rimType + '&measure=' + measure
-            let url2 = urlPrefix + 'rollOut&rollOut=' + rawValue2 + '&rimType=' + rimType + '&measure=' + measure
-            if (tyreWidth !== '') {
-                url = url + '&tyreWidth=' + tyreWidth
-                url2 = url2 + '&tyreWidth=' + tyreWidth
+            const tyreWidth1 = tyreWidth1Fld.value
+            const tyreWidth2 = tyreWidth2Fld.value
+            const rimType1 = rimType1Fld.value
+            const rimType2 = rimType2Fld.value
+            let url = urlPrefix + 'rollOut&rollOut=' + rawValue + '&rimType=' + rimType1 + '&measure=' + measure
+            let url2 = urlPrefix + 'rollOut&rollOut=' + rawValue2 + '&rimType=' + rimType2 + '&measure=' + measure
+            if (tyreWidth1 !== '') {
+                url = url + '&tyreWidth=' + tyreWidth1
+            }
+            if (tyreWidth2 !== '') {
+                url2 = url2 + '&tyreWidth=' + tyreWidth2
             }
             a.text = value
             a.title = 'Find other gears for Roll Out of ' + rawValue + ' or below'
@@ -306,15 +345,19 @@ const insertHeadingValueRow = (table, heading, value, value2, link = false, rawV
             if (extras === 'speed') {
                 fixed = 'cadence'
             }
-            const tyreWidth = tyreWidthFld.value
-            const rimType = rimTypeFld.value
+            const tyreWidth1 = tyreWidth1Fld.value
+            const tyreWidth2 = tyreWidth2Fld.value
+            const rimType1 = rimType1Fld.value
+            const rimType2 = rimType2Fld.value
             let url = urlPrefix + 'speedCadence&speed=' + rawValue + '&cadence=' + otherValue1 
-                + '&fixed=' + fixed + '&rimType=' + rimType + '&measure=' + measure
+                + '&fixed=' + fixed + '&rimType=' + rimType1 + '&measure=' + measure
             let url2 = urlPrefix + 'speedCadence&speed=' + rawValue2 + '&cadence=' + otherValue2 
-                + '&fixed=' + fixed + '&rimType=' + rimType + '&measure=' + measure
-            if (tyreWidth !== '') {
-                url = url + '&tyreWidth=' + tyreWidth
-                url2 = url2 + '&tyreWidth=' + tyreWidth
+                + '&fixed=' + fixed + '&rimType=' + rimType2 + '&measure=' + measure
+            if (tyreWidth1 !== '') {
+                url = url + '&tyreWidth=' + tyreWidth1
+            }
+            if (tyreWidth2 !== '') {
+                url2 = url2 + '&tyreWidth=' + tyreWidth2
             }
             a.text = value
             a.title = 'Find other gears for speed of ' + rawValue + ' and cadence of ' + otherValue1
@@ -328,15 +371,19 @@ const insertHeadingValueRow = (table, heading, value, value2, link = false, rawV
             if (extras === 'speed') {
                 fixed = 'cadence'
             }
-            const tyreWidth = tyreWidthFld.value
-            const rimType = rimTypeFld.value
+            const tyreWidth1 = tyreWidth1Fld.value
+            const tyreWidth2 = tyreWidth2Fld.value
+            const rimType1 = rimType1Fld.value
+            const rimType2 = rimType2Fld.value
             let url = urlPrefix + 'speedCadence&speed=' + otherValue1 + '&cadence=' + rawValue 
-                + '&fixed=' + fixed + '&rimType=' + rimType + '&measure=' + measure
+                + '&fixed=' + fixed + '&rimType=' + rimType1 + '&measure=' + measure
             let url2 = urlPrefix + 'speedCadence&speed=' + otherValue2 + '&cadence=' + rawValue2
-                + '&fixed=' + fixed + '&rimType=' + rimType + '&measure=' + measure
-            if (tyreWidth !== '') {
-                url = url + '&tyreWidth=' + tyreWidth
-                url2 = url2 + '&tyreWidth=' + tyreWidth
+                + '&fixed=' + fixed + '&rimType=' + rimType2 + '&measure=' + measure
+            if (tyreWidth1 !== '') {
+                url = url + '&tyreWidth=' + tyreWidth1
+            }
+            if (tyreWidth2 !== '') {
+                url2 = url2 + '&tyreWidth=' + tyreWidth2
             }
             a.text = value
             a.title = 'Find other gears for cadence of ' + rawValue + ' and speed of ' + otherValue1
@@ -345,16 +392,20 @@ const insertHeadingValueRow = (table, heading, value, value2, link = false, rawV
             a2.title = 'Find other gears for cadence of ' + rawValue2 + ' and speed of ' + otherValue2
             a2.href = url2
         } else if (heading === 'Lap Time') {
-            const tyreWidth = tyreWidthFld.value
-            const rimType = rimTypeFld.value
+            const tyreWidth1 = tyreWidth1Fld.value
+            const tyreWidth2 = tyreWidth2Fld.value
+            const rimType1 = rimType1Fld.value
+            const rimType2 = rimType2Fld.value
             const lapLength = lapLengthFld.value
             let url = urlPrefix + 'lapTimeCadence&lapTime=' + rawValue + '&cadence=' + otherValue1 
-                + '&lapLength=' + lapLength + '&rimType=' + rimType + '&measure=' + measure
+                + '&lapLength=' + lapLength + '&rimType=' + rimType1 + '&measure=' + measure
             let url2 = urlPrefix + 'lapTimeCadence&lapTime=' + rawValue2 + '&cadence=' + otherValue2 
-                + '&lapLength=' + lapLength + '&rimType=' + rimType + '&measure=' + measure
-            if (tyreWidth !== '') {
-                url = url + '&tyreWidth=' + tyreWidth
-                url2 = url2 + '&tyreWidth=' + tyreWidth
+                + '&lapLength=' + lapLength + '&rimType=' + rimType2 + '&measure=' + measure
+            if (tyreWidth1 !== '') {
+                url = url + '&tyreWidth=' + tyreWidth1
+            }
+            if (tyreWidth2 !== '') {
+                url2 = url2 + '&tyreWidth=' + tyreWidth2
             }
             a.text = value
             a.title = 'Find other gears for lap time of ' + rawValue + ' and cadence of ' + otherValue1
@@ -387,7 +438,9 @@ const buildOutputTable = (gear1, gear2) => {
     // Table contents
     insert3HeadingsRow(table, 'Gears', gear1.chainRing + ' x ' + gear1.cog, gear2.chainRing + ' x ' + gear2.cog)
     insertHeadingValueRow(table, 'Gear Ratio', round(gear1.gearRatio, 3), round(gear2.gearRatio, 3), true)
-    insertHeadingValueRow(table, 'Gear Inches', round(gear1.gearInches, 3), round(gear2.gearInches, 3), true)
+    insertHeadingValueRow(table, 'Gear Inches (27)', round(gear1.gearInches, 3), round(gear2.gearInches, 3), true)
+    insertHeadingValueRow(table, 'True Gear Inches', round(gear1.trueGearInches, 3), round(gear2.trueGearInches, 3), false)
+    insertHeadingValueRow(table, 'Gain Ratio', round(gear1.gainRatio, 3), round(gear2.gainRatio, 3), false)
     var rollOutDisplay1 = undefined
     var rollOutRaw1 = undefined
     var rollOutDisplay2 = undefined
@@ -439,12 +492,21 @@ const handleOnLoad = () => {
         }
     }
 
-    if (rimTypeHiddenFld.value !== '') {
-        rimTypeFld.value = rimTypeHiddenFld.value
+    if (rimType1HiddenFld.value !== '') {
+        rimType1Fld.value = rimType1HiddenFld.value
     } else {
-        const rimTypeCookie = getCookie('rimType')
-        if (rimTypeCookie !== '') {
-            rimTypeFld.value = rimTypeCookie
+        const rimType1Cookie = getCookie('rimType1')
+        if (rimType1Cookie !== '') {
+            rimType1Fld.value = rimType1Cookie
+        }
+    }
+    
+    if (rimType2HiddenFld.value !== '') {
+        rimType2Fld.value = rimType2HiddenFld.value
+    } else {
+        const rimType2Cookie = getCookie('rimType2')
+        if (rimType2Cookie !== '') {
+            rimType2Fld.value = rimType2Cookie
         }
     }
     
@@ -452,9 +514,16 @@ const handleOnLoad = () => {
     setFieldFromCookieIfBlank(cog1Fld, 'cog1')
     setFieldFromCookieIfBlank(chainRing1Fld, 'chainRing')
     setFieldFromCookieIfBlank(cog1Fld, 'cog')
-    setFieldFromCookieIfBlank(tyreWidthFld, 'tyreWidth')
     setFieldFromCookieIfBlank(chainRing2Fld, 'chainRing2')
     setFieldFromCookieIfBlank(cog2Fld, 'cog2')
+    setFieldFromCookieIfBlank(tyreWidth1Fld, 'tyreWidth1')
+    setFieldFromCookieIfBlank(tyreWidth2Fld, 'tyreWidth2')
+    setFieldFromCookieIfBlank(tyreWidth1Fld, 'tyreWidth')
+    setFieldFromCookieIfBlank(tyreWidth2Fld, 'tyreWidth')
+    setFieldFromCookieIfBlank(crankLength1Fld, 'crankLength1')
+    setFieldFromCookieIfBlank(crankLength2Fld, 'crankLength2')
+    setFieldFromCookieIfBlank(crankLength1Fld, 'crankLength')
+    setFieldFromCookieIfBlank(crankLength2Fld, 'crankLength')
     
     if (extrasHiddenFld.value === '' && extrasHiddenFld.value === 'none') {
         extrasSelect.value = 'none'

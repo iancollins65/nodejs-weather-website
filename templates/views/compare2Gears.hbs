@@ -31,16 +31,25 @@
             <label >Cog:</label>
             <input type="number" id="cog1" name="cog1" value={{cog1}}>
             <input type="number" id="cog2" name="cog2" value={{cog2}}><br>
-            <label for="tyreWidth">Tyre Width:</label>
-            <input type="number" id="tyreWidth" name="tyreWidth" placeholder="23" value={{tyreWidth}}><br>
-            <label for="rimType">Rim Type:</label>
-            <select id="rimType" name="rimType">
-                <option value="700c">700c (622mm)</option>
-                <option value="650c">650c (571mm)</option>
+            <label>Tyre Width:</label>
+            <input type="number" id="tyreWidth1" name="tyreWidth1" placeholder="23" value={{tyreWidth1}}>
+            <input type="number" id="tyreWidth2" name="tyreWidth2" placeholder="23" value={{tyreWidth2}}><br>
+            <label>Rim Type:</label>
+            <select class="column-select" id="rimType1" name="rimType1">
+                <option value="700c">700c</option>
+                <option value="650c">650c</option>
+            </select>
+            <select class="column-select" id="rimType2" name="rimType2">
+                <option value="700c">700c</option>
+                <option value="650c">650c</option>
             </select><br>
-            <input type="hidden" id="rimTypeHidden" name="rimTypeHidden" value={{rimType}}>
+            <input type="hidden" id="rimType1Hidden" name="rimType1Hidden" value={{rimType1}}>
+            <input type="hidden" id="rimType2Hidden" name="rimType2Hidden" value={{rimType2}}>
             <input type="hidden" id="rimTypeOptionsListHidden" name="rimTypeOptionsListHidden" value={{rimTypeOptionsList}}>
             <input type="hidden" id="rimTypeDescriptionsListHidden" name="rimTypeDescriptionsListHidden" value={{rimTypeDescriptionsList}}>
+            <label>Cranks:</label>
+            <input type="number" id="crankLength1" name="crankLength1" step="0.001" placeholder="172.5" value={{crankLength1}}>
+            <input type="number" id="crankLength2" name="crankLength2" step="0.001" placeholder="172.5" value={{crankLength2}}><br>
             <label for="extras">Extras:</label>
             <select id="extras" name="extras">
                 <option value="none">None</option>

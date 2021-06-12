@@ -113,6 +113,82 @@ app.get('/gearDetails', (req, res) => {
 
 app.get('/compare2Gears', (req, res) => {
 
+    const {error, chainRing1, cog1, chainRing2, cog2, tyreWidth1, tyreWidth2, 
+            rimType1, rimType2, crankLength1, crankLength2, 
+            extras, speed, cadence, lapLength, lapTime, measure} = 
+        hpcUtils.validateQueryString(req.query, [
+            { name: 'chainRing1', type: 'integer', sign: 'positive', returnEmpty: true },
+            { name: 'cog1', type: 'integer', sign: 'positive', returnEmpty: true },
+            { name: 'chainRing2', type: 'integer', sign: 'positive', returnEmpty: true },
+            { name: 'cog2', type: 'integer', sign: 'positive', returnEmpty: true },
+            { name: 'tyreWidth1', type: 'integer', sign: 'positive', returnEmpty: true },
+            { name: 'tyreWidth2', type: 'integer', sign: 'positive', returnEmpty: true },
+            { name: 'rimType1', type: 'string', options: gears.getRimOptionsTypeArray(), returnEmpty: true },
+            { name: 'rimType2', type: 'string', options: gears.getRimOptionsTypeArray(), returnEmpty: true },
+            { name: 'crankLength1', type: 'decimal', sign: 'positive', returnEmpty: true },
+            { name: 'crankLength2', type: 'decimal', sign: 'positive', returnEmpty: true },
+            { name: 'extras', type: 'string', options: ['none', 'cadenceAtSpeed', 'speedAtCadence', 'cadenceAtLapTime'], returnEmpty: true },
+            { name: 'speed', type: 'decimal', sign: 'positive', returnEmpty: true },
+            { name: 'cadence', type: 'decimal', sign: 'positive', returnEmpty: true },
+            { name: 'lapTime', type: 'decimal', sign: 'positive', returnEmpty: true },
+            { name: 'lapLength', type: 'decimal', sign: 'positive', returnEmpty: true },
+            { name: 'measure', type: 'string', options: ['metric', 'imperial'], returnEmpty: true }
+    ])
+
+    const rimTypeOptionsList = gears.getRimOptionsTypeStringList()
+    const rimTypeDescriptionsList = gears.getRimOptionsShortDescStringList()
+
+    if (error) {
+        res.render('compare2Gears', {
+            title: 'Compare 2 Gears',
+            name: 'Hot Pursuit Cycling',
+            rimTypeOptionsList,
+            rimTypeDescriptionsList,
+            chainRing1: '',
+            cog1: '',
+            chainRing2: '',
+            cog2: '',
+            tyreWidth1: '',
+            tyreWidth2: '',
+            rimType1: '',
+            rimType2: '',
+            crankLength1: '',
+            crankLength2: '',
+            extras: '',
+            speed: '',
+            cadence: '',
+            lapTime: '',
+            lapLength: '',
+            measure: ''
+        })
+    } else {
+        res.render('compare2Gears', {
+            title: 'Compare 2 Gears',
+            name: 'Hot Pursuit Cycling',
+            rimTypeOptionsList,
+            rimTypeDescriptionsList,
+            chainRing1,
+            cog1,
+            chainRing2,
+            cog2,
+            tyreWidth1,
+            tyreWidth2,
+            rimType1,
+            rimType2,
+            crankLength1,
+            crankLength2,
+            extras,
+            speed,
+            cadence,
+            lapTime,
+            lapLength,
+            measure
+        })
+    }
+})
+
+app.get('/compare2GearsOld', (req, res) => {
+
     const {error, chainRing1, cog1, chainRing2, cog2, tyreWidth, rimType, extras, speed, cadence, lapLength, lapTime, measure} = 
         hpcUtils.validateQueryString(req.query, [
             { name: 'chainRing1', type: 'integer', sign: 'positive', returnEmpty: true },
@@ -499,6 +575,46 @@ app.get('/comp2Gears', (req, res) => {
         lapLength, lapTime, measure)
     const gearInfo2 = gears.getGearInfo(chainRing2, cog2, tyreWidth, rimType, speed, cadence, 
         lapLength, lapTime, measure)
+    
+    const twoGears = {
+        gear1: gearInfo1,
+        gear2: gearInfo2
+    }
+
+    res.send(twoGears)
+})
+
+app.get('/comp2GearsFull', (req, res) => {
+
+    const {error, chainRing1, cog1, chainRing2, cog2, tyreWidth1, tyreWidth2, 
+            rimType1, rimType2, crankLength1, crankLength2, speed, cadence, lapLength, lapTime, measure} = 
+        hpcUtils.validateQueryString(req.query, [
+            { name: 'chainRing1', mandatory: true, type: 'integer', sign: 'positive' },
+            { name: 'cog1', mandatory: true, type: 'integer', sign: 'positive' },
+            { name: 'chainRing2', mandatory: true, type: 'integer', sign: 'positive' },
+            { name: 'cog2', mandatory: true, type: 'integer', sign: 'positive' },
+            { name: 'tyreWidth1', default: 23, type: 'integer', sign: 'positive' },
+            { name: 'tyreWidth2', default: 23, type: 'integer', sign: 'positive' },
+            { name: 'rimType1', default: '700c', type: 'string', options: gears.getRimOptionsTypeArray() },
+            { name: 'rimType2', default: '700c', type: 'string', options: gears.getRimOptionsTypeArray() },
+            { name: 'crankLength1', default: 172.5, type: 'decimal', sign: 'positive' },
+            { name: 'crankLength2', default: 172.5, type: 'decimal', sign: 'positive' },
+            { name: 'speed', type: 'decimal', sign: 'positive' },
+            { name: 'cadence', type: 'decimal', sign: 'positive' },
+            { name: 'lapLength', type: 'decimal', sign: 'positive' },
+            { name: 'lapTime', type: 'decimal', sign: 'positive' },
+            { name: 'measure', default: 'metric', type: 'string', options: ['metric', 'imperial'] }
+    ])
+
+    if (error) {
+        return res.send({ error })
+    }
+
+    // Get the gear info
+    const gearInfo1 = gears.getGearInfo(chainRing1, cog1, tyreWidth1, rimType1, speed, cadence, 
+        lapLength, lapTime, measure, crankLength1)
+    const gearInfo2 = gears.getGearInfo(chainRing2, cog2, tyreWidth2, rimType2, speed, cadence, 
+        lapLength, lapTime, measure, crankLength2)
     
     const twoGears = {
         gear1: gearInfo1,

@@ -54,6 +54,12 @@ const validateQueryString = (query, fields) => {
     let cog2 = undefined
     let measure = undefined
     let crankLength = undefined
+    let tyreWidth1 = undefined
+    let tyreWidth2 = undefined
+    let rimType1 = undefined
+    let rimType2 = undefined
+    let crankLength1 = undefined
+    let crankLength2 = undefined
 
     for (field of fields) {
         let fieldValue = field.default
@@ -166,6 +172,12 @@ const validateQueryString = (query, fields) => {
             case 'cog2': cog2 = fieldValue; break;
             case 'measure': measure = fieldValue; break;
             case 'crankLength': crankLength = fieldValue; break;
+            case 'tyreWidth1': tyreWidth1 = fieldValue; break;
+            case 'tyreWidth2': tyreWidth2 = fieldValue; break;
+            case 'rimType1': rimType1 = fieldValue; break; 
+            case 'rimType2': rimType2 = fieldValue; break; 
+            case 'crankLength1': crankLength1 = fieldValue; break;
+            case 'crankLength2': crankLength2 = fieldValue; break;
         }
     }
 
@@ -204,7 +216,13 @@ const validateQueryString = (query, fields) => {
         chainRing2,
         cog1,
         cog2,
-        measure
+        measure,
+        tyreWidth1,
+        tyreWidth2,
+        rimType1,
+        rimType2,
+        crankLength1,
+        crankLength2
     }
 }
 
