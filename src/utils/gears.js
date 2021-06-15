@@ -389,6 +389,95 @@ const getChainRingAndCogOptionsForGearInches = (gearInches, plusOrMinus = 1, sor
     return options
 }
 
+const getCogGivenChainRingAndTrueGearInches = (chainRing, wheelDiameter, trueGearInches, fraction = 0.4) => {
+    const decimalCog = (wheelDiameter * mmToInches * chainRing) / trueGearInches
+    const floorCog = Math.floor(decimalCog)
+    const ceilingCog = Math.ceil(decimalCog)
+    const floorFraction = decimalCog - floorCog
+    if (floorFraction < fraction) {
+        return [floorCog]
+    } else if (floorFraction > (1 - fraction)) {
+        return [ceilingCog]
+    } else {
+        return [floorCog, ceilingCog]
+    }
+}
+
+const getChainRingAndCogOptionsForTrueGearInches = (trueGearInches, plusOrMinus = 1, sortByDiff = true, 
+    tyreWidth = 23, rimType = '700c', minChainRing = 34, maxChainRing = 60, minCog = 10, maxCog = 36, minTeeth = 44, maxTeeth = 96) => {
+    const rimDiameter = getRimSizeByType(rimType)
+    const wheelDiameter = getWheelDiameter(rimDiameter, tyreWidth)
+    let options = []
+    var chainRing = minChainRing
+    for (; chainRing <= maxChainRing; chainRing++) {
+        const cogCandidates = getCogGivenChainRingAndTrueGearInches(chainRing, wheelDiameter, trueGearInches)
+        for (cog of cogCandidates) {
+            const teeth = chainRing + cog
+            if ((cog >= minCog) && (cog <= maxCog) && (teeth >= minTeeth) && (teeth <= maxTeeth)) {
+                const candidateTrueGearInches = getTrueGearInches(getGearRatio(chainRing,cog), wheelDiameter)
+                const diffTrueGearInches = Math.abs(candidateTrueGearInches - trueGearInches)
+                if (diffTrueGearInches <= plusOrMinus) {
+                    options.push({
+                        chainRing,
+                        cog,
+                        trueGearInches: candidateTrueGearInches,
+                        diff: diffTrueGearInches
+                    })
+                }
+            }
+        }
+    }
+    if (sortByDiff === true) {
+        options.sort((a, b) => (a.diff >= b.diff) ? 1 : -1)
+    }
+    return options
+}
+
+const getCogGivenChainRingAndGainRatio = (chainRing, radiusRatio, gainRatio, fraction = 0.4) => {
+    const decimalCog = (radiusRatio * chainRing) / gainRatio
+    const floorCog = Math.floor(decimalCog)
+    const ceilingCog = Math.ceil(decimalCog)
+    const floorFraction = decimalCog - floorCog
+    if (floorFraction < fraction) {
+        return [floorCog]
+    } else if (floorFraction > (1 - fraction)) {
+        return [ceilingCog]
+    } else {
+        return [floorCog, ceilingCog]
+    }
+}
+
+const getChainRingAndCogOptionsForGainRatio = (gainRatio, plusOrMinus = 0.2, sortByDiff = true, 
+    tyreWidth = 23, rimType = '700c', crankLength = 172.5, minChainRing = 34, maxChainRing = 60, minCog = 10, maxCog = 36, minTeeth = 44, maxTeeth = 96) => {
+    const rimDiameter = getRimSizeByType(rimType)
+    const wheelDiameter = getWheelDiameter(rimDiameter, tyreWidth)
+    const radiusRatio = getRadiusRatio(crankLength, wheelDiameter)
+    let options = []
+    var chainRing = minChainRing
+    for (; chainRing <= maxChainRing; chainRing++) {
+        const cogCandidates = getCogGivenChainRingAndGainRatio(chainRing, radiusRatio, gainRatio)
+        for (cog of cogCandidates) {
+            const teeth = chainRing + cog
+            if ((cog >= minCog) && (cog <= maxCog) && (teeth >= minTeeth) && (teeth <= maxTeeth)) {
+                const candidateGainRatio = getGainRatio(getGearRatio(chainRing,cog), radiusRatio)
+                const diffGainRatio = Math.abs(candidateGainRatio - gainRatio)
+                if (diffGainRatio <= plusOrMinus) {
+                    options.push({
+                        chainRing,
+                        cog,
+                        gainRatio: candidateGainRatio,
+                        diff: diffGainRatio
+                    })
+                }
+            }
+        }
+    }
+    if (sortByDiff === true) {
+        options.sort((a, b) => (a.diff >= b.diff) ? 1 : -1)
+    }
+    return options
+}
+
 const getCogGivenChainRingAndGearRatio = (chainRing, gearRatio, fraction = 0.4) => {
     const decimalCog = chainRing / gearRatio
     const floorCog = Math.floor(decimalCog)
@@ -574,8 +663,10 @@ module.exports = {
     getRimSizeByType: getRimSizeByType,
     getGearInfo: getGearInfo,
     getChainRingAndCogOptionsForGearInches: getChainRingAndCogOptionsForGearInches,
+    getChainRingAndCogOptionsForTrueGearInches: getChainRingAndCogOptionsForTrueGearInches,
     getChainRingAndCogOptionsForGearRatio: getChainRingAndCogOptionsForGearRatio,
     getChainRingAndCogOptionsForRollOut: getChainRingAndCogOptionsForRollOut,
+    getChainRingAndCogOptionsForGainRatio: getChainRingAndCogOptionsForGainRatio,
     getChainRingAndCogOptionsForSpeedAndCadence: getChainRingAndCogOptionsForSpeedAndCadence,
     getChainRingAndCogOptionsForLapTimeAndCadence: getChainRingAndCogOptionsForLapTimeAndCadence,
     getGearInfoForCassette: getGearInfoForCassette,
