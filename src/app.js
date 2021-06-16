@@ -695,6 +695,35 @@ app.get('/gearInchesOptions', (req, res) => {
     res.send(gearInchesOptions)
 })
 
+app.get('/trueGearInchesOptions', (req, res) => {
+
+    const {error, trueGearInches, plusOrMinus, sortByDiff, tyreWidth, rimType, minChainRing, maxChainRing, 
+        minCog, maxCog, minTeeth, maxTeeth} = 
+        hpcUtils.validateQueryString(req.query, [
+            { name: 'trueGearInches', mandatory: true, type: 'decimal', sign: 'positive' },
+            { name: 'plusOrMinus', default: 1, type: 'decimal', sign: 'positive' },
+            { name: 'sortByDiff', default: true, type: 'boolean'},
+            { name: 'tyreWidth', default: 23, type: 'integer', sign: 'positive' },
+            { name: 'rimType', default: '700c', type: 'string', options: gears.getRimOptionsTypeArray() },
+            { name: 'minChainRing', type: 'integer', sign: 'positive' },
+            { name: 'maxChainRing', type: 'integer', sign: 'positive' },
+            { name: 'minCog', type: 'integer', sign: 'positive' },
+            { name: 'maxCog', type: 'integer', sign: 'positive' },
+            { name: 'minTeeth', type: 'integer', sign: 'positive' },
+            { name: 'maxTeeth', type: 'integer', sign: 'positive' }
+    ])
+
+    if (error) {
+        return res.send({ error })
+    }
+
+    // Get the gear inches options
+    const trueGearInchesOptions = gears.getChainRingAndCogOptionsForTrueGearInches(trueGearInches, plusOrMinus, 
+        sortByDiff, tyreWidth, rimType, minChainRing, maxChainRing, minCog, maxCog, minTeeth, maxTeeth)
+
+    res.send(trueGearInchesOptions)
+})
+
 app.get('/gearRatioOptions', (req, res) => {
 
     const {error, gearRatio, plusOrMinus, sortByDiff, minChainRing, maxChainRing, 
@@ -751,6 +780,37 @@ app.get('/rollOutOptions', (req, res) => {
         calcInches, tyreWidth, rimType, minChainRing, maxChainRing, minCog, maxCog, minTeeth, maxTeeth, measure)
 
     res.send(rollOutOptions)
+})
+
+app.get('/gainRatioOptions', (req, res) => {
+
+    const {error, gainRatio, plusOrMinus, sortByDiff, tyreWidth, rimType, crankLength, minChainRing, maxChainRing, 
+        minCog, maxCog, minTeeth, maxTeeth, measure} = 
+        hpcUtils.validateQueryString(req.query, [
+            { name: 'gainRatio', mandatory: true, type: 'decimal', sign: 'positive' },
+            { name: 'plusOrMinus', default: 0.2, type: 'decimal', sign: 'positive' },
+            { name: 'sortByDiff', default: true, type: 'boolean'},
+            { name: 'tyreWidth', default: 23, type: 'integer', sign: 'positive' },
+            { name: 'rimType', default: '700c', type: 'string', options: gears.getRimOptionsTypeArray() },
+            { name: 'crankLength', default: 172.5, type: 'decimal', sign: 'positive' },
+            { name: 'minChainRing', type: 'integer', sign: 'positive' },
+            { name: 'maxChainRing', type: 'integer', sign: 'positive' },
+            { name: 'minCog', type: 'integer', sign: 'positive' },
+            { name: 'maxCog', type: 'integer', sign: 'positive' },
+            { name: 'minTeeth', type: 'integer', sign: 'positive' },
+            { name: 'maxTeeth', type: 'integer', sign: 'positive' },
+            { name: 'measure', default: 'metric', type: 'string', options: ['metric', 'imperial'] }
+    ])
+
+    if (error) {
+        return res.send({ error })
+    }
+
+    // Get the options
+    const gainRatioOptions = gears.getChainRingAndCogOptionsForGainRatio(gainRatio, plusOrMinus, sortByDiff, 
+        tyreWidth, rimType, crankLength, minChainRing, maxChainRing, minCog, maxCog, minTeeth, maxTeeth, measure)
+
+    res.send(gainRatioOptions)
 })
 
 app.get('/speedCadenceOptions', (req, res) => {

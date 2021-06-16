@@ -24,9 +24,11 @@
             <input type="hidden" id="measureHidden" name="measureHidden" value={{measure}}>
             <label for="findFor">Find For:</label>
             <select id="findFor" name="findFor">
-                <option value="gearInches">Gear Inches</option>
+                <option value="gearInches">Gear Inches (27)</option>
+                <option value="trueGearInches">True Gear Inches</option>
                 <option value="gearRatio">Gear Ratio</option>
                 <option value="rollOut">Roll Out</option>
+                <option value="gainRatio">Gain Ratio</option>
                 <option value="speedCadence">Speed and Cadence</option>
                 <option value="lapTimeCadence">Lap Time and Cadence</option>
             </select><br>
@@ -36,6 +38,12 @@
                 <input type="number" id="gearInches" name="gearInches" step="0.001" value={{gearInches}}>
                 <label class="sub-label" for="plusOrMinus">+/-</label>
                 <input class="sub-input" type="number" id="plusOrMinus" name="plusOrMinus" step="0.001" placeholder="1" value={{plusOrMinus}}><br>
+            </div>
+            <div id="trueGearInchesSection">
+                <label for="trueGearInches">True Gear In.:</label>
+                <input type="number" id="trueGearInches" name="trueGearInches" step="0.001" value={{trueGearInches}}>
+                <label class="sub-label" for="plusOrMinus3">+/-</label>
+                <input class="sub-input" type="number" id="plusOrMinus3" name="plusOrMinus3" step="0.001" placeholder="1" value={{plusOrMinus3}}><br>
             </div>
             <div id="gearRatioSection">
                 <label for="gearRatio">Gear Ratio:</label>
@@ -48,6 +56,12 @@
                 <input type="number" id="rollOut" name="rollOut" step="0.001" placeholder="(metres)" value={{rollOut}}>
                 <label class="sub-label" for="maxDiff">to -</label>
                 <input class="sub-input" type="number" id="maxDiff" name="maxDiff" step="0.001" placeholder="0.5" value={{maxDiff}}><br>
+            </div>
+            <div id="gainRatioSection">
+                <label for="gainRatio">Gain Ratio:</label>
+                <input type="number" id="gainRatio" name="gainRatio" step="0.001" value={{gainRatio}}>
+                <label class="sub-label" for="plusOrMinus4">+/-</label>
+                <input class="sub-input" type="number" id="plusOrMinus4" name="plusOrMinus4" step="0.001" placeholder="0.2" value={{plusOrMinus4}}><br>
             </div>
             <div id="speedSection">
                 <label for="speed">Speed:</label>
@@ -81,6 +95,10 @@
                     <option value="700c">700c (622mm)</option>
                     <option value="650c">650c (571mm)</option>
                 </select><br>
+            </div>
+            <div id="crankLengthSection">
+                <label for="crankLength">Cranks:</label>
+                <input type="number" id="crankLength" name="crankLength" step="0.001" placeholder="172.5" value={{crankLength}}><br>
             </div>
             <input type="hidden" id="rimTypeHidden" name="rimTypeHidden" value={{rimType}}>
             <input type="hidden" id="rimTypeOptionsListHidden" name="rimTypeOptionsListHidden" value={{rimTypeOptionsList}}>

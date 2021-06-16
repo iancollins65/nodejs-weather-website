@@ -29,6 +29,8 @@ const validateQueryString = (query, fields) => {
     let lapLength = undefined
     let lapTime = undefined
     let gearInches = undefined
+    let trueGearInches = undefined
+    let gainRatio = undefined
     let gearRatio = undefined
     let plusOrMinus = undefined
     let sortByDiff = undefined
@@ -147,7 +149,9 @@ const validateQueryString = (query, fields) => {
             case 'lapLength': lapLength = fieldValue; break; 
             case 'lapTime': lapTime = fieldValue; break; 
             case 'gearInches': gearInches = fieldValue; break; 
+            case 'trueGearInches': trueGearInches = fieldValue; break; 
             case 'gearRatio': gearRatio = fieldValue; break; 
+            case 'gainRatio': gainRatio = fieldValue; break; 
             case 'plusOrMinus': plusOrMinus = fieldValue; break; 
             case 'sortByDiff': sortByDiff = fieldValue; break;
             case 'rollOut': rollOut = fieldValue; break;
@@ -192,8 +196,10 @@ const validateQueryString = (query, fields) => {
         cadence,
         lapLength,
         lapTime,
-        gearInches, 
+        gearInches,
+        trueGearInches,
         gearRatio,
+        gainRatio,
         plusOrMinus, 
         sortByDiff,
         rollOut, 
