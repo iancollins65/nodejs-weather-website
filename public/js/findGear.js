@@ -1187,7 +1187,7 @@ const handleOnLoad = () => {
             actOnShowMinMaxSet()
         }
     }
-    
+
     if (findForHiddenFld.value !== '') {
         // Use values provided in the query string / fields
         findForSelect.value = findForHiddenFld.value

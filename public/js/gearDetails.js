@@ -253,17 +253,37 @@ const insertHeadingValueRow = (table, heading, value, link = false, rawValue = 0
         let a = document.createElement('A')
         let urlPrefix = '/findGear?findFor='
         const measure = measureSelect.value
+        const tyreWidth = tyreWidthFld.value
+        const rimType = rimTypeFld.value
         if (heading === 'Gear Ratio') {
             a.text = value
             a.title = 'Find other gears for Gear Ratio close to ' + value
             a.href = urlPrefix + 'gearRatio&gearRatio=' + value + '&measure=' + measure
         } else if (heading === 'Gear Inches (27)') {
             a.text = value
-            a.title = 'Find other gears for Gear Inches close to ' + value
+            a.title = 'Find other gears for Gear Inches (27) close to ' + value
             a.href = urlPrefix + 'gearInches&gearInches=' + value + '&measure=' + measure
+        } else if (heading === 'True Gear Inches') {
+            a.text = value
+            a.title = 'Find other gears for True Gear Inches close to ' + value
+            let url = urlPrefix + 'trueGearInches&trueGearInches=' + value + '&rimType=' + rimType + '&measure=' + measure
+            if (tyreWidth !== '') {
+                url = url + '&tyreWidth=' + tyreWidth
+            }
+            a.href = url
+        } else if (heading === 'Gain Ratio') {
+            const crankLength = crankLengthFld.value
+            a.text = value
+            a.title = 'Find other gears for Gain Ratio close to ' + value
+            let url = urlPrefix + 'gainRatio&gainRatio=' + value + '&rimType=' + rimType + '&measure=' + measure
+            if (tyreWidth !== '') {
+                url = url + '&tyreWidth=' + tyreWidth
+            }
+            if (crankLength !== '') {
+                url = url + '&crankLength=' + crankLength
+            }
+            a.href = url
         } else if (heading === 'Roll Out (approx)') {
-            const tyreWidth = tyreWidthFld.value
-            const rimType = rimTypeFld.value
             var url = urlPrefix + 'rollOut&rollOut=' + rawValue + '&rimType=' + rimType + '&measure=' + measure
             if (tyreWidth !== '') {
                 url = url + '&tyreWidth=' + tyreWidth
@@ -277,8 +297,6 @@ const insertHeadingValueRow = (table, heading, value, link = false, rawValue = 0
             if (extras === 'speed') {
                 fixed = 'cadence'
             }
-            const tyreWidth = tyreWidthFld.value
-            const rimType = rimTypeFld.value
             let url = urlPrefix + 'speedCadence&speed=' + rawValue + '&cadence=' + otherValue1 
                 + '&fixed=' + fixed + '&rimType=' + rimType + '&measure=' + measure
             if (tyreWidth !== '') {
@@ -293,8 +311,6 @@ const insertHeadingValueRow = (table, heading, value, link = false, rawValue = 0
             if (extras === 'speed') {
                 fixed = 'cadence'
             }
-            const tyreWidth = tyreWidthFld.value
-            const rimType = rimTypeFld.value
             let url = urlPrefix + 'speedCadence&speed=' + otherValue1 + '&cadence=' + rawValue 
                 + '&fixed=' + fixed + '&rimType=' + rimType + '&measure=' + measure
             if (tyreWidth !== '') {
@@ -304,8 +320,6 @@ const insertHeadingValueRow = (table, heading, value, link = false, rawValue = 0
             a.title = 'Find other gears for cadence of ' + rawValue + ' and speed of ' + otherValue1
             a.href = url
         } else if (heading === 'Lap Time') {
-            const tyreWidth = tyreWidthFld.value
-            const rimType = rimTypeFld.value
             const lapLength = lapLengthFld.value
             let url = urlPrefix + 'lapTimeCadence&lapTime=' + rawValue + '&cadence=' + otherValue1 
                 + '&lapLength=' + lapLength + '&rimType=' + rimType + '&measure=' + measure
@@ -339,8 +353,8 @@ const buildOutputTable = (gearRatio, gearInches, rollOut, speed, cadence, lapTim
     // Table contents
     insertHeadingValueRow(table, 'Gear Ratio', round(gearRatio, 3), true)
     insertHeadingValueRow(table, 'Gear Inches (27)', round(gearInches, 3), true)
-    insertHeadingValueRow(table, 'True Gear Inches', round(trueGearInches, 3), false)
-    insertHeadingValueRow(table, 'Gain Ratio', round(gainRatio, 3), false)
+    insertHeadingValueRow(table, 'True Gear Inches', round(trueGearInches, 3), true)
+    insertHeadingValueRow(table, 'Gain Ratio', round(gainRatio, 3), true)
     var rollOutDisplay = undefined
     var rollOutRaw = undefined
     if (measure === 'imperial') {
