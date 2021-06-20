@@ -306,6 +306,10 @@ const insertHeadingValueRow = (table, heading, value, value2, link = false, rawV
         let a2 = document.createElement('A')
         let urlPrefix = '/findGear?findFor='
         const measure = measureSelect.value
+        const tyreWidth1 = tyreWidth1Fld.value
+        const tyreWidth2 = tyreWidth2Fld.value
+        const rimType1 = rimType1Fld.value
+        const rimType2 = rimType2Fld.value
         if (heading === 'Gear Ratio') {
             a.text = value
             a.title = 'Find other gears for Gear Ratio close to ' + value
@@ -320,11 +324,45 @@ const insertHeadingValueRow = (table, heading, value, value2, link = false, rawV
             a2.text = value2
             a2.title = 'Find other gears for Gear Inches close to ' + value2
             a2.href = urlPrefix + 'gearInches&gearInches=' + value2 + '&measure=' + measure
+        } else if (heading === 'True Gear Inches') {
+            let url = urlPrefix + 'trueGearInches&trueGearInches=' + value + '&rimType=' + rimType1 + '&measure=' + measure
+            let url2 = urlPrefix + 'trueGearInches&trueGearInches=' + value2 + '&rimType=' + rimType2 + '&measure=' + measure
+            if (tyreWidth1 !== '') {
+                url = url + '&tyreWidth=' + tyreWidth1
+            }
+            if (tyreWidth2 !== '') {
+                url2 = url2 + '&tyreWidth=' + tyreWidth2
+            }
+            a.text = value
+            a.title = 'Find other gears for True Gear Inches close to ' + value
+            a.href = url
+            a2.text = value2
+            a2.title = 'Find other gears for True Gear Inches close to ' + value2
+            a2.href = url2
+        } else if (heading === 'Gain Ratio') {
+            const crankLength1 = crankLength1Fld.value
+            const crankLength2 = crankLength2Fld.value
+            let url = urlPrefix + 'gainRatio&gainRatio=' + value + '&rimType=' + rimType1 + '&measure=' + measure
+            let url2 = urlPrefix + 'gainRatio&gainRatio=' + value2 + '&rimType=' + rimType2 + '&measure=' + measure
+            if (tyreWidth1 !== '') {
+                url = url + '&tyreWidth=' + tyreWidth1
+            }
+            if (tyreWidth2 !== '') {
+                url2 = url2 + '&tyreWidth=' + tyreWidth2
+            }
+            if (crankLength1 !== '') {
+                url = url + '&crankLength=' + crankLength1
+            }
+            if (crankLength2 !== '') {
+                url2 = url2 + '&crankLength=' + crankLength2
+            }
+            a.text = value
+            a.title = 'Find other gears for Gain Ratio close to ' + value
+            a.href = url
+            a2.text = value2
+            a2.title = 'Find other gears for Gain Ratio close to ' + value2
+            a2.href = url2
         } else if (heading === 'Roll Out (approx)') {
-            const tyreWidth1 = tyreWidth1Fld.value
-            const tyreWidth2 = tyreWidth2Fld.value
-            const rimType1 = rimType1Fld.value
-            const rimType2 = rimType2Fld.value
             let url = urlPrefix + 'rollOut&rollOut=' + rawValue + '&rimType=' + rimType1 + '&measure=' + measure
             let url2 = urlPrefix + 'rollOut&rollOut=' + rawValue2 + '&rimType=' + rimType2 + '&measure=' + measure
             if (tyreWidth1 !== '') {
@@ -439,8 +477,8 @@ const buildOutputTable = (gear1, gear2) => {
     insert3HeadingsRow(table, 'Gears', gear1.chainRing + ' x ' + gear1.cog, gear2.chainRing + ' x ' + gear2.cog)
     insertHeadingValueRow(table, 'Gear Ratio', round(gear1.gearRatio, 3), round(gear2.gearRatio, 3), true)
     insertHeadingValueRow(table, 'Gear Inches (27)', round(gear1.gearInches, 3), round(gear2.gearInches, 3), true)
-    insertHeadingValueRow(table, 'True Gear Inches', round(gear1.trueGearInches, 3), round(gear2.trueGearInches, 3), false)
-    insertHeadingValueRow(table, 'Gain Ratio', round(gear1.gainRatio, 3), round(gear2.gainRatio, 3), false)
+    insertHeadingValueRow(table, 'True Gear Inches', round(gear1.trueGearInches, 3), round(gear2.trueGearInches, 3), true)
+    insertHeadingValueRow(table, 'Gain Ratio', round(gear1.gainRatio, 3), round(gear2.gainRatio, 3), true)
     var rollOutDisplay1 = undefined
     var rollOutRaw1 = undefined
     var rollOutDisplay2 = undefined
