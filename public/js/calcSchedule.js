@@ -582,7 +582,8 @@ const buildGearInfoTable = (gearInfo, measure) => {
     insertHeadingValueRow(table, 'Tyre Width', gearInfo.tyreWidth)
     insertHeadingValueRow(table, 'Rim Type', gearInfo.rimType)
     insertHeadingValueRow(table, 'Gear Ratio', round(gearInfo.gearRatio, 3))
-    insertHeadingValueRow(table, 'Gear Inches', round(gearInfo.gearInches, 3))
+    insertHeadingValueRow(table, 'Gear Inches (27)', round(gearInfo.gearInches, 3))
+    insertHeadingValueRow(table, 'True Gear Inches', round(gearInfo.trueGearInches, 3))
     if (measure === 'imperial') {
         insertHeadingValueRow(table, 'Roll Out', round(gearInfo.rollOut, 3) + mOrInches)
     } else {
