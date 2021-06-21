@@ -236,7 +236,15 @@ const setFieldFromCookieIfBlank = (field, cookieName) => {
     if (field.value === '') {
         const cookieValue = getCookie(cookieName)
         if (cookieValue !== '') {
-            field.value = cookieValue
+            let cookieNumber = Number(cookieValue)
+            if (isNaN(cookieNumber)) {
+                field.value = cookieValue
+            } else if (Number.isInteger(cookieNumber)) {
+                field.value = cookieValue
+            } else {
+                cookieNumber = round(cookieNumber, 3)
+                field.value = cookieNumber
+            }
         }
     }
 }

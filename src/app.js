@@ -251,12 +251,13 @@ app.get('/compare2GearsOld', (req, res) => {
 
 app.get('/cassetteDetails', (req, res) => {
 
-    const {error, chainRings, cogs, tyreWidth, rimType, extras, speed, cadence, lapLength, lapTime, measure} = 
+    const {error, chainRings, cogs, tyreWidth, rimType, crankLength, extras, speed, cadence, lapLength, lapTime, measure} = 
         hpcUtils.validateQueryString(req.query, [
             { name: 'chainRings', type: 'list', subType: 'integer', sign: 'positive', returnEmpty: true },
             { name: 'cogs', type: 'list', subType: 'integer', sign: 'positive', returnEmpty: true },
             { name: 'tyreWidth', type: 'integer', sign: 'positive', returnEmpty: true },
             { name: 'rimType', type: 'string', options: gears.getRimOptionsTypeArray(), returnEmpty: true },
+            { name: 'crankLength', type: 'decimal', sign: 'positive', returnEmpty: true },
             { name: 'extras', type: 'string', options: ['none', 'cadenceAtSpeed', 'speedAtCadence', 'cadenceAtLapTime'], returnEmpty: true },
             { name: 'speed', type: 'decimal', sign: 'positive', returnEmpty: true },
             { name: 'cadence', type: 'decimal', sign: 'positive', returnEmpty: true },
@@ -280,6 +281,7 @@ app.get('/cassetteDetails', (req, res) => {
             cogs: '',
             tyreWidth: '',
             rimType: '',
+            crankLength: '',
             extras: '',
             speed: '',
             cadence: '',
@@ -298,6 +300,7 @@ app.get('/cassetteDetails', (req, res) => {
             cogs,
             tyreWidth,
             rimType,
+            crankLength,
             extras,
             speed,
             cadence,
@@ -654,12 +657,13 @@ app.get('/cassettesBySpeed', (req, res) => {
 app.get('/cassetteInfo', (req, res) => {
 
     const extras = req.query.extras
-    const {error, chainRings, cogs, tyreWidth, rimType, speed, cadence, lapLength, lapTime, measure} = 
+    const {error, chainRings, cogs, tyreWidth, rimType, crankLength, speed, cadence, lapLength, lapTime, measure} = 
         hpcUtils.validateQueryString(req.query, [
             { name: 'chainRings', mandatory: true, type: 'list', subType: 'integer', sign: 'positive' },
             { name: 'cogs', mandatory: true, type: 'list', subType: 'integer', sign: 'positive' },
             { name: 'tyreWidth', default: 23, type: 'integer', sign: 'positive' },
             { name: 'rimType', default: '700c', type: 'string', options: gears.getRimOptionsTypeArray() },
+            { name: 'crankLength', default: 172.5, type: 'decimal', sign: 'positive' },
             { name: 'speed', mandatory: Boolean(extras === 'cadence'), type: 'decimal', sign: 'positive' },
             { name: 'cadence', mandatory: Boolean(extras === 'speed'), type: 'decimal', sign: 'positive' },
             { name: 'lapTime', mandatory: Boolean(extras === 'cadenceLapTime'), type: 'decimal', sign: 'positive' },
@@ -673,7 +677,7 @@ app.get('/cassetteInfo', (req, res) => {
 
     // Get the gear info
     const gearInfoForCassette = gears.getGearInfoForCassette(chainRings, cogs, tyreWidth, rimType, speed, cadence, 
-        lapLength, lapTime, measure)
+        lapLength, lapTime, measure, crankLength)
 
     res.send(gearInfoForCassette)
 })

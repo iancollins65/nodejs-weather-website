@@ -7,6 +7,7 @@ const cogsFld = document.querySelector('#cogs')
 const tyreWidthFld = document.querySelector('#tyreWidth')
 const rimTypeFld = document.querySelector('#rimType')
 const rimTypeHiddenFld = document.querySelector('#rimTypeHidden')
+const crankLengthFld = document.querySelector('#crankLength')
 const measureSelect = document.querySelector('#measure')
 const measureHiddenFld = document.querySelector('#measureHidden')
 const messageOne = document.querySelector('#message-1')
@@ -55,6 +56,7 @@ const handleSubmit = () => {
     const cogs = cogsFld.value
     const tyreWidth = tyreWidthFld.value
     const rimType = rimTypeFld.value
+    const crankLength = crankLengthFld.value
     const extras = extrasSelect.value
     const speed = speedFld.value
     const cadence = cadenceFld.value
@@ -68,6 +70,10 @@ const handleSubmit = () => {
     if (tyreWidth !== '') {
         url = url + '&tyreWidth=' + tyreWidth
         setCookie('tyreWidth', tyreWidth, 1)
+    }
+    if (crankLength !== '') {
+        url = url + '&crankLength=' + crankLength
+        setCookie('crankLength', crankLength, 1)
     }
     if (speed !== '') {
         url = url + '&speed=' + speed
@@ -94,6 +100,7 @@ const handleSubmit = () => {
                 errorStr = errorStr.replace('cogs', 'Cogs')
                 errorStr = errorStr.replace('tyreWidth', 'Tyre Width')
                 errorStr = errorStr.replace('rimType', 'Rim Type')
+                errorStr = errorStr.replace('crankLength', 'Cranks')
                 errorStr = errorStr.replace('speed', 'Speed')
                 errorStr = errorStr.replace('cadence', 'Cadence')
                 errorStr = errorStr.replace('lapTime', 'Lap Time')
@@ -198,8 +205,8 @@ showSelect.addEventListener('change', (e) => {
 })
 
 const buildShowSelect = () => {
-    while (showSelect.options.length > 3) {
-        showSelect.remove(3);
+    while (showSelect.options.length > 5) {
+        showSelect.remove(5);
     }
     const extras = extrasSelect.value
     if (extras === 'cadence') {
@@ -394,6 +401,8 @@ const buildOutputTable = (chainRings, cogs, cassetteInfo, show, measure) => {
                         cellText = round(gearInfo.gearRatio, 3)
                     } else if (show === 'gearInches') {
                         cellText = round(gearInfo.gearInches, 3)
+                    } else if (show === 'trueGearInches') {
+                        cellText = round(gearInfo.trueGearInches, 3)
                     } else if (show === 'rollOut') {
                         let rollOutDisplay = undefined
                         if (measure === 'imperial') {
@@ -402,6 +411,8 @@ const buildOutputTable = (chainRings, cogs, cassetteInfo, show, measure) => {
                             rollOutDisplay = round(gearInfo.rollOut / 1000, 3)
                         }
                         cellText = rollOutDisplay + mOrInches
+                    } else if (show === 'gainRatio') {
+                        cellText = round(gearInfo.gainRatio, 3)
                     } else if (show === 'cadence') {
                         cellText = round(gearInfo.cadence, 3) + ' rpm'
                     } else if (show === 'speed') {
@@ -415,7 +426,7 @@ const buildOutputTable = (chainRings, cogs, cassetteInfo, show, measure) => {
                     a.text = cellText
                     a.title = cellText
                     a.href = linkToGearDetails(extrasSelect.value, chainRing, cog, measure)
-                    a.className = 'link-cell'
+                    // a.className = 'link-cell' // Decided to return to standard link behaviour.
                     cell.appendChild(a)
                 }
             }
@@ -432,10 +443,16 @@ const buildOutputTable = (chainRings, cogs, cassetteInfo, show, measure) => {
         th.innerHTML = 'Ratio'
         tr.appendChild(th)
         th = document.createElement('th')
-        th.innerHTML = 'Inches'
+        th.innerHTML = 'Inch (27)'
+        tr.appendChild(th)
+        th = document.createElement('th')
+        th.innerHTML = 'Inch (True)'
         tr.appendChild(th)
         th = document.createElement('th')
         th.innerHTML = 'Roll Out'
+        tr.appendChild(th)
+        th = document.createElement('th')
+        th.innerHTML = 'Gain Ratio'
         tr.appendChild(th)
         if (extras === 'cadence') {
             th = document.createElement('th')
@@ -479,10 +496,14 @@ const buildOutputTable = (chainRings, cogs, cassetteInfo, show, measure) => {
             let ratioCell = tr.insertCell(-1)
             let rawValue = gearInfo.gearRatio
             ratioCell.innerHTML = round(rawValue, 3)
-            // Inches cell
+            // Inches (27) cell
             let inchesCell = tr.insertCell(-1)
             rawValue = gearInfo.gearInches
             inchesCell.innerHTML = round(rawValue, 3)
+            // Inches (True) cell
+            let trueInchesCell = tr.insertCell(-1)
+            rawValue = gearInfo.trueGearInches
+            trueInchesCell.innerHTML = round(rawValue, 3)
             // Roll Out cell
             let rollOutCell = tr.insertCell(-1)
             let rollOutDisplay = undefined
@@ -492,6 +513,10 @@ const buildOutputTable = (chainRings, cogs, cassetteInfo, show, measure) => {
                 rollOutDisplay = round(gearInfo.rollOut / 1000, 3)
             }
             rollOutCell.innerHTML = rollOutDisplay + mOrInches
+            // Gain Ratio cell
+            let gainRatioCell = tr.insertCell(-1)
+            rawValue = gearInfo.gainRatio
+            gainRatioCell.innerHTML = round(rawValue, 3)
             // Extras
             if (extras === 'cadence') {
                 // Cadence cell
@@ -539,6 +564,9 @@ const linkToGearDetails = (extras, chainRing, cog, measure = 'metric') => {
         url = url + '&tyreWidth=' + tyreWidthFld.value
     }
     url = url + '&rimType=' + rimTypeFld.value
+    if (crankLengthFld.value !== '') {
+        url = url + '&crankLength=' + crankLengthFld.value
+    }
     if (extras === 'speed') {
         url = url + '&extras=speedAtCadence&cadence=' + cadenceFld.value
     } else if (extras === 'cadence') {
@@ -614,7 +642,15 @@ const setFieldFromCookieIfBlank = (field, cookieName) => {
     if (field.value === '') {
         const cookieValue = getCookie(cookieName)
         if (cookieValue !== '') {
-            field.value = cookieValue
+            let cookieNumber = Number(cookieValue)
+            if (isNaN(cookieNumber)) {
+                field.value = cookieValue
+            } else if (Number.isInteger(cookieNumber)) {
+                field.value = cookieValue
+            } else {
+                cookieNumber = round(cookieNumber, 3)
+                field.value = cookieNumber
+            }
         }
     }
 }
@@ -656,6 +692,7 @@ const handleOnLoad = () => {
     
     setFieldFromCookieIfBlank(chainRingsFld, 'chainRings')
     setFieldFromCookieIfBlank(tyreWidthFld, 'tyreWidth')
+    setFieldFromCookieIfBlank(crankLengthFld, 'crankLength')
 
     if (extrasHiddenFld.value === '' && extrasHiddenFld.value === 'none') {
         extrasSelect.value = 'none'
