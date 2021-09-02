@@ -275,4 +275,4 @@ const test = gears.getChainRingAndCogOptionsForGainRatio(5.6,0.1,true,28,'700c',
 console.log(test)
 
 // console.log(test2)
-// test commit 4
+// test commit 5
