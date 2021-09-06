@@ -29,6 +29,10 @@ const getWheelCircumfranceGivenDiameter = (wheelDiameter) => {
     return wheelDiameter * Math.PI
 }
 
+const getWheelDiameterFromGivenCircumfrance = (wheelCircumfrance) => {
+    return wheelCircumfrance / Math.PI
+}
+
 const getRollOut = (gearRatio, wheelCircumfrance) => {
     return gearRatio * wheelCircumfrance
 }
@@ -225,7 +229,8 @@ const getSpeedFromLapTimeAndLength = (lapTime, lapLength) => {
 }
 
 const getGearInfo = (chainRing, cog, tyreWidth = 23, rimType = '700c', speed, cadence, 
-    lapLength, lapTime, measure = 'metric', crankLength = 172.5) => {
+    lapLength, lapTime, measure = 'metric', crankLength = 172.5, circumfranceApproach = 'estimated', 
+    measuredCircumfrance = 2100.000) => {
     if (measure === 'imperial') {
         var origSpeed = undefined
         var origLapLength = undefined
@@ -237,13 +242,27 @@ const getGearInfo = (chainRing, cog, tyreWidth = 23, rimType = '700c', speed, ca
             origLapLength = lapLength
             lapLength = lapLength * ydsToM
         }
+        var origMeasuredCircumfrance = measuredCircumfrance
+        measuredCircumfrance = measuredCircumfrance * inchesToMm
     }
     const gearRatio = getGearRatio(chainRing, cog)
     const gearInches = getGearInches(gearRatio)
-    let rimDiameter = getRimSizeByType(rimType)
-    let wheelDiameter = getWheelDiameter(rimDiameter, tyreWidth)
+    var usedTypeWidth = null
+    var usedRimType = null
+    var rimDiameter = null
+    var wheelDiameter = null
+    var wheelCircumfrance = null
+    if (circumfranceApproach === 'measured') {
+        wheelCircumfrance = measuredCircumfrance
+        wheelDiameter = getWheelDiameterFromGivenCircumfrance(wheelCircumfrance)
+    } else { // circumfranceApproach === 'estimated'
+        usedTypeWidth = tyreWidth
+        usedRimType = rimType
+        rimDiameter = getRimSizeByType(rimType)
+        wheelDiameter = getWheelDiameter(rimDiameter, tyreWidth)
+        wheelCircumfrance = getWheelCircumfranceGivenDiameter(wheelDiameter)
+    }
     const trueGearInches = getTrueGearInches(gearRatio, wheelDiameter)
-    let wheelCircumfrance = getWheelCircumfranceGivenDiameter(wheelDiameter)
     let rollOut = getRollOut(gearRatio, wheelCircumfrance)
     const radiusRatio = getRadiusRatio(crankLength, wheelDiameter)
     const gainRatio = getGainRatio(gearRatio, radiusRatio)
@@ -268,9 +287,15 @@ const getGearInfo = (chainRing, cog, tyreWidth = 23, rimType = '700c', speed, ca
     }
 
     if (measure === 'imperial') {
-        rimDiameter = rimDiameter * mmToInches
+        if (rimDiameter) {
+            rimDiameter = rimDiameter * mmToInches
+        }
         wheelDiameter = wheelDiameter * mmToInches
-        wheelCircumfrance = wheelCircumfrance * mmToInches
+        if (circumfranceApproach === 'measured') {
+            wheelCircumfrance = origMeasuredCircumfrance
+        } else { // circumfranceApproach === 'estimated'
+            wheelCircumfrance = wheelCircumfrance * mmToInches
+        }
         rollOut = rollOut * mmToInches
         if (returnSpeed) {
             if (origSpeed) {
@@ -291,8 +316,8 @@ const getGearInfo = (chainRing, cog, tyreWidth = 23, rimType = '700c', speed, ca
     return {
         chainRing,
         cog,
-        tyreWidth,
-        rimType,
+        tyreWidth: usedTypeWidth,
+        rimType: usedRimType,
         rimDiameter,
         crankLength,
         gearRatio,
@@ -308,7 +333,8 @@ const getGearInfo = (chainRing, cog, tyreWidth = 23, rimType = '700c', speed, ca
         lapLength,
         lapTime: returnLapTime,
         lapPedalCount: returnLapPedalCount,
-        measure
+        measure,
+        circumfranceApproach
     }
 }
 

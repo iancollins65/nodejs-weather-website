@@ -6,7 +6,15 @@ const cassettes = require('./utils/cassettes.js')
 
 const schedules = require('./utils/schedules.js')
 
+// const test = gears.getWheelCircumfrance(622, 23)
+
 // const test = gears.getGearInfo(54, 11, 25, '700c', 60, undefined, 250, undefined, "metric", 162.5)
+
+// const test = gears.getGearInfo(54, 11, 25, '700c', 36, undefined, 250, undefined, "imperial", 162.5)
+
+// const test = gears.getGearInfo(54, 11, 25, '700c', 60, undefined, 250, undefined, "metric", 162.5, "measured", 2111.150)
+
+const test = gears.getGearInfo(54, 11, 25, '700c', 36, undefined, 250, undefined, "imperial", 162.5, "measured", 83.1)
 
 // const test = gears.getCogGivenChainRingAndGearInches(50, 119)
 
@@ -20,7 +28,7 @@ const schedules = require('./utils/schedules.js')
 
 // const test = gears.getChainRingAndCogOptionsForGainRatio(5.6)
 
-const test = gears.getChainRingAndCogOptionsForGainRatio(5.6,0.1,true,28,'700c',172.5)
+// const test = gears.getChainRingAndCogOptionsForGainRatio(5.6,0.1,true,28,'700c',172.5)
 
 // const test = gears.getRimOptionsTypeStringList()
 
