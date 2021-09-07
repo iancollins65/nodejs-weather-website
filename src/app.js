@@ -537,7 +537,8 @@ app.get('/weather', (req, res) => {
 
 app.get('/gearInfo', (req, res) => {
 
-    const {error, chainRing, cog, tyreWidth, rimType, crankLength, speed, cadence, lapLength, lapTime, measure} = 
+    const {error, chainRing, cog, tyreWidth, rimType, crankLength, speed, cadence, lapLength, lapTime, 
+        measure, circumfranceApproach, measuredCircumfrance} = 
         hpcUtils.validateQueryString(req.query, [
             { name: 'chainRing', mandatory: true, type: 'integer', sign: 'positive' },
             { name: 'cog', mandatory: true, type: 'integer', sign: 'positive' },
@@ -548,7 +549,9 @@ app.get('/gearInfo', (req, res) => {
             { name: 'cadence', type: 'decimal', sign: 'positive' },
             { name: 'lapLength', type: 'decimal', sign: 'positive' },
             { name: 'lapTime', type: 'decimal', sign: 'positive' },
-            { name: 'measure', default: 'metric', type: 'string', options: ['metric', 'imperial'] }
+            { name: 'measure', default: 'metric', type: 'string', options: ['metric', 'imperial'] },
+            { name: 'circumfranceApproach', default: 'estimated', type: 'string', options: ['estimated', 'measured'] },
+            { name: 'measuredCircumfrance', default: 2100.000, type: 'decimal', sign: 'positive' }
     ])
 
     if (error) {
@@ -557,7 +560,7 @@ app.get('/gearInfo', (req, res) => {
 
     // Get the gear info
     const gearInfo = gears.getGearInfo(chainRing, cog, tyreWidth, rimType, speed, cadence, 
-        lapLength, lapTime, measure, crankLength)
+        lapLength, lapTime, measure, crankLength, circumfranceApproach, measuredCircumfrance)
 
     res.send(gearInfo)
 })
