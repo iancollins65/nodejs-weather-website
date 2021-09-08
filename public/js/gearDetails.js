@@ -1,9 +1,15 @@
 const gearDetailsForm = document.querySelector('form')
 const chainRingFld = document.querySelector('#chainRing')
 const cogFld = document.querySelector('#cog')
+const circumfranceApproachSelect = document.querySelector('#circumfranceApproach')
+const circumfranceApproachHiddenFld = document.querySelector('#circumfranceApproachHidden')
+const tyreWidthSection = document.querySelector('#tyreWidthSection')
 const tyreWidthFld = document.querySelector('#tyreWidth')
+const rimTypeSection = document.querySelector('#rimTypeSection')
 const rimTypeFld = document.querySelector('#rimType')
 const rimTypeHiddenFld = document.querySelector('#rimTypeHidden')
+const measuredCircumfranceSection = document.querySelector('#measuredCircumfranceSection')
+const measuredCircumfranceFld = document.querySelector('#measuredCircumfrance')
 const crankLengthFld = document.querySelector('#crankLength')
 const measureSelect = document.querySelector('#measure')
 const measureHiddenFld = document.querySelector('#measureHidden')
@@ -22,6 +28,7 @@ const outputTable = document.querySelector('#outputTable')
 const rimTypeOptionsListHiddenFld = document.querySelector('#rimTypeOptionsListHidden')
 const rimTypeDescriptionsListHiddenFld = document.querySelector('#rimTypeDescriptionsListHidden')
 
+measuredCircumfranceSection.style.display = 'none'
 speedSection.style.display = 'none'
 cadenceSection.style.display = 'none'
 lapTimeSection.style.display = 'none'
@@ -43,8 +50,10 @@ const handleSubmit = () => {
     const measure = measureSelect.value
     const chainRing = chainRingFld.value
     const cog = cogFld.value
+    const circumfranceApproach = circumfranceApproachSelect.value
     const tyreWidth = tyreWidthFld.value
     const rimType = rimTypeFld.value
+    const measuredCircumfrance = measuredCircumfranceFld.value
     const crankLength = crankLengthFld.value
     const speed = speedFld.value
     const cadence = cadenceFld.value
@@ -53,11 +62,17 @@ const handleSubmit = () => {
     setCookie('measure', measure, 1)
     setCookie('chainRing', chainRing, 1)
     setCookie('cog', cog, 1)
+    setCookie('circumfranceApproach', circumfranceApproach, 1)
     setCookie('rimType', rimType, 1)
-    var url = '/gearInfo?chainRing=' + chainRing + '&cog=' + cog + '&rimType=' + rimType + '&measure=' + measure
+    var url = '/gearInfo?chainRing=' + chainRing + '&cog=' + cog + '&rimType=' + rimType 
+                + '&measure=' + measure + '&circumfranceApproach=' + circumfranceApproach
     if (tyreWidth !== '') {
         url = url + '&tyreWidth=' + tyreWidth
         setCookie('tyreWidth', tyreWidth, 1)
+    }
+    if (measuredCircumfrance !== '') {
+        url = url + '&measuredCircumfrance=' + measuredCircumfrance
+        setCookie('measuredCircumfrance', measuredCircumfrance, 1)
     }
     if (crankLength !== '') {
         url = url + '&crankLength=' + crankLength
@@ -81,7 +96,8 @@ const handleSubmit = () => {
     }
 
     fetch(url).then((response) => {
-        response.json().then(({ error, gearRatio, gearInches, rollOut, speed, cadence, lapTime, lapPedalCount, measure, trueGearInches, gainRatio }) => {
+        response.json().then(({ error, gearRatio, gearInches, rollOut, speed, cadence, lapTime, 
+                lapPedalCount, measure, trueGearInches, gainRatio, wheelCircumfrance }) => {
             if (error) {
                 var errorStr = error + '.'
                 errorStr = errorStr.replace('chainRing', 'Chain Ring')
@@ -94,6 +110,8 @@ const handleSubmit = () => {
                 errorStr = errorStr.replace('lapTime', 'Lap Time')
                 errorStr = errorStr.replace('lapLength', 'Lap Length')
                 errorStr = errorStr.replace('measure', 'Measure')
+                errorStr = errorStr.replace('circumfranceApproach', 'Circumfrance Approach')
+                errorStr = errorStr.replace('measuredCircumfrance', 'Measured Circumfrance')
                 messageOne.style.color = 'red'
                 messageOne.textContent = errorStr
                 outputTable.style.display = 'none'
@@ -101,7 +119,7 @@ const handleSubmit = () => {
                 messageOne.textContent = 'Your gear details...'
                 outputTable.style.display = 'block'
                 outputTable.innerHTML = ""
-                outputTable.appendChild(buildOutputTable(gearRatio, gearInches, rollOut, speed, cadence, lapTime, lapPedalCount, measure, trueGearInches, gainRatio))
+                outputTable.appendChild(buildOutputTable(gearRatio, gearInches, rollOut, speed, cadence, lapTime, lapPedalCount, measure, trueGearInches, gainRatio, wheelCircumfrance))
             }
         })
     })
@@ -123,6 +141,7 @@ const actOnMeasureSelect = () => {
         } else {
             lapLengthFld.placeholder = '(yd, optional)'
         }
+        measuredCircumfranceFld.placeholder = '(in)'
         speedFld.placeholder = '(mph)'
     } else { // 'metric'
         if (extrasSelect.value === 'cadenceLapTime') {
@@ -130,7 +149,24 @@ const actOnMeasureSelect = () => {
         } else {
             lapLengthFld.placeholder = '(m, optional)'
         }
+        measuredCircumfranceFld.placeholder = '(mm)'
         speedFld.placeholder = '(km/h)'
+    }
+}
+
+circumfranceApproachSelect.addEventListener('change', (e) => {
+    actOnCircumfranceApproachSelect()
+})
+
+const actOnCircumfranceApproachSelect = () => {
+    if (circumfranceApproachSelect.value === 'estimated') {
+        tyreWidthSection.style.display = 'block'
+        rimTypeSection.style.display = 'block'
+        measuredCircumfranceSection.style.display = 'none'
+    } else if (circumfranceApproachSelect.value === 'measured') {
+        tyreWidthSection.style.display = 'none'
+        rimTypeSection.style.display = 'none'
+        measuredCircumfranceSection.style.display = 'block'
     }
 }
 
@@ -344,7 +380,7 @@ const insertHeadingValueRow = (table, heading, value, link = false, rawValue = 0
 
 // Output table
 
-const buildOutputTable = (gearRatio, gearInches, rollOut, speed, cadence, lapTime, lapPedalCount, measure, trueGearInches, gainRatio) => {
+const buildOutputTable = (gearRatio, gearInches, rollOut, speed, cadence, lapTime, lapPedalCount, measure, trueGearInches, gainRatio, wheelCircumfrance) => {
     // Build the table
     var table = document.createElement('table')
 
@@ -361,6 +397,7 @@ const buildOutputTable = (gearRatio, gearInches, rollOut, speed, cadence, lapTim
     // Table contents
     insertHeadingValueRow(table, 'Gear Ratio', round(gearRatio, 3), true)
     insertHeadingValueRow(table, 'Gear Inches (27)', round(gearInches, 3), true)
+    insertHeadingValueRow(table, 'Wheel Circ.', round(wheelCircumfrance, 3), false)
     insertHeadingValueRow(table, 'True Gear Inches', round(trueGearInches, 3), true)
     insertHeadingValueRow(table, 'Gain Ratio', round(gainRatio, 3), true)
     var rollOutDisplay = undefined
@@ -404,6 +441,17 @@ const handleOnLoad = () => {
         }
     }
 
+    if (circumfranceApproachHiddenFld.value !== '') {
+        circumfranceApproachSelect.value = circumfranceApproachHiddenFld.value
+    } else {
+        const circumfranceApproachCookie = getCookie('circumfranceApproach')
+        if (circumfranceApproachCookie !== '') {
+            circumfranceApproachSelect.value = circumfranceApproachCookie
+        }
+    }
+
+    actOnCircumfranceApproachSelect()
+
     if (rimTypeHiddenFld.value !== '') {
         rimTypeFld.value = rimTypeHiddenFld.value
     } else {
@@ -416,6 +464,7 @@ const handleOnLoad = () => {
     setFieldFromCookieIfBlank(chainRingFld, 'chainRing')
     setFieldFromCookieIfBlank(cogFld, 'cog')
     setFieldFromCookieIfBlank(tyreWidthFld, 'tyreWidth')
+    setFieldFromCookieIfBlank(measuredCircumfranceFld, 'measuredCircumfrance')
     setFieldFromCookieIfBlank(crankLengthFld, 'crankLength')
 
     if (extrasHiddenFld.value === '' && extrasHiddenFld.value === 'none') {
