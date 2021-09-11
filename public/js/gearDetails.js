@@ -25,6 +25,7 @@ const cadenceFld = document.querySelector('#cadence')
 const lapTimeFld = document.querySelector('#lapTime')
 const lapLengthFld = document.querySelector('#lapLength')
 const outputTable = document.querySelector('#outputTable')
+const shareableLink = document.querySelector('#shareableLink')
 const rimTypeOptionsListHiddenFld = document.querySelector('#rimTypeOptionsListHidden')
 const rimTypeDescriptionsListHiddenFld = document.querySelector('#rimTypeDescriptionsListHidden')
 
@@ -35,6 +36,7 @@ lapTimeSection.style.display = 'none'
 lapLengthSection.style.display = 'none'
 messageOne.style.display = 'none'
 outputTable.style.display = 'none'
+shareableLink.style.display = 'none'
 
 gearDetailsForm.addEventListener('submit', (e) => {
     e.preventDefault()
@@ -46,6 +48,7 @@ const handleSubmit = () => {
     messageOne.style.color = '#333456'   
     messageOne.textContent = 'Loading...'
     outputTable.style.display = 'none'
+    shareableLink.style.display = 'none'
 
     const measure = measureSelect.value
     const chainRing = chainRingFld.value
@@ -64,7 +67,7 @@ const handleSubmit = () => {
     setCookie('cog', cog, 1)
     setCookie('circumfranceApproach', circumfranceApproach, 1)
     setCookie('rimType', rimType, 1)
-    var url = '/gearInfo?chainRing=' + chainRing + '&cog=' + cog + '&rimType=' + rimType 
+    var url = 'chainRing=' + chainRing + '&cog=' + cog + '&rimType=' + rimType 
                 + '&measure=' + measure + '&circumfranceApproach=' + circumfranceApproach
     if (tyreWidth !== '') {
         url = url + '&tyreWidth=' + tyreWidth
@@ -95,6 +98,9 @@ const handleSubmit = () => {
         setCookie('lapLength', lapLength, 1)
     }
 
+    url = '/gearInfo?' + url
+    var shareableLinkURL = '/gearDetails?' + url
+
     fetch(url).then((response) => {
         response.json().then(({ error, gearRatio, gearInches, rollOut, speed, cadence, lapTime, 
                 lapPedalCount, measure, trueGearInches, gainRatio, wheelCircumfrance }) => {
@@ -115,11 +121,15 @@ const handleSubmit = () => {
                 messageOne.style.color = 'red'
                 messageOne.textContent = errorStr
                 outputTable.style.display = 'none'
+                shareableLink.style.display = 'none'
             } else {
                 messageOne.textContent = 'Your gear details...'
                 outputTable.style.display = 'block'
                 outputTable.innerHTML = ""
                 outputTable.appendChild(buildOutputTable(gearRatio, gearInches, rollOut, speed, cadence, lapTime, lapPedalCount, measure, trueGearInches, gainRatio, wheelCircumfrance))
+                shareableLink.style.display = 'block'
+                shareableLink.innerHTML = ""
+                shareableLink.appendChild(buildShareableLink(shareableLinkURL))
             }
         })
     })
@@ -128,6 +138,7 @@ const handleSubmit = () => {
 gearDetailsForm.addEventListener('input', (e) => {
     messageOne.style.display = 'none'
     outputTable.style.display = 'none'
+    shareableLink.style.display = 'none'
 })
 
 measureSelect.addEventListener('change', (e) => {
@@ -425,6 +436,15 @@ const buildOutputTable = (gearRatio, gearInches, rollOut, speed, cadence, lapTim
 
     return table
 }
+
+const buildShareableLink = (shareableLinkURL) => {
+    let a = document.createElement('A')
+    a.text = 'Shareable link'
+    a.title = 'Copy this link to share these Gear Details.'
+    a.href = shareableLinkURL
+    return a
+}
+
 
 // On load
 
