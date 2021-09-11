@@ -98,8 +98,8 @@ const handleSubmit = () => {
         setCookie('lapLength', lapLength, 1)
     }
 
-    url = '/gearInfo?' + url
     var shareableLinkURL = '/gearDetails?' + url
+    url = '/gearInfo?' + url
 
     fetch(url).then((response) => {
         response.json().then(({ error, gearRatio, gearInches, rollOut, speed, cadence, lapTime, 
