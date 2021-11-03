@@ -339,7 +339,8 @@ const getGearInfo = (chainRing, cog, tyreWidth = 23, rimType = '700c', speed, ca
 }
 
 const getGearInfoForCassette = (chainRings = [], cogs = [], tyreWidth = 23, rimType = '700c', speed, cadence, 
-lapLength, lapTime, measure = 'metric', crankLength = 172.5) => {
+lapLength, lapTime, measure = 'metric', crankLength = 172.5, circumfranceApproach = 'estimated', 
+measuredCircumfrance = 2100.000) => {
     const error = undefined
     // Sort chainRings descending
     chainRings.sort((a, b) => (a <= b) ? 1 : -1)
@@ -350,7 +351,7 @@ lapLength, lapTime, measure = 'metric', crankLength = 172.5) => {
     for (chainRing of chainRings) {
         for (cog of cogs) {
             const gearInfo = getGearInfo(chainRing, cog, tyreWidth, rimType, speed, cadence, 
-                lapLength, lapTime, measure, crankLength)
+                lapLength, lapTime, measure, crankLength, circumfranceApproach, measuredCircumfrance)
             gearInfoForCassette.push(gearInfo)
         }
     }
