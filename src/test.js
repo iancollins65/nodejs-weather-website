@@ -283,4 +283,4 @@ const test = gears.getGearInfo(54, 11, 25, '700c', 36, undefined, 250, undefined
 console.log(test)
 
 // console.log(test2)
-// test commit 8
+// test commit 8a
