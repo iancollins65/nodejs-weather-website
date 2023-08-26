@@ -397,18 +397,21 @@ const buildOutputTable = (gearRatio, gearInches, rollOut, speed, cadence, lapTim
 
     var mOrInches = undefined
     var kmOrMi = undefined
+    var mmOrInches = undefined
     if (measure === 'imperial') {
         mOrInches = ' in'
+        mmOrInches = ' in'
         kmOrMi = ' mph'
     } else { // 'metric'
         mOrInches = ' m'
+        mmOrInches = ' mm'
         kmOrMi = ' km/h'
     }
 
     // Table contents
     insertHeadingValueRow(table, 'Gear Ratio', round(gearRatio, 3), true)
     insertHeadingValueRow(table, 'Gear Inches (27)', round(gearInches, 3), true)
-    insertHeadingValueRow(table, 'Wheel Circ.', round(wheelCircumfrance, 3), false)
+    insertHeadingValueRow(table, 'Wheel Circ.', round(wheelCircumfrance, 3) + mmOrInches, false)
     insertHeadingValueRow(table, 'True Gear Inches', round(trueGearInches, 3), true)
     insertHeadingValueRow(table, 'Gain Ratio', round(gainRatio, 3), true)
     var rollOutDisplay = undefined
