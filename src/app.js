@@ -788,7 +788,7 @@ app.get('/gearRatioOptions', (req, res) => {
 app.get('/rollOutOptions', (req, res) => {
 
     const {error, rollOut, maxDiff, sortDesc, calcInches, tyreWidth, rimType, minChainRing, maxChainRing, 
-        minCog, maxCog, minTeeth, maxTeeth, measure} = 
+        minCog, maxCog, minTeeth, maxTeeth, measure, circumfranceApproach, measuredCircumfrance} = 
         hpcUtils.validateQueryString(req.query, [
             { name: 'rollOut', mandatory: true, type: 'decimal', sign: 'positive' },
             { name: 'maxDiff', default: 1000, type: 'decimal', sign: 'positive' },
@@ -802,8 +802,10 @@ app.get('/rollOutOptions', (req, res) => {
             { name: 'maxCog', type: 'integer', sign: 'positive' },
             { name: 'minTeeth', type: 'integer', sign: 'positive' },
             { name: 'maxTeeth', type: 'integer', sign: 'positive' },
-            { name: 'measure', default: 'metric', type: 'string', options: ['metric', 'imperial'] }
-    ])
+            { name: 'measure', default: 'metric', type: 'string', options: ['metric', 'imperial'] },
+            { name: 'circumfranceApproach', default: 'estimated', type: 'string', options: ['estimated', 'measured'] },
+            { name: 'measuredCircumfrance', default: 2100.000, type: 'decimal', sign: 'positive' }
+        ])
 
     if (error) {
         return res.send({ error })
@@ -811,7 +813,8 @@ app.get('/rollOutOptions', (req, res) => {
 
     // Get the options
     const rollOutOptions = gears.getChainRingAndCogOptionsForRollOut(rollOut, maxDiff, sortDesc, 
-        calcInches, tyreWidth, rimType, minChainRing, maxChainRing, minCog, maxCog, minTeeth, maxTeeth, measure)
+        calcInches, tyreWidth, rimType, minChainRing, maxChainRing, minCog, maxCog, minTeeth, maxTeeth, 
+        measure, circumfranceApproach, measuredCircumfrance)
 
     res.send(rollOutOptions)
 })
