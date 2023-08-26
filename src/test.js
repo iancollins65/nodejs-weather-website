@@ -14,7 +14,7 @@ const schedules = require('./utils/schedules.js')
 
 // const test = gears.getGearInfo(54, 11, 25, '700c', 60, undefined, 250, undefined, "metric", 162.5, "measured", 2111.150)
 
-const test = gears.getGearInfo(54, 11, 25, '700c', 36, undefined, 250, undefined, "imperial", 162.5, "measured", 83.1)
+// const test = gears.getGearInfo(54, 11, 25, '700c', 36, undefined, 250, undefined, "imperial", 162.5, "measured", 83.1)
 
 // const test = gears.getCogGivenChainRingAndGearInches(50, 119)
 
@@ -34,7 +34,15 @@ const test = gears.getGearInfo(54, 11, 25, '700c', 36, undefined, 250, undefined
 
 // const test = gears.getCogGivenChainRingAndWheelForRollOut(50, 2099, 7000)
 
-// const test = gears.getChainRingAndCogOptionsForRollOut(7000, 100, true, 21, '700c', 47, 56, 12, 18)
+// const test = gears.getChainRingAndCogOptionsForRollOut(7000, 500, true, true, 21, '700c', 47, 56, 12, 18)
+
+// const test = gears.getChainRingAndCogOptionsForRollOut(7000, 500, true, true, 21, '700c', 47, 56, 12, 18, 44, 96, 'metric', 'estimated', 2000)
+
+// const test = gears.getChainRingAndCogOptionsForRollOut(275, 19, true, true, 21, '700c', 47, 56, 12, 18, 44, 96, 'imperial', 'estimated', 2000)
+
+// const test = gears.getChainRingAndCogOptionsForRollOut(7000, 500, true, true, 21, '700c', 47, 56, 12, 18, 44, 96, 'metric', 'measured', 2050)
+
+const test = gears.getChainRingAndCogOptionsForRollOut(275, 19, true, true, 21, '700c', 47, 56, 12, 18, 44, 96, 'imperial', 'measured', 78)
 
 // const test = gears.getGearInfo(50, 15)
 

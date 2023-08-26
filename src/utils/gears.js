@@ -555,15 +555,24 @@ const getCogGivenChainRingAndWheelForRollOut = (chainRing, wheelCircumfrance, ro
 
 const getChainRingAndCogOptionsForRollOut = (rollOut, maxDiff = 500, sortDesc = true, calcInches = true, 
     tyreWidth = 23, rimType = '700c', minChainRing = 34, maxChainRing = 60, minCog = 10, maxCog = 36, 
-    minTeeth = 44, maxTeeth = 96, measure = 'metric') => {
+    minTeeth = 44, maxTeeth = 96, measure = 'metric', circumfranceApproach = 'estimated', 
+    measuredCircumfrance = 2100.000) => {
     if (measure === 'imperial') {
         rollOut = rollOut * inchesToMm
+        if (measuredCircumfrance !== 2100.000) {
+            measuredCircumfrance = measuredCircumfrance * inchesToMm
+        }
         if (maxDiff !== 500) {
             maxDiff = maxDiff * inchesToMm
         }
     }
-    const rimDiameter = getRimSizeByType(rimType)
-    const wheelCircumfrance = getWheelCircumfrance(rimDiameter, tyreWidth)
+    var wheelCircumfrance = null
+    if (circumfranceApproach === 'measured') {
+        wheelCircumfrance = measuredCircumfrance
+    } else { // circumfranceApproach === 'estimated'
+        rimDiameter = getRimSizeByType(rimType)
+        wheelCircumfrance = getWheelCircumfranceGivenDiameter(rimDiameter, tyreWidth)
+    }
     let options = []
     var chainRing = minChainRing
     for (; chainRing <= maxChainRing; chainRing++) {
