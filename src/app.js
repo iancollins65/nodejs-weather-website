@@ -330,7 +330,7 @@ app.get('/findGear', (req, res) => {
     const {error, findFor, gearInches, gearRatio, plusOrMinus, rollOut, maxDiff, speed, cadence, lapTime, lapLength, 
         fixed, tyreWidth, rimType, showMinMax, 
         minChainRing, maxChainRing, minCog, maxCog, minTeeth, maxTeeth, measure, 
-        crankLength, trueGearInches, gainRatio} = 
+        crankLength, trueGearInches, gainRatio, circumfranceApproach, measuredCircumfrance} = 
         hpcUtils.validateQueryString(req.query, [
             { name: 'findFor', type: 'string', options: ['gearInches', 'trueGearInches', 'gearRatio', 'gainRatio', 'rollOut', 'speedCadence', 'lapTimeCadence'], returnEmpty: true },
             { name: 'gearInches', type: 'decimal', sign: 'positive', returnEmpty: true },
@@ -355,8 +355,10 @@ app.get('/findGear', (req, res) => {
             { name: 'maxCog', type: 'integer', sign: 'positive', returnEmpty: true },
             { name: 'minTeeth', type: 'integer', sign: 'positive', returnEmpty: true },
             { name: 'maxTeeth', type: 'integer', sign: 'positive', returnEmpty: true },
-            { name: 'measure', type: 'string', options: ['metric', 'imperial'], returnEmpty: true }
-    ])
+            { name: 'measure', type: 'string', options: ['metric', 'imperial'], returnEmpty: true },
+            { name: 'circumfranceApproach', type: 'string', options: ['estimated', 'measured'], returnEmpty: true },
+            { name: 'measuredCircumfrance', type: 'decimal', sign: 'positive', returnEmpty: true }
+        ])
 
     const rimTypeOptionsList = gears.getRimOptionsTypeStringList()
     const rimTypeDescriptionsList = gears.getRimOptionsDescStringList()
@@ -391,7 +393,9 @@ app.get('/findGear', (req, res) => {
             maxCog: '', 
             minTeeth: '', 
             maxTeeth: '',
-            measure: ''
+            measure: '',
+            circumfranceApproach: '',
+            measuredCircumfrance: ''
         })
     } else {
         res.render('findGear', {
@@ -423,7 +427,9 @@ app.get('/findGear', (req, res) => {
             maxCog, 
             minTeeth, 
             maxTeeth,
-            measure
+            measure,
+            circumfranceApproach,
+            measuredCircumfrance
         })    
     }
 })

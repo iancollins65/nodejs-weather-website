@@ -85,6 +85,14 @@
                 </select><br>
             </div>
             <input type="hidden" id="fixedHidden" name="fixedHidden" value={{fixed}}>
+            <div id="circumfranceApproachSection">
+                <label for="circumfranceApproach">Circumfrance:</label>
+                <select id="circumfranceApproach" name="circumfranceApproach">
+                    <option value="estimated">Use Estimated</option>
+                    <option value="measured">Use Measured</option>
+                </select><br>
+            </div>
+            <input type="hidden" id="circumfranceApproachHidden" name="circumfranceApproachHidden" value={{circumfranceApproach}}>
             <div id="tyreWidthSection">
                 <label for="tyreWidth">Tyre Width:</label>
                 <input type="number" id="tyreWidth" name="tyreWidth" placeholder="23" value={{tyreWidth}}><br>
@@ -95,6 +103,10 @@
                     <option value="700c">700c (622mm)</option>
                     <option value="650c">650c (571mm)</option>
                 </select><br>
+            </div>
+            <div id="measuredCircumfranceSection">
+                <label for="measuredCircumfrance">Meas'd Circ.:</label>
+                <input type="number" id="measuredCircumfrance" name="measuredCircumfrance" step="0.001" placeholder="(mm)" value={{measuredCircumfrance}}><br>
             </div>
             <div id="crankLengthSection">
                 <label for="crankLength">Cranks:</label>
