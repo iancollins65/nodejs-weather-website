@@ -20,7 +20,7 @@ const schedules = require('./utils/schedules.js')
 
 // const test = gears.getChainRingAndCogOptionsForGearInches(94,1,true)
 
-// const test2 = gears.getChainRingAndCogOptionsForTrueGearInches(94,1,true,32)
+// const test = gears.getChainRingAndCogOptionsForTrueGearInches(94, 1, true, 32, '700c', 47, 56, 12, 18, 44, 96, 'metric', 'estimated', 2000)
 
 // const test = gears.getChainRingAndCogOptionsForGearInches(94,0.5,49,56,15,16,50,70)
 
@@ -28,7 +28,7 @@ const schedules = require('./utils/schedules.js')
 
 // const test = gears.getChainRingAndCogOptionsForGainRatio(5.6)
 
-// const test = gears.getChainRingAndCogOptionsForGainRatio(5.6,0.1,true,28,'700c',172.5)
+// const test = gears.getChainRingAndCogOptionsForGainRatio(5.6,0.1,true,28,'700c',172.5, 47, 56, 12, 18, 44, 96, 'metric', 'estimated', 2000)
 
 // const test = gears.getRimOptionsTypeStringList()
 
@@ -42,7 +42,7 @@ const schedules = require('./utils/schedules.js')
 
 // const test = gears.getChainRingAndCogOptionsForRollOut(7000, 500, true, true, 21, '700c', 47, 56, 12, 18, 44, 96, 'metric', 'measured', 2050)
 
-const test = gears.getChainRingAndCogOptionsForRollOut(275, 19, true, true, 21, '700c', 47, 56, 12, 18, 44, 96, 'imperial', 'measured', 78)
+// const test = gears.getChainRingAndCogOptionsForRollOut(275, 19, true, true, 21, '700c', 47, 56, 12, 18, 44, 96, 'imperial', 'measured', 78)
 
 // const test = gears.getGearInfo(50, 15)
 
@@ -52,7 +52,9 @@ const test = gears.getChainRingAndCogOptionsForRollOut(275, 19, true, true, 21, 
 
 // const test = gears.getChainRingAndCogOptionsForSpeedAndCadence(40, 90, 'cadence')
 
-// const test = gears.getChainRingAndCogOptionsForLapTimeAndCadence(22, 250, 90)
+// const test = gears.getChainRingAndCogOptionsForSpeedAndCadence(40, 90, 'speed', 4, 32, '700c', 47, 56, 12, 18, 44, 96, 'metric', 'estimated', 2000)
+
+const test = gears.getChainRingAndCogOptionsForLapTimeAndCadence(22, 250, 90, 32, '700c', 47, 56, 12, 18, 44, 96, 'metric', 'estimated', 2000)
 
 // console.log(test)
 
