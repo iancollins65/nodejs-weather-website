@@ -738,7 +738,7 @@ app.get('/gearInchesOptions', (req, res) => {
 app.get('/trueGearInchesOptions', (req, res) => {
 
     const {error, trueGearInches, plusOrMinus, sortByDiff, tyreWidth, rimType, minChainRing, maxChainRing, 
-        minCog, maxCog, minTeeth, maxTeeth} = 
+        minCog, maxCog, minTeeth, maxTeeth, measure, circumfranceApproach, measuredCircumfrance} = 
         hpcUtils.validateQueryString(req.query, [
             { name: 'trueGearInches', mandatory: true, type: 'decimal', sign: 'positive' },
             { name: 'plusOrMinus', default: 1, type: 'decimal', sign: 'positive' },
@@ -750,7 +750,10 @@ app.get('/trueGearInchesOptions', (req, res) => {
             { name: 'minCog', type: 'integer', sign: 'positive' },
             { name: 'maxCog', type: 'integer', sign: 'positive' },
             { name: 'minTeeth', type: 'integer', sign: 'positive' },
-            { name: 'maxTeeth', type: 'integer', sign: 'positive' }
+            { name: 'maxTeeth', type: 'integer', sign: 'positive' },
+            { name: 'measure', default: 'metric', type: 'string', options: ['metric', 'imperial'] },
+            { name: 'circumfranceApproach', default: 'estimated', type: 'string', options: ['estimated', 'measured'] },
+            { name: 'measuredCircumfrance', default: 2100.000, type: 'decimal', sign: 'positive' }
     ])
 
     if (error) {
@@ -759,7 +762,8 @@ app.get('/trueGearInchesOptions', (req, res) => {
 
     // Get the gear inches options
     const trueGearInchesOptions = gears.getChainRingAndCogOptionsForTrueGearInches(trueGearInches, plusOrMinus, 
-        sortByDiff, tyreWidth, rimType, minChainRing, maxChainRing, minCog, maxCog, minTeeth, maxTeeth)
+        sortByDiff, tyreWidth, rimType, minChainRing, maxChainRing, minCog, maxCog, minTeeth, maxTeeth, 
+        measure, circumfranceApproach, measuredCircumfrance)
 
     res.send(trueGearInchesOptions)
 })
@@ -828,7 +832,7 @@ app.get('/rollOutOptions', (req, res) => {
 app.get('/gainRatioOptions', (req, res) => {
 
     const {error, gainRatio, plusOrMinus, sortByDiff, tyreWidth, rimType, crankLength, minChainRing, maxChainRing, 
-        minCog, maxCog, minTeeth, maxTeeth, measure} = 
+        minCog, maxCog, minTeeth, maxTeeth, measure, circumfranceApproach, measuredCircumfrance} = 
         hpcUtils.validateQueryString(req.query, [
             { name: 'gainRatio', mandatory: true, type: 'decimal', sign: 'positive' },
             { name: 'plusOrMinus', default: 0.2, type: 'decimal', sign: 'positive' },
@@ -842,7 +846,9 @@ app.get('/gainRatioOptions', (req, res) => {
             { name: 'maxCog', type: 'integer', sign: 'positive' },
             { name: 'minTeeth', type: 'integer', sign: 'positive' },
             { name: 'maxTeeth', type: 'integer', sign: 'positive' },
-            { name: 'measure', default: 'metric', type: 'string', options: ['metric', 'imperial'] }
+            { name: 'measure', default: 'metric', type: 'string', options: ['metric', 'imperial'] },
+            { name: 'circumfranceApproach', default: 'estimated', type: 'string', options: ['estimated', 'measured'] },
+            { name: 'measuredCircumfrance', default: 2100.000, type: 'decimal', sign: 'positive' }
     ])
 
     if (error) {
@@ -851,7 +857,8 @@ app.get('/gainRatioOptions', (req, res) => {
 
     // Get the options
     const gainRatioOptions = gears.getChainRingAndCogOptionsForGainRatio(gainRatio, plusOrMinus, sortByDiff, 
-        tyreWidth, rimType, crankLength, minChainRing, maxChainRing, minCog, maxCog, minTeeth, maxTeeth, measure)
+        tyreWidth, rimType, crankLength, minChainRing, maxChainRing, minCog, maxCog, minTeeth, maxTeeth, 
+        measure, circumfranceApproach, measuredCircumfrance)
 
     res.send(gainRatioOptions)
 })
@@ -859,7 +866,7 @@ app.get('/gainRatioOptions', (req, res) => {
 app.get('/speedCadenceOptions', (req, res) => {
 
     const {error, speed, cadence, fixed, plusOrMinus, tyreWidth, rimType, minChainRing, maxChainRing, 
-        minCog, maxCog, minTeeth, maxTeeth, measure} = 
+        minCog, maxCog, minTeeth, maxTeeth, measure, circumfranceApproach, measuredCircumfrance} = 
         hpcUtils.validateQueryString(req.query, [
             { name: 'speed', mandatory: true, type: 'decimal', sign: 'positive' },
             { name: 'cadence', mandatory: true, type: 'decimal', sign: 'positive' },
@@ -873,7 +880,9 @@ app.get('/speedCadenceOptions', (req, res) => {
             { name: 'maxCog', type: 'integer', sign: 'positive' },
             { name: 'minTeeth', type: 'integer', sign: 'positive' },
             { name: 'maxTeeth', type: 'integer', sign: 'positive' },
-            { name: 'measure', default: 'metric', type: 'string', options: ['metric', 'imperial'] }
+            { name: 'measure', default: 'metric', type: 'string', options: ['metric', 'imperial'] },
+            { name: 'circumfranceApproach', default: 'estimated', type: 'string', options: ['estimated', 'measured'] },
+            { name: 'measuredCircumfrance', default: 2100.000, type: 'decimal', sign: 'positive' }
     ])
 
     if (error) {
@@ -882,7 +891,8 @@ app.get('/speedCadenceOptions', (req, res) => {
 
     // Get the speed cadence options
     const speedCadenceOptions = gears.getChainRingAndCogOptionsForSpeedAndCadence(speed, cadence, fixed, 
-        plusOrMinus, tyreWidth, rimType, minChainRing, maxChainRing, minCog, maxCog, minTeeth, maxTeeth, measure)
+        plusOrMinus, tyreWidth, rimType, minChainRing, maxChainRing, minCog, maxCog, minTeeth, maxTeeth, 
+        measure, circumfranceApproach, measuredCircumfrance)
 
     res.send(speedCadenceOptions)
 })
@@ -890,7 +900,7 @@ app.get('/speedCadenceOptions', (req, res) => {
 app.get('/lapTimeCadenceOptions', (req, res) => {
 
     const {error, lapTime, lapLength, cadence, tyreWidth, rimType, minChainRing, maxChainRing, 
-        minCog, maxCog, minTeeth, maxTeeth, measure} = 
+        minCog, maxCog, minTeeth, maxTeeth, measure, circumfranceApproach, measuredCircumfrance} = 
         hpcUtils.validateQueryString(req.query, [
             { name: 'lapTime', mandatory: true, type: 'decimal', sign: 'positive' },
             { name: 'lapLength', mandatory: true, type: 'decimal', sign: 'positive' },
@@ -903,7 +913,9 @@ app.get('/lapTimeCadenceOptions', (req, res) => {
             { name: 'maxCog', type: 'integer', sign: 'positive' },
             { name: 'minTeeth', type: 'integer', sign: 'positive' },
             { name: 'maxTeeth', type: 'integer', sign: 'positive' },
-            { name: 'measure', default: 'metric', type: 'string', options: ['metric', 'imperial'] }
+            { name: 'measure', default: 'metric', type: 'string', options: ['metric', 'imperial'] },
+            { name: 'circumfranceApproach', default: 'estimated', type: 'string', options: ['estimated', 'measured'] },
+            { name: 'measuredCircumfrance', default: 2100.000, type: 'decimal', sign: 'positive' }
     ])
 
     if (error) {
@@ -912,7 +924,8 @@ app.get('/lapTimeCadenceOptions', (req, res) => {
 
     // Get the options
     const lapTimeCadenceOptions = gears.getChainRingAndCogOptionsForLapTimeAndCadence(lapTime, lapLength, 
-        cadence, tyreWidth, rimType, minChainRing, maxChainRing, minCog, maxCog, minTeeth, maxTeeth, measure)
+        cadence, tyreWidth, rimType, minChainRing, maxChainRing, minCog, maxCog, minTeeth, maxTeeth, 
+        measure, circumfranceApproach, measuredCircumfrance)
 
     res.send(lapTimeCadenceOptions)
 })
