@@ -144,16 +144,20 @@ const handleSubmit = () => {
     } else if (findFor === 'trueGearInches') {
         const trueGearInches = trueGearInchesFld.value
         const plusOrMinus = plusOrMinus3Fld.value
+        const circumfranceApproach = circumfranceApproachSelect.value
         const tyreWidth = tyreWidthFld.value
         const rimType = rimTypeFld.value
+        const measuredCircumfrance = measuredCircumfranceFld.value
         const minChainRing = minChainRingFld.value
         const maxChainRing = maxChainRingFld.value
         const minCog = minCogFld.value
         const maxCog = maxCogFld.value
 
-        var url = '/trueGearInchesOptions?trueGearInches=' + trueGearInches + '&rimType=' + rimType
+        var url = '/trueGearInchesOptions?trueGearInches=' + trueGearInches + '&rimType=' + rimType +
+            '&measure=' + measure + '&circumfranceApproach=' + circumfranceApproach
         if (plusOrMinus !== '') { url = url + "&plusOrMinus=" + plusOrMinus }
         if (tyreWidth !== '') { url = url + '&tyreWidth=' + tyreWidth }
+        if (measuredCircumfrance !== '') { url = url + '&measuredCircumfrance=' + measuredCircumfrance }
         if (minChainRing !== '') { url = url + "&minChainRing=" + minChainRing }
         if (maxChainRing !== '') { url = url + "&maxChainRing=" + maxChainRing }
         if (minCog !== '') { url = url + "&minCog=" + minCog }
@@ -161,8 +165,10 @@ const handleSubmit = () => {
 
         setCookie('trueGearInches', trueGearInches, 1)
         setCookie('plusOrMinus3', plusOrMinus, 1)
+        setCookie('circumfranceApproach', circumfranceApproach, 1)
         setCookie('tyreWidth', tyreWidth, 1)
         setCookie('rimType', rimType, 1)
+        setCookie('measuredCircumfrance', measuredCircumfrance, 1)
         setCookie('minChainRing', minChainRing, 1)
         setCookie('maxChainRing', maxChainRing, 1)
         setCookie('minCog', minCog, 1)
@@ -179,6 +185,9 @@ const handleSubmit = () => {
                     errorStr = errorStr.replace('min', 'Min ')
                     errorStr = errorStr.replace('max', 'Max ')
                     errorStr = errorStr.replace('ChainRing', 'Chain Ring')
+                    errorStr = errorStr.replace('measure', 'Measure')
+                    errorStr = errorStr.replace('circumfranceApproach', 'Circumfrance Approach')
+                    errorStr = errorStr.replace('measuredCircumfrance', 'Measured Circumfrance')
                     messageOne.style.color = 'red'
                     messageOne.textContent = errorStr
                 } else if (gearOptions.length === 0) {
@@ -341,8 +350,10 @@ const handleSubmit = () => {
     } else if (findFor === 'gainRatio') {
         const gainRatio = gainRatioFld.value
         const plusOrMinus = plusOrMinus4Fld.value
+        const circumfranceApproach = circumfranceApproachSelect.value
         const tyreWidth = tyreWidthFld.value
         const rimType = rimTypeFld.value
+        const measuredCircumfrance = measuredCircumfranceFld.value
         const crankLength = crankLengthFld.value
         const minChainRing = minChainRingFld.value
         const maxChainRing = maxChainRingFld.value
@@ -350,8 +361,10 @@ const handleSubmit = () => {
         const maxCog = maxCogFld.value
 
         var url = '/gainRatioOptions?gainRatio=' + gainRatio + '&rimType=' + rimType
+                   + '&measure=' + measure + '&circumfranceApproach=' + circumfranceApproach
         if (plusOrMinus !== '') { url = url + "&plusOrMinus=" + plusOrMinus }
         if (tyreWidth !== '') { url = url + '&tyreWidth=' + tyreWidth }
+        if (measuredCircumfrance !== '') { url = url + '&measuredCircumfrance=' + measuredCircumfrance }
         if (crankLength !== '') { url = url + '&crankLength=' + crankLength }
         if (minChainRing !== '') { url = url + "&minChainRing=" + minChainRing }
         if (maxChainRing !== '') { url = url + "&maxChainRing=" + maxChainRing }
@@ -360,8 +373,10 @@ const handleSubmit = () => {
 
         setCookie('gainRatio', gainRatio, 1)
         setCookie('plusOrMinus3', plusOrMinus, 1)
+        setCookie('circumfranceApproach', circumfranceApproach, 1)
         setCookie('tyreWidth', tyreWidth, 1)
         setCookie('rimType', rimType, 1)
+        setCookie('measuredCircumfrance', measuredCircumfrance, 1)
         setCookie('crankLength', crankLength, 1)
         setCookie('minChainRing', minChainRing, 1)
         setCookie('maxChainRing', maxChainRing, 1)
@@ -380,6 +395,9 @@ const handleSubmit = () => {
                     errorStr = errorStr.replace('min', 'Min ')
                     errorStr = errorStr.replace('max', 'Max ')
                     errorStr = errorStr.replace('ChainRing', 'Chain Ring')
+                    errorStr = errorStr.replace('measure', 'Measure')
+                    errorStr = errorStr.replace('circumfranceApproach', 'Circumfrance Approach')
+                    errorStr = errorStr.replace('measuredCircumfrance', 'Measured Circumfrance')
                     messageOne.style.color = 'red'
                     messageOne.textContent = errorStr
                 } else if (gearOptions.length === 0) {
@@ -399,16 +417,19 @@ const handleSubmit = () => {
         const speed = speedFld.value
         const cadence = cadenceFld.value
         const fixed = fixedFld.value
+        const circumfranceApproach = circumfranceApproachSelect.value
         const tyreWidth = tyreWidthFld.value
         const rimType = rimTypeFld.value
+        const measuredCircumfrance = measuredCircumfranceFld.value
         const minChainRing = minChainRingFld.value
         const maxChainRing = maxChainRingFld.value
         const minCog = minCogFld.value
         const maxCog = maxCogFld.value
 
         var url = '/speedCadenceOptions?speed=' + speed + '&cadence=' + cadence + '&fixed=' + fixed + 
-            '&rimType=' + rimType + '&measure=' + measure
+            '&rimType=' + rimType + '&measure=' + measure + '&circumfranceApproach=' + circumfranceApproach
         if (tyreWidth !== '') { url = url + '&tyreWidth=' + tyreWidth }
+        if (measuredCircumfrance !== '') { url = url + '&measuredCircumfrance=' + measuredCircumfrance }
         if (minChainRing !== '') { url = url + "&minChainRing=" + minChainRing }
         if (maxChainRing !== '') { url = url + "&maxChainRing=" + maxChainRing }
         if (minCog !== '') { url = url + "&minCog=" + minCog }
@@ -417,8 +438,10 @@ const handleSubmit = () => {
         setCookie('speed', speed, 1)
         setCookie('cadence', cadence, 1)
         setCookie('fixed', fixed, 1)
+        setCookie('circumfranceApproach', circumfranceApproach, 1)
         setCookie('tyreWidth', tyreWidth, 1)
         setCookie('rimType', rimType, 1)
+        setCookie('measuredCircumfrance', measuredCircumfrance, 1)
         setCookie('minChainRing', minChainRing, 1)
         setCookie('maxChainRing', maxChainRing, 1)
         setCookie('minCog', minCog, 1)
@@ -440,6 +463,8 @@ const handleSubmit = () => {
                     errorStr = errorStr.replace('max', 'Max ')
                     errorStr = errorStr.replace('ChainRing', 'Chain Ring')
                     errorStr = errorStr.replace('measure', 'Measure')
+                    errorStr = errorStr.replace('circumfranceApproach', 'Circumfrance Approach')
+                    errorStr = errorStr.replace('measuredCircumfrance', 'Measured Circumfrance')
                     messageOne.style.color = 'red'
                     messageOne.textContent = errorStr
                 } else if (gearOptions.length === 0) {
@@ -461,16 +486,20 @@ const handleSubmit = () => {
         const lapTime = lapTimeFld.value
         const lapLength = lapLengthFld.value
         const cadence = cadenceFld.value
+        const circumfranceApproach = circumfranceApproachSelect.value
         const tyreWidth = tyreWidthFld.value
         const rimType = rimTypeFld.value
+        const measuredCircumfrance = measuredCircumfranceFld.value
         const minChainRing = minChainRingFld.value
         const maxChainRing = maxChainRingFld.value
         const minCog = minCogFld.value
         const maxCog = maxCogFld.value
 
         var url = '/lapTimeCadenceOptions?lapTime=' + lapTime + '&lapLength=' + lapLength + 
-            '&cadence=' + cadence + '&rimType=' + rimType + '&measure=' + measure
+            '&cadence=' + cadence + '&rimType=' + rimType + '&measure=' + measure +
+            '&circumfranceApproach=' + circumfranceApproach
         if (tyreWidth !== '') { url = url + '&tyreWidth=' + tyreWidth }
+        if (measuredCircumfrance !== '') { url = url + '&measuredCircumfrance=' + measuredCircumfrance }
         if (minChainRing !== '') { url = url + "&minChainRing=" + minChainRing }
         if (maxChainRing !== '') { url = url + "&maxChainRing=" + maxChainRing }
         if (minCog !== '') { url = url + "&minCog=" + minCog }
@@ -479,8 +508,10 @@ const handleSubmit = () => {
         setCookie('lapTime', lapTime, 1)
         setCookie('lapLength', lapLength, 1)
         setCookie('cadence', cadence, 1)
+        setCookie('circumfranceApproach', circumfranceApproach, 1)
         setCookie('tyreWidth', tyreWidth, 1)
         setCookie('rimType', rimType, 1)
+        setCookie('measuredCircumfrance', measuredCircumfrance, 1)
         setCookie('minChainRing', minChainRing, 1)
         setCookie('maxChainRing', maxChainRing, 1)
         setCookie('minCog', minCog, 1)
@@ -502,6 +533,8 @@ const handleSubmit = () => {
                     errorStr = errorStr.replace('max', 'Max ')
                     errorStr = errorStr.replace('ChainRing', 'Chain Ring')
                     errorStr = errorStr.replace('measure', 'Measure')
+                    errorStr = errorStr.replace('circumfranceApproach', 'Circumfrance Approach')
+                    errorStr = errorStr.replace('measuredCircumfrance', 'Measured Circumfrance')
                     messageOne.style.color = 'red'
                     messageOne.textContent = errorStr
                 } else if (gearOptions.length === 0) {
@@ -599,10 +632,8 @@ const actOnFindForSelection = () => {
         lapSection.style.display = 'none'
         cadenceSection.style.display = 'none'
         fixedSection.style.display = 'none'
-        circumfranceApproachSection.style.display = 'none'
-        measuredCircumfranceSection.style.display = 'none'
-        tyreWidthSection.style.display = 'block'
-        rimTypeSection.style.display = 'block'
+        circumfranceApproachSection.style.display = 'block'
+        actOnCircumfranceApproachSelect()
         crankLengthSection.style.display = 'none'
     } else if (findForSelect.value === 'gainRatio') {
         gearInchesSection.style.display = 'none'
@@ -614,10 +645,8 @@ const actOnFindForSelection = () => {
         lapSection.style.display = 'none'
         cadenceSection.style.display = 'none'
         fixedSection.style.display = 'none'
-        circumfranceApproachSection.style.display = 'none'
-        measuredCircumfranceSection.style.display = 'none'
-        tyreWidthSection.style.display = 'block'
-        rimTypeSection.style.display = 'block'
+        circumfranceApproachSection.style.display = 'block'
+        actOnCircumfranceApproachSelect()
         crankLengthSection.style.display = 'block'
     } else if (findForSelect.value === 'gearRatio') {
         gearInchesSection.style.display = 'none'
@@ -657,10 +686,8 @@ const actOnFindForSelection = () => {
         lapSection.style.display = 'none'
         cadenceSection.style.display = 'block'
         fixedSection.style.display = 'block'
-        circumfranceApproachSection.style.display = 'none'
-        measuredCircumfranceSection.style.display = 'none'
-        tyreWidthSection.style.display = 'block'
-        rimTypeSection.style.display = 'block'
+        circumfranceApproachSection.style.display = 'block'
+        actOnCircumfranceApproachSelect()
         crankLengthSection.style.display = 'none'
     } else if (findForSelect.value === 'lapTimeCadence') {
         gearInchesSection.style.display = 'none'
@@ -672,10 +699,8 @@ const actOnFindForSelection = () => {
         lapSection.style.display = 'block'
         cadenceSection.style.display = 'block'
         fixedSection.style.display = 'none'
-        circumfranceApproachSection.style.display = 'none'
-        measuredCircumfranceSection.style.display = 'none'
-        tyreWidthSection.style.display = 'block'
-        rimTypeSection.style.display = 'block'
+        circumfranceApproachSection.style.display = 'block'
+        actOnCircumfranceApproachSelect()
         crankLengthSection.style.display = 'none'
     }
 }
@@ -1103,7 +1128,8 @@ const buildOutputTable = (findFor, gearOptions, measure = 'metric') => {
 const linkToGearDetails = (findFor, chainRing, cog, measure = 'metric') => {
     let url = '/gearDetails?chainRing=' + chainRing + '&cog=' + cog + '&measure=' + measure
 
-    if (findFor === 'rollOut') {
+    if ((findFor === 'rollOut') || (findFor === 'speedCadence') || (findFor === 'lapTimeCadence') 
+            || (findFor === 'trueGearInches') || (findFor === 'gainRatio')) {
         url = url + '&circumfranceApproach=' + circumfranceApproachSelect.value
         if (circumfranceApproachSelect.value === 'estimated') {
             if (tyreWidthFld.value !== '') {
@@ -1115,12 +1141,6 @@ const linkToGearDetails = (findFor, chainRing, cog, measure = 'metric') => {
                 url = url + '&measuredCircumfrance=' + measuredCircumfranceFld.value
             }
         }
-    } else if ((findFor === 'speedCadence') || (findFor === 'lapTimeCadence') 
-        || (findFor === 'trueGearInches') || (findFor === 'gainRatio')) {
-        if (tyreWidthFld.value !== '') {
-            url = url + '&tyreWidth=' + tyreWidthFld.value
-        }
-        url = url + '&rimType=' + rimTypeFld.value
     }
 
     if (findFor === 'speedCadence' && fixedFld.value === 'cadence') {
@@ -1312,6 +1332,18 @@ const handleOnLoad = () => {
                 if (plusOrMinus !== '') {
                     plusOrMinus3Fld.value = plusOrMinus
                 }
+                const tyreWidth = getCookie('tyreWidth')
+                if (tyreWidth !== '') {
+                    tyreWidthFld.value = tyreWidth
+                }
+                const rimType = getCookie('rimType')
+                if (rimType !== '') {
+                    rimTypeFld.value = rimType
+                }
+                const measuredCircumfrance = getCookie('measuredCircumfrance')
+                if (measuredCircumfrance !== '') {
+                    measuredCircumfranceFld.value = measuredCircumfrance
+                }
                 applyMinMaxCookies()
                 handleSubmit()
             }
@@ -1324,6 +1356,18 @@ const handleOnLoad = () => {
                 const plusOrMinus = getCookie('plusOrMinus4')
                 if (plusOrMinus !== '') {
                     plusOrMinus4Fld.value = plusOrMinus
+                }
+                const tyreWidth = getCookie('tyreWidth')
+                if (tyreWidth !== '') {
+                    tyreWidthFld.value = tyreWidth
+                }
+                const rimType = getCookie('rimType')
+                if (rimType !== '') {
+                    rimTypeFld.value = rimType
+                }
+                const measuredCircumfrance = getCookie('measuredCircumfrance')
+                if (measuredCircumfrance !== '') {
+                    measuredCircumfranceFld.value = measuredCircumfrance
                 }
                 applyMinMaxCookies()
                 handleSubmit()
@@ -1386,6 +1430,10 @@ const handleOnLoad = () => {
                 if (rimType !== '') {
                     rimTypeFld.value = rimType
                 }
+                const measuredCircumfrance = getCookie('measuredCircumfrance')
+                if (measuredCircumfrance !== '') {
+                    measuredCircumfranceFld.value = measuredCircumfrance
+                }
                 applyMinMaxCookies()
                 handleSubmit()
             }
@@ -1406,6 +1454,10 @@ const handleOnLoad = () => {
                 const rimType = getCookie('rimType')
                 if (rimType !== '') {
                     rimTypeFld.value = rimType
+                }
+                const measuredCircumfrance = getCookie('measuredCircumfrance')
+                if (measuredCircumfrance !== '') {
+                    measuredCircumfranceFld.value = measuredCircumfrance
                 }
                 applyMinMaxCookies()
                 handleSubmit()
