@@ -364,7 +364,9 @@ measuredCircumfrance = 2100.000) => {
         cadence,
         lapLength,
         lapTime,
-        measure
+        measure,
+        circumfranceApproach,
+        measuredCircumfrance
     }
     const response = gearInfoForCassette
     return {
