@@ -571,7 +571,7 @@ app.get('/gearInfo', (req, res) => {
             { name: 'lapTime', type: 'decimal', sign: 'positive' },
             { name: 'measure', default: 'metric', type: 'string', options: ['metric', 'imperial'] },
             { name: 'circumfranceApproach', default: 'estimated', type: 'string', options: ['estimated', 'measured'] },
-            { name: 'measuredCircumfrance', default: 2100.000, type: 'decimal', sign: 'positive' }
+            { name: 'measuredCircumfrance', mandatoryIfField: 'circumfranceApproach', mandatoryIfValue: 'measured', default: 2100.000, type: 'decimal', sign: 'positive' }
     ])
 
     if (error) {

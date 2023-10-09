@@ -69,11 +69,11 @@ const handleSubmit = () => {
     setCookie('rimType', rimType, 1)
     var url = 'chainRing=' + chainRing + '&cog=' + cog + '&rimType=' + rimType 
                 + '&measure=' + measure + '&circumfranceApproach=' + circumfranceApproach
-    if (tyreWidth !== '') {
+    if (circumfranceApproach === 'estimated' && tyreWidth !== '') {
         url = url + '&tyreWidth=' + tyreWidth
         setCookie('tyreWidth', tyreWidth, 1)
     }
-    if (measuredCircumfrance !== '') {
+    if (circumfranceApproach === 'measured' && measuredCircumfrance !== '') {
         url = url + '&measuredCircumfrance=' + measuredCircumfrance
         setCookie('measuredCircumfrance', measuredCircumfrance, 1)
     }
@@ -125,9 +125,9 @@ const handleSubmit = () => {
                 errorStr = errorStr.replace('cadence', 'Cadence')
                 errorStr = errorStr.replace('lapTime', 'Lap Time')
                 errorStr = errorStr.replace('lapLength', 'Lap Length')
-                errorStr = errorStr.replace('measure', 'Measure')
                 errorStr = errorStr.replace('circumfranceApproach', 'Circumfrance Approach')
                 errorStr = errorStr.replace('measuredCircumfrance', 'Measured Circumfrance')
+                errorStr = errorStr.replace('measure', 'Measure')
                 messageOne.style.color = 'red'
                 messageOne.textContent = errorStr
                 outputTable.style.display = 'none'

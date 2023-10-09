@@ -72,6 +72,9 @@ const validateQueryString = (query, fields) => {
             if (!query[field.name]) {
                 return { error: field.name + ' is not provided' }
             }
+        } else if (field.mandatoryIfField && query[field.mandatoryIfField] && field.mandatoryIfValue) {
+            if (query[field.mandatoryIfField] === field.mandatoryIfValue && !query[field.name])
+                return { error: field.name + ' is not provided' }
         }
 
         if (query[field.name]) {
