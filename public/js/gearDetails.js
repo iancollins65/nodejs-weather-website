@@ -99,6 +99,16 @@ const handleSubmit = () => {
     }
 
     var shareableLinkURL = '/gearDetails?' + url
+    if (extrasSelect.value === 'none') {
+        shareableLinkURL = shareableLinkURL + '&extras=none'
+    } else if (extrasSelect.value === 'cadence') {
+        shareableLinkURL = shareableLinkURL + '&extras=cadenceAtSpeed'
+    } else if (extrasSelect.value === 'speed') {
+        shareableLinkURL = shareableLinkURL + '&extras=speedAtCadence'
+    } else if (extrasSelect.value === 'cadenceLapTime') {
+        shareableLinkURL = shareableLinkURL + '&extras=cadenceAtLapTime'
+    }
+
     url = '/gearInfo?' + url
 
     fetch(url).then((response) => {
