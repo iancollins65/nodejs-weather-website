@@ -156,8 +156,8 @@ const handleSubmit = () => {
         var url = '/trueGearInchesOptions?trueGearInches=' + trueGearInches + '&rimType=' + rimType +
             '&measure=' + measure + '&circumfranceApproach=' + circumfranceApproach
         if (plusOrMinus !== '') { url = url + "&plusOrMinus=" + plusOrMinus }
-        if (tyreWidth !== '') { url = url + '&tyreWidth=' + tyreWidth }
-        if (measuredCircumfrance !== '') { url = url + '&measuredCircumfrance=' + measuredCircumfrance }
+        if (circumfranceApproach === 'estimated' && tyreWidth !== '') { url = url + '&tyreWidth=' + tyreWidth }
+        if (circumfranceApproach === 'measured' && measuredCircumfrance !== '') { url = url + '&measuredCircumfrance=' + measuredCircumfrance }
         if (minChainRing !== '') { url = url + "&minChainRing=" + minChainRing }
         if (maxChainRing !== '') { url = url + "&maxChainRing=" + maxChainRing }
         if (minCog !== '') { url = url + "&minCog=" + minCog }
@@ -185,9 +185,9 @@ const handleSubmit = () => {
                     errorStr = errorStr.replace('min', 'Min ')
                     errorStr = errorStr.replace('max', 'Max ')
                     errorStr = errorStr.replace('ChainRing', 'Chain Ring')
-                    errorStr = errorStr.replace('measure', 'Measure')
                     errorStr = errorStr.replace('circumfranceApproach', 'Circumfrance Approach')
                     errorStr = errorStr.replace('measuredCircumfrance', 'Measured Circumfrance')
+                    errorStr = errorStr.replace('measure', 'Measure')
                     messageOne.style.color = 'red'
                     messageOne.textContent = errorStr
                 } else if (gearOptions.length === 0) {
@@ -291,8 +291,8 @@ const handleSubmit = () => {
 
         var url = '/rollOutOptions?rollOut=' + rollOut + '&maxDiff=' + maxDiff + '&rimType=' + rimType +
             '&measure=' + measure + '&circumfranceApproach=' + circumfranceApproach
-        if (tyreWidth !== '') { url = url + '&tyreWidth=' + tyreWidth }
-        if (measuredCircumfrance !== '') { url = url + '&measuredCircumfrance=' + measuredCircumfrance }
+        if (circumfranceApproach === 'estimated' && tyreWidth !== '') { url = url + '&tyreWidth=' + tyreWidth }
+        if (circumfranceApproach === 'measured' && measuredCircumfrance !== '') { url = url + '&measuredCircumfrance=' + measuredCircumfrance }
         if (minChainRing !== '') { url = url + "&minChainRing=" + minChainRing }
         if (maxChainRing !== '') { url = url + "&maxChainRing=" + maxChainRing }
         if (minCog !== '') { url = url + "&minCog=" + minCog }
@@ -327,9 +327,9 @@ const handleSubmit = () => {
                     errorStr = errorStr.replace('min', 'Min ')
                     errorStr = errorStr.replace('max', 'Max ')
                     errorStr = errorStr.replace('ChainRing', 'Chain Ring')
-                    errorStr = errorStr.replace('measure', 'Measure')
                     errorStr = errorStr.replace('circumfranceApproach', 'Circumfrance Approach')
                     errorStr = errorStr.replace('measuredCircumfrance', 'Measured Circumfrance')
+                    errorStr = errorStr.replace('measure', 'Measure')
                     messageOne.style.color = 'red'
                     messageOne.textContent = errorStr
                 } else if (gearOptions.length === 0) {
@@ -363,8 +363,8 @@ const handleSubmit = () => {
         var url = '/gainRatioOptions?gainRatio=' + gainRatio + '&rimType=' + rimType
                    + '&measure=' + measure + '&circumfranceApproach=' + circumfranceApproach
         if (plusOrMinus !== '') { url = url + "&plusOrMinus=" + plusOrMinus }
-        if (tyreWidth !== '') { url = url + '&tyreWidth=' + tyreWidth }
-        if (measuredCircumfrance !== '') { url = url + '&measuredCircumfrance=' + measuredCircumfrance }
+        if (circumfranceApproach === 'estimated' && tyreWidth !== '') { url = url + '&tyreWidth=' + tyreWidth }
+        if (circumfranceApproach === 'measured' && measuredCircumfrance !== '') { url = url + '&measuredCircumfrance=' + measuredCircumfrance }
         if (crankLength !== '') { url = url + '&crankLength=' + crankLength }
         if (minChainRing !== '') { url = url + "&minChainRing=" + minChainRing }
         if (maxChainRing !== '') { url = url + "&maxChainRing=" + maxChainRing }
@@ -395,9 +395,9 @@ const handleSubmit = () => {
                     errorStr = errorStr.replace('min', 'Min ')
                     errorStr = errorStr.replace('max', 'Max ')
                     errorStr = errorStr.replace('ChainRing', 'Chain Ring')
-                    errorStr = errorStr.replace('measure', 'Measure')
                     errorStr = errorStr.replace('circumfranceApproach', 'Circumfrance Approach')
                     errorStr = errorStr.replace('measuredCircumfrance', 'Measured Circumfrance')
+                    errorStr = errorStr.replace('measure', 'Measure')
                     messageOne.style.color = 'red'
                     messageOne.textContent = errorStr
                 } else if (gearOptions.length === 0) {
@@ -428,8 +428,8 @@ const handleSubmit = () => {
 
         var url = '/speedCadenceOptions?speed=' + speed + '&cadence=' + cadence + '&fixed=' + fixed + 
             '&rimType=' + rimType + '&measure=' + measure + '&circumfranceApproach=' + circumfranceApproach
-        if (tyreWidth !== '') { url = url + '&tyreWidth=' + tyreWidth }
-        if (measuredCircumfrance !== '') { url = url + '&measuredCircumfrance=' + measuredCircumfrance }
+        if (circumfranceApproach === 'estimated' && tyreWidth !== '') { url = url + '&tyreWidth=' + tyreWidth }
+        if (circumfranceApproach === 'measured' && measuredCircumfrance !== '') { url = url + '&measuredCircumfrance=' + measuredCircumfrance }
         if (minChainRing !== '') { url = url + "&minChainRing=" + minChainRing }
         if (maxChainRing !== '') { url = url + "&maxChainRing=" + maxChainRing }
         if (minCog !== '') { url = url + "&minCog=" + minCog }
@@ -462,9 +462,9 @@ const handleSubmit = () => {
                     errorStr = errorStr.replace('min', 'Min ')
                     errorStr = errorStr.replace('max', 'Max ')
                     errorStr = errorStr.replace('ChainRing', 'Chain Ring')
-                    errorStr = errorStr.replace('measure', 'Measure')
                     errorStr = errorStr.replace('circumfranceApproach', 'Circumfrance Approach')
                     errorStr = errorStr.replace('measuredCircumfrance', 'Measured Circumfrance')
+                    errorStr = errorStr.replace('measure', 'Measure')
                     messageOne.style.color = 'red'
                     messageOne.textContent = errorStr
                 } else if (gearOptions.length === 0) {
@@ -498,8 +498,8 @@ const handleSubmit = () => {
         var url = '/lapTimeCadenceOptions?lapTime=' + lapTime + '&lapLength=' + lapLength + 
             '&cadence=' + cadence + '&rimType=' + rimType + '&measure=' + measure +
             '&circumfranceApproach=' + circumfranceApproach
-        if (tyreWidth !== '') { url = url + '&tyreWidth=' + tyreWidth }
-        if (measuredCircumfrance !== '') { url = url + '&measuredCircumfrance=' + measuredCircumfrance }
+        if (circumfranceApproach === 'estimated' && tyreWidth !== '') { url = url + '&tyreWidth=' + tyreWidth }
+        if (circumfranceApproach === 'measured' && measuredCircumfrance !== '') { url = url + '&measuredCircumfrance=' + measuredCircumfrance }
         if (minChainRing !== '') { url = url + "&minChainRing=" + minChainRing }
         if (maxChainRing !== '') { url = url + "&maxChainRing=" + maxChainRing }
         if (minCog !== '') { url = url + "&minCog=" + minCog }
@@ -532,9 +532,9 @@ const handleSubmit = () => {
                     errorStr = errorStr.replace('min', 'Min ')
                     errorStr = errorStr.replace('max', 'Max ')
                     errorStr = errorStr.replace('ChainRing', 'Chain Ring')
-                    errorStr = errorStr.replace('measure', 'Measure')
                     errorStr = errorStr.replace('circumfranceApproach', 'Circumfrance Approach')
                     errorStr = errorStr.replace('measuredCircumfrance', 'Measured Circumfrance')
+                    errorStr = errorStr.replace('measure', 'Measure')
                     messageOne.style.color = 'red'
                     messageOne.textContent = errorStr
                 } else if (gearOptions.length === 0) {

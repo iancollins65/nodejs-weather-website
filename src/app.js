@@ -694,7 +694,7 @@ app.get('/cassetteInfo', (req, res) => {
             { name: 'lapLength', mandatory: Boolean(extras === 'cadenceLapTime'), type: 'decimal', sign: 'positive' },
             { name: 'measure', default: 'metric', type: 'string', options: ['metric', 'imperial'] },
             { name: 'circumfranceApproach', default: 'estimated', type: 'string', options: ['estimated', 'measured'] },
-            { name: 'measuredCircumfrance', default: 2100.000, type: 'decimal', sign: 'positive' }
+            { name: 'measuredCircumfrance', mandatoryIfField: 'circumfranceApproach', mandatoryIfValue: 'measured', default: 2100.000, type: 'decimal', sign: 'positive' }
     ])
 
     if (error) {
@@ -753,7 +753,7 @@ app.get('/trueGearInchesOptions', (req, res) => {
             { name: 'maxTeeth', type: 'integer', sign: 'positive' },
             { name: 'measure', default: 'metric', type: 'string', options: ['metric', 'imperial'] },
             { name: 'circumfranceApproach', default: 'estimated', type: 'string', options: ['estimated', 'measured'] },
-            { name: 'measuredCircumfrance', default: 2100.000, type: 'decimal', sign: 'positive' }
+            { name: 'measuredCircumfrance', mandatoryIfField: 'circumfranceApproach', mandatoryIfValue: 'measured', default: 2100.000, type: 'decimal', sign: 'positive' }
     ])
 
     if (error) {
@@ -814,7 +814,7 @@ app.get('/rollOutOptions', (req, res) => {
             { name: 'maxTeeth', type: 'integer', sign: 'positive' },
             { name: 'measure', default: 'metric', type: 'string', options: ['metric', 'imperial'] },
             { name: 'circumfranceApproach', default: 'estimated', type: 'string', options: ['estimated', 'measured'] },
-            { name: 'measuredCircumfrance', default: 2100.000, type: 'decimal', sign: 'positive' }
+            { name: 'measuredCircumfrance', mandatoryIfField: 'circumfranceApproach', mandatoryIfValue: 'measured', default: 2100.000, type: 'decimal', sign: 'positive' }
         ])
 
     if (error) {
@@ -848,7 +848,7 @@ app.get('/gainRatioOptions', (req, res) => {
             { name: 'maxTeeth', type: 'integer', sign: 'positive' },
             { name: 'measure', default: 'metric', type: 'string', options: ['metric', 'imperial'] },
             { name: 'circumfranceApproach', default: 'estimated', type: 'string', options: ['estimated', 'measured'] },
-            { name: 'measuredCircumfrance', default: 2100.000, type: 'decimal', sign: 'positive' }
+            { name: 'measuredCircumfrance', mandatoryIfField: 'circumfranceApproach', mandatoryIfValue: 'measured', default: 2100.000, type: 'decimal', sign: 'positive' }
     ])
 
     if (error) {
@@ -882,7 +882,7 @@ app.get('/speedCadenceOptions', (req, res) => {
             { name: 'maxTeeth', type: 'integer', sign: 'positive' },
             { name: 'measure', default: 'metric', type: 'string', options: ['metric', 'imperial'] },
             { name: 'circumfranceApproach', default: 'estimated', type: 'string', options: ['estimated', 'measured'] },
-            { name: 'measuredCircumfrance', default: 2100.000, type: 'decimal', sign: 'positive' }
+            { name: 'measuredCircumfrance', mandatoryIfField: 'circumfranceApproach', mandatoryIfValue: 'measured', default: 2100.000, type: 'decimal', sign: 'positive' }
     ])
 
     if (error) {
@@ -915,7 +915,7 @@ app.get('/lapTimeCadenceOptions', (req, res) => {
             { name: 'maxTeeth', type: 'integer', sign: 'positive' },
             { name: 'measure', default: 'metric', type: 'string', options: ['metric', 'imperial'] },
             { name: 'circumfranceApproach', default: 'estimated', type: 'string', options: ['estimated', 'measured'] },
-            { name: 'measuredCircumfrance', default: 2100.000, type: 'decimal', sign: 'positive' }
+            { name: 'measuredCircumfrance', mandatoryIfField: 'circumfranceApproach', mandatoryIfValue: 'measured', default: 2100.000, type: 'decimal', sign: 'positive' }
     ])
 
     if (error) {
