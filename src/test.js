@@ -293,4 +293,4 @@ const test = gears.getChainRingAndCogOptionsForLapTimeAndCadence(22, 250, 90, 32
 console.log(test)
 
 // console.log(test2)
-// test commit 9a
+// test commit 10
