@@ -122,7 +122,8 @@ app.get('/compare2Gears', (req, res) => {
 
     const {error, chainRing1, cog1, chainRing2, cog2, tyreWidth1, tyreWidth2, 
             rimType1, rimType2, crankLength1, crankLength2, 
-            extras, speed, cadence, lapLength, lapTime, measure} = 
+            extras, speed, cadence, lapLength, lapTime, measure,
+            circumfranceApproach, measuredCircumfrance1, measuredCircumfrance2} = 
         hpcUtils.validateQueryString(req.query, [
             { name: 'chainRing1', type: 'integer', sign: 'positive', returnEmpty: true },
             { name: 'cog1', type: 'integer', sign: 'positive', returnEmpty: true },
@@ -139,7 +140,10 @@ app.get('/compare2Gears', (req, res) => {
             { name: 'cadence', type: 'decimal', sign: 'positive', returnEmpty: true },
             { name: 'lapTime', type: 'decimal', sign: 'positive', returnEmpty: true },
             { name: 'lapLength', type: 'decimal', sign: 'positive', returnEmpty: true },
-            { name: 'measure', type: 'string', options: ['metric', 'imperial'], returnEmpty: true }
+            { name: 'measure', type: 'string', options: ['metric', 'imperial'], returnEmpty: true },
+            { name: 'circumfranceApproach', type: 'string', options: ['estimated', 'measured'], returnEmpty: true },
+            { name: 'measuredCircumfrance1', type: 'decimal', sign: 'positive', returnEmpty: true },
+            { name: 'measuredCircumfrance2', type: 'decimal', sign: 'positive', returnEmpty: true }
     ])
 
     const rimTypeOptionsList = gears.getRimOptionsTypeStringList()
@@ -166,7 +170,10 @@ app.get('/compare2Gears', (req, res) => {
             cadence: '',
             lapTime: '',
             lapLength: '',
-            measure: ''
+            measure: '',
+            circumfranceApproach: '',
+            measuredCircumfrance1: '',
+            measuredCircumfrance2: ''
         })
     } else {
         res.render('compare2Gears', {
@@ -189,7 +196,10 @@ app.get('/compare2Gears', (req, res) => {
             cadence,
             lapTime,
             lapLength,
-            measure
+            measure,
+            circumfranceApproach,
+            measuredCircumfrance1,
+            measuredCircumfrance2
         })
     }
 })
@@ -623,7 +633,8 @@ app.get('/comp2Gears', (req, res) => {
 app.get('/comp2GearsFull', (req, res) => {
 
     const {error, chainRing1, cog1, chainRing2, cog2, tyreWidth1, tyreWidth2, 
-            rimType1, rimType2, crankLength1, crankLength2, speed, cadence, lapLength, lapTime, measure} = 
+            rimType1, rimType2, crankLength1, crankLength2, speed, cadence, lapLength, lapTime, measure, 
+            circumfranceApproach, measuredCircumfrance1, measuredCircumfrance2} = 
         hpcUtils.validateQueryString(req.query, [
             { name: 'chainRing1', mandatory: true, type: 'integer', sign: 'positive' },
             { name: 'cog1', mandatory: true, type: 'integer', sign: 'positive' },
@@ -639,7 +650,10 @@ app.get('/comp2GearsFull', (req, res) => {
             { name: 'cadence', type: 'decimal', sign: 'positive' },
             { name: 'lapLength', type: 'decimal', sign: 'positive' },
             { name: 'lapTime', type: 'decimal', sign: 'positive' },
-            { name: 'measure', default: 'metric', type: 'string', options: ['metric', 'imperial'] }
+            { name: 'measure', default: 'metric', type: 'string', options: ['metric', 'imperial'] },
+            { name: 'circumfranceApproach', default: 'estimated', type: 'string', options: ['estimated', 'measured'] },
+            { name: 'measuredCircumfrance1', mandatoryIfField: 'circumfranceApproach', mandatoryIfValue: 'measured', default: 2100.000, type: 'decimal', sign: 'positive' },
+            { name: 'measuredCircumfrance2', mandatoryIfField: 'circumfranceApproach', mandatoryIfValue: 'measured', default: 2100.000, type: 'decimal', sign: 'positive' }
     ])
 
     if (error) {
@@ -648,9 +662,9 @@ app.get('/comp2GearsFull', (req, res) => {
 
     // Get the gear info
     const gearInfo1 = gears.getGearInfo(chainRing1, cog1, tyreWidth1, rimType1, speed, cadence, 
-        lapLength, lapTime, measure, crankLength1)
+        lapLength, lapTime, measure, crankLength1, circumfranceApproach, measuredCircumfrance1)
     const gearInfo2 = gears.getGearInfo(chainRing2, cog2, tyreWidth2, rimType2, speed, cadence, 
-        lapLength, lapTime, measure, crankLength2)
+        lapLength, lapTime, measure, crankLength2, circumfranceApproach, measuredCircumfrance2)
     
     const twoGears = {
         gear1: gearInfo1,

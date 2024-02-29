@@ -64,6 +64,8 @@ const validateQueryString = (query, fields) => {
     let crankLength2 = undefined
     let circumfranceApproach = undefined
     let measuredCircumfrance = undefined
+    let measuredCircumfrance1 = undefined
+    let measuredCircumfrance2 = undefined
 
     for (field of fields) {
         let fieldValue = field.default
@@ -189,6 +191,8 @@ const validateQueryString = (query, fields) => {
             case 'crankLength2': crankLength2 = fieldValue; break;
             case 'circumfranceApproach': circumfranceApproach = fieldValue; break;
             case 'measuredCircumfrance': measuredCircumfrance = fieldValue; break;
+            case 'measuredCircumfrance1': measuredCircumfrance1 = fieldValue; break;
+            case 'measuredCircumfrance2': measuredCircumfrance2 = fieldValue; break;
         }
     }
 
@@ -237,7 +241,9 @@ const validateQueryString = (query, fields) => {
         crankLength1,
         crankLength2,
         circumfranceApproach,
-        measuredCircumfrance
+        measuredCircumfrance,
+        measuredCircumfrance1,
+        measuredCircumfrance2
     }
 }
 
