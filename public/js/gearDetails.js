@@ -508,7 +508,6 @@ const buildShareableLink = (shareableLinkURL) => {
     return a
 }
 
-
 // On load
 
 const handleOnLoad = () => {

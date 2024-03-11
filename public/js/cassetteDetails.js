@@ -30,6 +30,7 @@ const lapLengthFld = document.querySelector('#lapLength')
 const showSection = document.querySelector('#showSection')
 const showSelect = document.querySelector('#showData')
 const outputTable = document.querySelector('#outputTable')
+const shareableLink = document.querySelector('#shareableLink')
 const rimTypeOptionsListHiddenFld = document.querySelector('#rimTypeOptionsListHidden')
 const rimTypeDescriptionsListHiddenFld = document.querySelector('#rimTypeDescriptionsListHidden')
 var chainRingsGlobal = []
@@ -45,6 +46,7 @@ lapLengthSection.style.display = 'none'
 messageOne.style.display = 'none'
 showSection.style.display = 'none'
 outputTable.style.display = 'none'
+shareableLink.style.display = 'none'
 
 cassetteDetailsForm.addEventListener('submit', (e) => {
     e.preventDefault()
@@ -57,6 +59,7 @@ const handleSubmit = () => {
     messageOne.textContent = 'Loading...'
     outputTable.style.display = 'none'    
     showSection.style.display = 'none'
+    shareableLink.style.display = 'none'
 
     const measure = measureSelect.value
     const chainRings = chainRingsFld.value
@@ -75,8 +78,11 @@ const handleSubmit = () => {
     setCookie('chainRings', chainRings, 1)
     setCookie('circumfranceApproach', circumfranceApproach, 1)
     setCookie('rimType', rimType, 1)
-    var url = '/cassetteInfo?chainRings=' + chainRings + '&cogs=' + cogs 
-        + '&rimType=' + rimType + '&extras=' + extras + '&measure=' + measure  
+    //var url = 'chainRings=' + chainRings + '&cogs=' + cogs 
+    //    + '&rimType=' + rimType + '&extras=' + extras + '&measure=' + measure  
+    //    + '&circumfranceApproach=' + circumfranceApproach
+    var url = 'chainRings=' + chainRings + '&cogs=' + cogs 
+        + '&rimType=' + rimType + '&measure=' + measure  
         + '&circumfranceApproach=' + circumfranceApproach
     if (circumfranceApproach === 'estimated' && tyreWidth !== '') {
         url = url + '&tyreWidth=' + tyreWidth
@@ -107,6 +113,19 @@ const handleSubmit = () => {
         setCookie('lapLength', lapLength, 1)
     }
 
+    var shareableLinkURL = '/cassetteDetails?' + url
+    if (extrasSelect.value === 'none') {
+        shareableLinkURL = shareableLinkURL + '&extras=none'
+    } else if (extrasSelect.value === 'cadence') {
+        shareableLinkURL = shareableLinkURL + '&extras=cadenceAtSpeed'
+    } else if (extrasSelect.value === 'speed') {
+        shareableLinkURL = shareableLinkURL + '&extras=speedAtCadence'
+    } else if (extrasSelect.value === 'cadenceLapTime') {
+        shareableLinkURL = shareableLinkURL + '&extras=cadenceAtLapTime'
+    }
+
+    url = '/cassetteInfo?' + url + '&extras=' + extras 
+
     fetch(url).then((res) => {
         res.json().then(({ error, request, response }) => {
             if (error) {
@@ -125,6 +144,7 @@ const handleSubmit = () => {
                 errorStr = errorStr.replace('measure', 'Measure')
                 messageOne.style.color = 'red'
                 messageOne.textContent = errorStr
+                shareableLink.style.display = 'none'
             } else {
                 messageOne.textContent = 'Your cassette details...'
                 buildShowSelect()
@@ -132,6 +152,9 @@ const handleSubmit = () => {
                 outputTable.style.display = 'block'
                 outputTable.innerHTML = ""
                 outputTable.appendChild(buildOutputTable(request.chainRings, request.cogs, response, showSelect.value, measure))
+                shareableLink.style.display = 'block'
+                shareableLink.innerHTML = ""
+                shareableLink.appendChild(buildShareableLink(shareableLinkURL))
                 chainRingsGlobal = request.chainRings
                 cogsGlobal = request.cogs
                 responseGlobal = response
@@ -144,6 +167,7 @@ cassetteDetailsForm.addEventListener('input', (e) => {
     messageOne.style.display = 'none'
     showSection.style.display = 'none'
     outputTable.style.display = 'none'
+    shareableLink.style.display = 'none'
 })
 
 measureSelect.addEventListener('change', (e) => {
@@ -698,6 +722,14 @@ const setFieldFromCookieIfBlank = (field, cookieName) => {
             }
         }
     }
+}
+
+const buildShareableLink = (shareableLinkURL) => {
+    let a = document.createElement('A')
+    a.text = 'Shareable link'
+    a.title = 'Copy this link to share these Cassette Details.'
+    a.href = shareableLinkURL
+    return a
 }
 
 // On load
