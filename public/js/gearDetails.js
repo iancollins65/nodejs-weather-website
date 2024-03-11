@@ -334,7 +334,7 @@ const insertHeadingValueRow = (table, heading, value, link = false, rawValue = 0
             a.text = value
             a.title = 'Find other gears for True Gear Inches close to ' + value
             let url = urlPrefix + 'trueGearInches&trueGearInches=' + value + '&measure=' + measure            
-            url = url + '&circumfranceApproach=' + circumfranceApproachSelect.value
+            url = url + '&circumfranceApproach=' + circumfranceApproach
             if (circumfranceApproach === 'estimated') {
                 if (tyreWidth !== '') {
                     url = url + '&tyreWidth=' + tyreWidth

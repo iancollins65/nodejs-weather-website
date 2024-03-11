@@ -359,6 +359,9 @@ const insertHeadingValueRow = (table, heading, value, value2, link = false, rawV
         const tyreWidth2 = tyreWidth2Fld.value
         const rimType1 = rimType1Fld.value
         const rimType2 = rimType2Fld.value
+        const circumfranceApproach = circumfranceApproachSelect.value
+        const measuredCircumfrance1 = measuredCircumfrance1Fld.value
+        const measuredCircumfrance2 = measuredCircumfrance2Fld.value
         if (heading === 'Gear Ratio') {
             a.text = value
             a.title = 'Find other gears for Gear Ratio close to ' + value
@@ -374,13 +377,29 @@ const insertHeadingValueRow = (table, heading, value, value2, link = false, rawV
             a2.title = 'Find other gears for Gear Inches close to ' + value2
             a2.href = urlPrefix + 'gearInches&gearInches=' + value2 + '&measure=' + measure
         } else if (heading === 'True Gear Inches') {
-            let url = urlPrefix + 'trueGearInches&trueGearInches=' + value + '&rimType=' + rimType1 + '&measure=' + measure
-            let url2 = urlPrefix + 'trueGearInches&trueGearInches=' + value2 + '&rimType=' + rimType2 + '&measure=' + measure
-            if (tyreWidth1 !== '') {
-                url = url + '&tyreWidth=' + tyreWidth1
+            let url = urlPrefix + 'trueGearInches&trueGearInches=' + value + '&measure=' + measure
+            let url2 = urlPrefix + 'trueGearInches&trueGearInches=' + value2 + '&measure=' + measure
+            url = url + '&circumfranceApproach=' + circumfranceApproach
+            if (circumfranceApproach === 'estimated') {
+                if (tyreWidth1 !== '') {
+                    url = url + '&tyreWidth=' + tyreWidth1
+                }
+                url = url + '&rimType=' + rimType1
+            } else if (circumfranceApproach === 'measured') {
+                if (measuredCircumfrance1 !== '') {
+                    url = url + '&measuredCircumfrance=' + measuredCircumfrance1
+                }
             }
-            if (tyreWidth2 !== '') {
-                url2 = url2 + '&tyreWidth=' + tyreWidth2
+            url2 = url2 + '&circumfranceApproach=' + circumfranceApproach
+            if (circumfranceApproach === 'estimated') {
+                if (tyreWidth2 !== '') {
+                    url2 = url2 + '&tyreWidth=' + tyreWidth2
+                }
+                url2 = url2 + '&rimType=' + rimType2
+            } else if (circumfranceApproach === 'measured') {
+                if (measuredCircumfrance2 !== '') {
+                    url2 = url2 + '&measuredCircumfrance=' + measuredCircumfrance2
+                }
             }
             a.text = value
             a.title = 'Find other gears for True Gear Inches close to ' + value
@@ -391,13 +410,29 @@ const insertHeadingValueRow = (table, heading, value, value2, link = false, rawV
         } else if (heading === 'Gain Ratio') {
             const crankLength1 = crankLength1Fld.value
             const crankLength2 = crankLength2Fld.value
-            let url = urlPrefix + 'gainRatio&gainRatio=' + value + '&rimType=' + rimType1 + '&measure=' + measure
-            let url2 = urlPrefix + 'gainRatio&gainRatio=' + value2 + '&rimType=' + rimType2 + '&measure=' + measure
-            if (tyreWidth1 !== '') {
-                url = url + '&tyreWidth=' + tyreWidth1
+            let url = urlPrefix + 'gainRatio&gainRatio=' + value + '&measure=' + measure
+            let url2 = urlPrefix + 'gainRatio&gainRatio=' + value2 + '&measure=' + measure
+            url = url + '&circumfranceApproach=' + circumfranceApproach
+            if (circumfranceApproach === 'estimated') {
+                if (tyreWidth1 !== '') {
+                    url = url + '&tyreWidth=' + tyreWidth1
+                }
+                url = url + '&rimType=' + rimType1
+            } else if (circumfranceApproach === 'measured') {
+                if (measuredCircumfrance1 !== '') {
+                    url = url + '&measuredCircumfrance=' + measuredCircumfrance1
+                }
             }
-            if (tyreWidth2 !== '') {
-                url2 = url2 + '&tyreWidth=' + tyreWidth2
+            url2 = url2 + '&circumfranceApproach=' + circumfranceApproach
+            if (circumfranceApproach === 'estimated') {
+                if (tyreWidth2 !== '') {
+                    url2 = url2 + '&tyreWidth=' + tyreWidth2
+                }
+                url2 = url2 + '&rimType=' + rimType2
+            } else if (circumfranceApproach === 'measured') {
+                if (measuredCircumfrance2 !== '') {
+                    url2 = url2 + '&measuredCircumfrance=' + measuredCircumfrance2
+                }
             }
             if (crankLength1 !== '') {
                 url = url + '&crankLength=' + crankLength1
@@ -412,13 +447,29 @@ const insertHeadingValueRow = (table, heading, value, value2, link = false, rawV
             a2.title = 'Find other gears for Gain Ratio close to ' + value2
             a2.href = url2
         } else if (heading === 'Roll Out (approx)') {
-            let url = urlPrefix + 'rollOut&rollOut=' + rawValue + '&rimType=' + rimType1 + '&measure=' + measure
-            let url2 = urlPrefix + 'rollOut&rollOut=' + rawValue2 + '&rimType=' + rimType2 + '&measure=' + measure
-            if (tyreWidth1 !== '') {
-                url = url + '&tyreWidth=' + tyreWidth1
+            let url = urlPrefix + 'rollOut&rollOut=' + rawValue + '&measure=' + measure
+            let url2 = urlPrefix + 'rollOut&rollOut=' + rawValue2 + '&measure=' + measure
+            url = url + '&circumfranceApproach=' + circumfranceApproach
+            if (circumfranceApproach === 'estimated') {
+                if (tyreWidth1 !== '') {
+                    url = url + '&tyreWidth=' + tyreWidth1
+                }
+                url = url + '&rimType=' + rimType1
+            } else if (circumfranceApproach === 'measured') {
+                if (measuredCircumfrance1 !== '') {
+                    url = url + '&measuredCircumfrance=' + measuredCircumfrance1
+                }
             }
-            if (tyreWidth2 !== '') {
-                url2 = url2 + '&tyreWidth=' + tyreWidth2
+            url2 = url2 + '&circumfranceApproach=' + circumfranceApproach
+            if (circumfranceApproach === 'estimated') {
+                if (tyreWidth2 !== '') {
+                    url2 = url2 + '&tyreWidth=' + tyreWidth2
+                }
+                url2 = url2 + '&rimType=' + rimType2
+            } else if (circumfranceApproach === 'measured') {
+                if (measuredCircumfrance2 !== '') {
+                    url2 = url2 + '&measuredCircumfrance=' + measuredCircumfrance2
+                }
             }
             a.text = value
             a.title = 'Find other gears for Roll Out of ' + rawValue + ' or below'
@@ -437,14 +488,30 @@ const insertHeadingValueRow = (table, heading, value, value2, link = false, rawV
             const rimType1 = rimType1Fld.value
             const rimType2 = rimType2Fld.value
             let url = urlPrefix + 'speedCadence&speed=' + rawValue + '&cadence=' + otherValue1 
-                + '&fixed=' + fixed + '&rimType=' + rimType1 + '&measure=' + measure
+                + '&fixed=' + fixed + '&measure=' + measure
             let url2 = urlPrefix + 'speedCadence&speed=' + rawValue2 + '&cadence=' + otherValue2 
-                + '&fixed=' + fixed + '&rimType=' + rimType2 + '&measure=' + measure
-            if (tyreWidth1 !== '') {
-                url = url + '&tyreWidth=' + tyreWidth1
+                + '&fixed=' + fixed + '&measure=' + measure
+            url = url + '&circumfranceApproach=' + circumfranceApproach
+            if (circumfranceApproach === 'estimated') {
+                if (tyreWidth1 !== '') {
+                    url = url + '&tyreWidth=' + tyreWidth1
+                }
+                url = url + '&rimType=' + rimType1
+            } else if (circumfranceApproach === 'measured') {
+                if (measuredCircumfrance1 !== '') {
+                    url = url + '&measuredCircumfrance=' + measuredCircumfrance1
+                }
             }
-            if (tyreWidth2 !== '') {
-                url2 = url2 + '&tyreWidth=' + tyreWidth2
+            url2 = url2 + '&circumfranceApproach=' + circumfranceApproach
+            if (circumfranceApproach === 'estimated') {
+                if (tyreWidth2 !== '') {
+                    url2 = url2 + '&tyreWidth=' + tyreWidth2
+                }
+                url2 = url2 + '&rimType=' + rimType2
+            } else if (circumfranceApproach === 'measured') {
+                if (measuredCircumfrance2 !== '') {
+                    url2 = url2 + '&measuredCircumfrance=' + measuredCircumfrance2
+                }
             }
             a.text = value
             a.title = 'Find other gears for speed of ' + rawValue + ' and cadence of ' + otherValue1
@@ -463,14 +530,30 @@ const insertHeadingValueRow = (table, heading, value, value2, link = false, rawV
             const rimType1 = rimType1Fld.value
             const rimType2 = rimType2Fld.value
             let url = urlPrefix + 'speedCadence&speed=' + otherValue1 + '&cadence=' + rawValue 
-                + '&fixed=' + fixed + '&rimType=' + rimType1 + '&measure=' + measure
+                + '&fixed=' + fixed + '&measure=' + measure
             let url2 = urlPrefix + 'speedCadence&speed=' + otherValue2 + '&cadence=' + rawValue2
-                + '&fixed=' + fixed + '&rimType=' + rimType2 + '&measure=' + measure
-            if (tyreWidth1 !== '') {
-                url = url + '&tyreWidth=' + tyreWidth1
+                + '&fixed=' + fixed + '&measure=' + measure
+            url = url + '&circumfranceApproach=' + circumfranceApproach
+            if (circumfranceApproach === 'estimated') {
+                if (tyreWidth1 !== '') {
+                    url = url + '&tyreWidth=' + tyreWidth1
+                }
+                url = url + '&rimType=' + rimType1
+            } else if (circumfranceApproach === 'measured') {
+                if (measuredCircumfrance1 !== '') {
+                    url = url + '&measuredCircumfrance=' + measuredCircumfrance1
+                }
             }
-            if (tyreWidth2 !== '') {
-                url2 = url2 + '&tyreWidth=' + tyreWidth2
+            url2 = url2 + '&circumfranceApproach=' + circumfranceApproach
+            if (circumfranceApproach === 'estimated') {
+                if (tyreWidth2 !== '') {
+                    url2 = url2 + '&tyreWidth=' + tyreWidth2
+                }
+                url2 = url2 + '&rimType=' + rimType2
+            } else if (circumfranceApproach === 'measured') {
+                if (measuredCircumfrance2 !== '') {
+                    url2 = url2 + '&measuredCircumfrance=' + measuredCircumfrance2
+                }
             }
             a.text = value
             a.title = 'Find other gears for cadence of ' + rawValue + ' and speed of ' + otherValue1
@@ -485,14 +568,30 @@ const insertHeadingValueRow = (table, heading, value, value2, link = false, rawV
             const rimType2 = rimType2Fld.value
             const lapLength = lapLengthFld.value
             let url = urlPrefix + 'lapTimeCadence&lapTime=' + rawValue + '&cadence=' + otherValue1 
-                + '&lapLength=' + lapLength + '&rimType=' + rimType1 + '&measure=' + measure
+                + '&lapLength=' + lapLength + '&measure=' + measure
             let url2 = urlPrefix + 'lapTimeCadence&lapTime=' + rawValue2 + '&cadence=' + otherValue2 
-                + '&lapLength=' + lapLength + '&rimType=' + rimType2 + '&measure=' + measure
-            if (tyreWidth1 !== '') {
-                url = url + '&tyreWidth=' + tyreWidth1
+                + '&lapLength=' + lapLength + '&measure=' + measure
+            url = url + '&circumfranceApproach=' + circumfranceApproach
+            if (circumfranceApproach === 'estimated') {
+                if (tyreWidth1 !== '') {
+                    url = url + '&tyreWidth=' + tyreWidth1
+                }
+                url = url + '&rimType=' + rimType1
+            } else if (circumfranceApproach === 'measured') {
+                if (measuredCircumfrance1 !== '') {
+                    url = url + '&measuredCircumfrance=' + measuredCircumfrance1
+                }
             }
-            if (tyreWidth2 !== '') {
-                url2 = url2 + '&tyreWidth=' + tyreWidth2
+            url2 = url2 + '&circumfranceApproach=' + circumfranceApproach
+            if (circumfranceApproach === 'estimated') {
+                if (tyreWidth2 !== '') {
+                    url2 = url2 + '&tyreWidth=' + tyreWidth2
+                }
+                url2 = url2 + '&rimType=' + rimType2
+            } else if (circumfranceApproach === 'measured') {
+                if (measuredCircumfrance2 !== '') {
+                    url2 = url2 + '&measuredCircumfrance=' + measuredCircumfrance2
+                }
             }
             a.text = value
             a.title = 'Find other gears for lap time of ' + rawValue + ' and cadence of ' + otherValue1
