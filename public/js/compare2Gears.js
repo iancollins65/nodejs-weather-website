@@ -32,6 +32,7 @@ const cadenceFld = document.querySelector('#cadence')
 const lapTimeFld = document.querySelector('#lapTime')
 const lapLengthFld = document.querySelector('#lapLength')
 const outputTable = document.querySelector('#outputTable')
+const shareableLink = document.querySelector('#shareableLink')
 const rimTypeOptionsListHiddenFld = document.querySelector('#rimTypeOptionsListHidden')
 const rimTypeDescriptionsListHiddenFld = document.querySelector('#rimTypeDescriptionsListHidden')
 
@@ -42,6 +43,7 @@ lapTimeSection.style.display = 'none'
 lapLengthSection.style.display = 'none'
 messageOne.style.display = 'none'
 outputTable.style.display = 'none'
+shareableLink.style.display = 'none'
 
 gearDetailsForm.addEventListener('submit', (e) => {
     e.preventDefault()
@@ -53,6 +55,7 @@ const handleSubmit = () => {
     messageOne.style.color = '#333456'   
     messageOne.textContent = 'Loading...'
     outputTable.style.display = 'none'
+    shareableLink.style.display = 'none'
 
     const measure = measureSelect.value
     const circumfranceApproach = circumfranceApproachSelect.value
@@ -80,7 +83,7 @@ const handleSubmit = () => {
     setCookie('cog2', cog2, 1)
     setCookie('rimType1', rimType1, 1)
     setCookie('rimType2', rimType2, 1)
-    var url = '/comp2GearsFull?chainRing1=' + chainRing1 + '&cog1=' + cog1 
+    var url = 'chainRing1=' + chainRing1 + '&cog1=' + cog1 
         + '&chainRing2=' + chainRing2 + '&cog2=' + cog2 + '&rimType1=' + rimType1 + '&rimType2=' + rimType2 
         + '&measure=' + measure + '&circumfranceApproach=' + circumfranceApproach
 
@@ -126,6 +129,19 @@ const handleSubmit = () => {
         setCookie('lapLength', lapLength, 1)
     }
 
+    var shareableLinkURL = '/compare2Gears?' + url
+    if (extrasSelect.value === 'none') {
+        shareableLinkURL = shareableLinkURL + '&extras=none'
+    } else if (extrasSelect.value === 'cadence') {
+        shareableLinkURL = shareableLinkURL + '&extras=cadenceAtSpeed'
+    } else if (extrasSelect.value === 'speed') {
+        shareableLinkURL = shareableLinkURL + '&extras=speedAtCadence'
+    } else if (extrasSelect.value === 'cadenceLapTime') {
+        shareableLinkURL = shareableLinkURL + '&extras=cadenceAtLapTime'
+    }
+
+    url = '/comp2GearsFull?' + url
+
     fetch(url).then((response) => {
         response.json().then(({ error, gear1, gear2 }) => {
             if (error) {
@@ -151,11 +167,15 @@ const handleSubmit = () => {
                 messageOne.style.color = 'red'
                 messageOne.textContent = errorStr
                 outputTable.style.display = 'none'
+                shareableLink.style.display = 'none'
             } else {
                 messageOne.textContent = 'Your gear details...'
                 outputTable.style.display = 'block'
                 outputTable.innerHTML = ""
                 outputTable.appendChild(buildOutputTable(gear1, gear2))
+                shareableLink.style.display = 'block'
+                shareableLink.innerHTML = ""
+                shareableLink.appendChild(buildShareableLink(shareableLinkURL))
             }
         })
     })
@@ -164,6 +184,7 @@ const handleSubmit = () => {
 gearDetailsForm.addEventListener('input', (e) => {
     messageOne.style.display = 'none'
     outputTable.style.display = 'none'
+    shareableLink.style.display = 'none'
 })
 
 measureSelect.addEventListener('change', (e) => {
@@ -661,6 +682,14 @@ const buildOutputTable = (gear1, gear2) => {
     }
 
     return table
+}
+
+const buildShareableLink = (shareableLinkURL) => {
+    let a = document.createElement('A')
+    a.text = 'Shareable link'
+    a.title = 'Copy this link to share these Gear Details.'
+    a.href = shareableLinkURL
+    return a
 }
 
 // On load
