@@ -538,7 +538,7 @@ app.get('/help', (req, res) => {
     res.render('help', {
         title: 'Help',
         helpText: 'This is the help message',
-        name: 'Ian Collins'
+        name: 'Hot Pursuit Cycling'
     })
 })
 
