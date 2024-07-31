@@ -32,16 +32,23 @@ app.use(express.static(publicDirectoryPath))
 // Page renders
 
 app.get('', (req, res) => {
+    res.render('gears', {
+        title: 'Gears',
+        name: 'Hot Pursuit Cycling'
+    })
+})
+
+app.get('/weatherPage', (req, res) => {
     res.render('index', {
         title: 'Weather',
-        name: 'Ian Collins'
+        name: 'Hot Pursuit Cycling'
     })
 })
 
 app.get('/about', (req, res) => {
     res.render('about', {
         title: 'About',
-        name: 'Ian Collins'
+        name: 'Hot Pursuit Cycling'
     })
 })
 
